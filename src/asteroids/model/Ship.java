@@ -6,7 +6,7 @@ public class Ship {
 	 *       | canHaveAsxVelocity(this.getxVelocity())
 	 */
 
-	/**
+	/** loolS
 	 * Initialize this new ship with given xVelocity.
 	 * 
 	 * @param xVelocity
