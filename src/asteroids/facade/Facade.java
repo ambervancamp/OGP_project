@@ -12,7 +12,7 @@ public class Facade {
 	 * speed is zero.
 	 */
 	public Ship createShip() throws ModelException {
-		
+		Ship();
 	}
 	/**
 	 * Create a new ship with the given position, velocity, radius and
@@ -20,7 +20,7 @@ public class Facade {
 	 */
 	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
 			throws ModelException {
-		
+		Ship(x,y,xVelocity,yVelocity,radius,orientation);
 	}
 
 	/**
@@ -28,7 +28,8 @@ public class Facade {
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
 	 */
 	public double[] getShipPosition(Ship ship) throws ModelException {
-		
+		double[] position = [ship.getxPosition(), ship.getyPosition()];
+		return position;
 	}
 
 	/**
@@ -36,21 +37,24 @@ public class Facade {
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
 	 */
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		
+		double[] velocity = [ship.getxVelocity(), ship.getyVelocity()];
+		return velocity
 	}
 
 	/**
 	 * Return the radius of <code>ship</code>.
 	 */
 	public double getShipRadius(Ship ship) throws ModelException {
-		
+		double radius = ship.getRadius();
+		return radius;
 	}
 
 	/**
 	 * Return the orientation of <code>ship</code> (in radians).
 	 */
 	public double getShipOrientation(Ship ship) throws ModelException {
-		
+		double orientation = ship.getOrientation();
+		return orientation;
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class Facade {
 	 * seconds at its current velocity.
 	 */
 	public void move(Ship ship, double dt) throws ModelException {
-		
+		ship.move(dt);
 	}
 
 	/**
@@ -66,7 +70,7 @@ public class Facade {
 	 * direction and the given <code>amount</code>.
 	 */
 	public void thrust(Ship ship, double amount) throws ModelException {
-		
+		ship.thrust(amount);
 	}
 
 	/**
@@ -75,7 +79,7 @@ public class Facade {
 	 * negative.
 	 */
 	public void turn(Ship ship, double angle) throws ModelException {
-		
+		ship.turn(angle);
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class Facade {
 	 * and itself is 0.
 	 */
 	public double getDistanceBetween(Ship ship1, Ship ship2) throws ModelException {
-		
+		ship1.getDistanceBetween(ship2);
 	}
 
 	/**
@@ -95,7 +99,7 @@ public class Facade {
 	 * always overlaps with itself.
 	 */
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
-		
+		ship1.overlap(ship2);
 	}
 
 	/**

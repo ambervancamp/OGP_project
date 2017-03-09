@@ -1,6 +1,5 @@
 package asteroids.model;
 import be.kuleuven.cs.som.annotate.*;
-import asteroids.util.ModelException;
 
 
 /**
@@ -13,7 +12,7 @@ import asteroids.util.ModelException;
  *       	| isValidRadius(getRadius())
  *  
  * 
- * @author amber_000 && Jasper_000
+ * @author Amber_000 && Jasper_000
  */
 
 public class Ship {
@@ -120,7 +119,7 @@ public class Ship {
 	 * 				0 <= orientation && orientation < 2*Math.PI
 	 */
 	@Raw
-	public boolean canHaveAsOrientation(double orientation) {
+	private boolean canHaveAsOrientation(double orientation) {
 		if (Double.isNaN(orientation))
 			return false;
 		if (0 <= orientation && orientation < 2*Math.PI)
@@ -153,7 +152,7 @@ public class Ship {
 	 * 			minimum radius.
 	 * 			| result == radius >= MIN_RADIUS
 	 */
-	public static boolean canHaveAsRadius(double radius) {
+	private static boolean canHaveAsRadius(double radius) {
 		return (radius > MIN_RADIUS && !Double.isNaN(radius));
 	}
 
@@ -233,7 +232,7 @@ public class Ship {
 	 * @return	...
 	 * 			...
 	 */
-	public boolean canHaveAsA(double a){
+	private boolean canHaveAsA(double a){
 		return (a>0 && !Double.isNaN(a));
 	}
 	
@@ -327,7 +326,7 @@ public class Ship {
 	 * 			the given yPosition can't be less than zero, 
 	 * 			| xPosition < 0
 	 */
-	private void setxPosition(double xPosition) throws IllegalArgumentException{
+	public void setxPosition(double xPosition) throws IllegalArgumentException{
 		if (!canHaveAsxPosition(xPosition))
 			throw new IllegalArgumentException();
 		this.xPosition = xPosition;
@@ -344,7 +343,7 @@ public class Ship {
 	 * 			the given yPosition can't be less than zero, 
 	 * 			| yPosition < 0
 	 */
-	private void setyPosition(double yPosition) throws IllegalArgumentException{
+	public void setyPosition(double yPosition) throws IllegalArgumentException{
 		if (!canHaveAsyPosition(yPosition))
 			throw new IllegalArgumentException();
 		this.yPosition = yPosition;
@@ -422,7 +421,7 @@ public class Ship {
 	 * @return
 	 * 			returns the xVelocity of the ship in kilometer/s
 	 */
-	private double getxVelocity(){
+	public double getxVelocity(){
 		return this.xVelocity;
 	}
 	
@@ -433,7 +432,7 @@ public class Ship {
 	 * @return
 	 * 			returns the yVelocity of the ship in kilometer/s
 	 */
-	private double getyVelocity(){
+	public double getyVelocity(){
 		return this.yVelocity;
 	}
 	
