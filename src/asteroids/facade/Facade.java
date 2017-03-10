@@ -12,7 +12,7 @@ public class Facade {
 	 * speed is zero.
 	 */
 	public Ship createShip() throws ModelException {
-		Ship();
+		return Ship();
 	}
 	/**
 	 * Create a new ship with the given position, velocity, radius and
@@ -20,7 +20,7 @@ public class Facade {
 	 */
 	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
 			throws ModelException {
-		Ship(x,y,xVelocity,yVelocity,radius,orientation);
+		return Ship(x,y,xVelocity,yVelocity,radius,orientation);
 	}
 
 	/**
@@ -28,8 +28,7 @@ public class Facade {
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
 	 */
 	public double[] getShipPosition(Ship ship) throws ModelException {
-		double[] position = [ship.getxPosition(), ship.getyPosition()];
-		return position;
+		return ship.getPosition();
 	}
 
 	/**
@@ -37,24 +36,21 @@ public class Facade {
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
 	 */
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		double[] velocity = [ship.getxVelocity(), ship.getyVelocity()];
-		return velocity
+		return ship.getVelocity();
 	}
 
 	/**
 	 * Return the radius of <code>ship</code>.
 	 */
 	public double getShipRadius(Ship ship) throws ModelException {
-		double radius = ship.getRadius();
-		return radius;
+		return ship.getRadius();
 	}
 
 	/**
 	 * Return the orientation of <code>ship</code> (in radians).
 	 */
 	public double getShipOrientation(Ship ship) throws ModelException {
-		double orientation = ship.getOrientation();
-		return orientation;
+		return ship.getOrientation();
 	}
 
 	/**
@@ -91,7 +87,7 @@ public class Facade {
 	 * and itself is 0.
 	 */
 	public double getDistanceBetween(Ship ship1, Ship ship2) throws ModelException {
-		ship1.getDistanceBetween(ship2);
+		return ship1.getDistanceBetween(ship2);
 	}
 
 	/**
@@ -99,7 +95,7 @@ public class Facade {
 	 * always overlaps with itself.
 	 */
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
-		ship1.overlap(ship2);
+		return ship1.overlap(ship2);
 	}
 
 	/**
@@ -123,4 +119,6 @@ public class Facade {
 	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException {
 		
 	}
+	
+	// Rode lijntjes bij initialiseren ship??
 }

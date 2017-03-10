@@ -48,8 +48,7 @@ public class Ship {
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
 				throws IllegalArgumentException {
-		this.setxPosition(x);
-		this.setyPosition(y);
+		this.setPosition(x, y);
 		this.setShipVelocity(xVelocity,yVelocity);
 		this.setRadius(radius);
 		this.setOrientation(orientation);
@@ -75,7 +74,7 @@ public class Ship {
 	 * 			centered on (0, 0) facing right and with speed zero.
 	 */
 	public Ship() {
-		this(0,0,0,0,MIN_RADIUS,0);
+		this(0,0,0,0,minRadius,0);
 	}
 
 		
@@ -153,7 +152,7 @@ public class Ship {
 	 * 			| result == radius >= MIN_RADIUS
 	 */
 	private static boolean canHaveAsRadius(double radius) {
-		return (radius > MIN_RADIUS && !Double.isNaN(radius));
+		return (radius > minRadius && !Double.isNaN(radius));
 	}
 
 	/**
@@ -171,7 +170,7 @@ public class Ship {
 	 *          | ! isValidRadius(getRadius())
 	 */
 	@Raw
-	public void setRadius(double radius) throws IllegalArgumentException {
+	private void setRadius(double radius) throws IllegalArgumentException {
 		if (!canHaveAsRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
@@ -182,10 +181,17 @@ public class Ship {
 	 */
 	private final double radius;
 	
+	@Basic
+	public static int getMinRadius() {
+		return 10;
+	}
+	
 	/**
 	 * Variable registering the minimum radius of all ships.
 	 */
-	private static final double MIN_RADIUS = 10;
+	private static final double minRadius = getMinRadius();
+	
+	// Wordt nu MinRadius gebruikt als variabele of getMinRadius??? (zie DigitalClock)
 	
 	
 	/**
@@ -286,6 +292,7 @@ public class Ship {
 	}
 	
 	
+	
 	// ANDER IEMAND
 		
 	
@@ -315,39 +322,43 @@ public class Ship {
 	}
 	
 	/**
-	 * this method sets the x-position of the ship to the given value
+	 * Calculate the x- and y-coordinate of the position of this ship.
 	 * 
-	 * @post	the new x-position will be equal to the given x-position
-	 * 			|new.getxPosition() == xPosition
-	 * @param 	xPosition
-	 * 			| the position of the ship in x coordinates
-	 * 
-	 * @throws 	IllegalArgumetnException
-	 * 			the given yPosition can't be less than zero, 
-	 * 			| xPosition < 0
+	 * @return
 	 */
-	public void setxPosition(double xPosition) throws IllegalArgumentException{
-		if (!canHaveAsxPosition(xPosition))
-			throw new IllegalArgumentException();
-		this.xPosition = xPosition;
+	public double[] getPosition(){
+		double[] position = {this.getxPosition(), this.getyPosition()};
+		return position;
 	}
 	
 	/**
-	 * this method sets the y-position of the ship to the given value
+	 * Set the x-position and y-position of this ship to the given value.
+	 * 
+	 * @param 	xPosition
+	 * 			Given x-position.
+	 * 
+	 * @param 	Position
+	 * 			Given y-position.
+	 * 
+	 * @post	the new x-position will be equal to the given x-position
+	 * 			|new.getxPosition() == xPosition
 	 * 
 	 * @post	the new y-position will be equal to the given y-position
 	 * 			|new.getyPosition() == yPosition
-	 * @param 	yPosition
-	 * 			| the position of the ship in y coordinates
-	 * @throws 	IllegalArgumetnException
-	 * 			the given yPosition can't be less than zero, 
-	 * 			| yPosition < 0
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			The given yPosition and xPosition can't be less than zero.
+	 * 			| !canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition)
+	 * 
 	 */
-	public void setyPosition(double yPosition) throws IllegalArgumentException{
-		if (!canHaveAsyPosition(yPosition))
+	public void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
+		if (!canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition))
 			throw new IllegalArgumentException();
-		this.yPosition = yPosition;
+		
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;	
 	}
+	
 	
 	/**
 	 * checks whether the given x-position is within the boundary of the play field
@@ -399,9 +410,9 @@ public class Ship {
 	 * 			setShipPosition = getShipVelocity*maxSpeed/speed
 	 */
 	public void setShipVelocity(double xVelocity,double yVelocity){
-		if (Double.isNaN(xVelocity)||xVelocity < 0)
+		if (!canHaveAsxVelocity(xVelocity))
 			xVelocity = 0;
-		if (Double.isNaN(yVelocity)||yVelocity < 0)
+		if (!canHaveAsyVelocity(yVelocity))
 			yVelocity = 0;
 		if (!canHaveAsSpeed(this.getShipSpeed())){
 			this.xVelocity = xVelocity*maxSpeed/(this.getShipSpeed());
@@ -411,7 +422,18 @@ public class Ship {
 			this.xVelocity = xVelocity;
 			this.yVelocity = yVelocity;
 		}
-		// eerste if statements canHave dingen van maken
+	}
+	
+	private boolean canHaveAsxVelocity(double xVelocity){
+		if (Double.isNaN(xVelocity) || xVelocity < 0)
+			return false;
+		return true;
+	}
+	
+	private boolean canHaveAsyVelocity(double yVelocity){
+		if (Double.isNaN(yVelocity) || yVelocity < 0)
+			return false;
+		return true;
 	}
 	
 	/**
@@ -445,19 +467,30 @@ public class Ship {
 	 * 			| result == speed>maxSpeed
 	 */
 	private boolean canHaveAsSpeed(double speed){
-		if (speed > maxSpeed)
+		if (speed > maxSpeed || Double.isNaN(speed))
 			return false;
 		return true;
 	}
 	
 	/**
-	 * a method that calculates the speed, given the x- and y-velocity of a ship
-	 * @effect 	calculates the root of the squares of the x- and y-velocity
+	 * A method that calculates the total speed of a ship
+	 * 
+	 * @effect 	calculates the root of the sum of squares of the x- and y-velocity
 	 * 			|Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2))
 	 */
 	private double  getShipSpeed(){
 		double speed = Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2));
 		return speed;
+	}
+	
+	/**
+	 * Calculate the x- and y-coordinate of the velocity of this ship.
+	 * 
+	 * @return
+	 */
+	public double[] getVelocity(){
+		double[] velocity = {this.getxVelocity(), this.getyVelocity()};
+		return velocity;
 	}
 	
 	/**
@@ -517,9 +550,17 @@ public class Ship {
 		setOrientation(angle+getOrientation());	
 	}
 	
-	private static double maxSpeed = 300000;
+	@Basic
+	public static int getMaxSpeed() {
+		return 30000;
+	}
+	
+	private static double maxSpeed = getMaxSpeed();
 	private double xPosition;
 	private double yPosition;
 	private double xVelocity;
 	private double yVelocity;
+	
+	// Geef max grenswaardes voor x en y (scherm grenzen) -> en pas aan bij canHaveAsyPosition() canHaveAsxPosition()
+	// Kan negatieve snelheid? (achteruit) -> indien niet: aanpassen canHaveAscVelocity en canHaveAsyVelocity()
 }
