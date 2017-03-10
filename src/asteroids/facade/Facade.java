@@ -1,9 +1,10 @@
 package asteroids.facade;
 
 import asteroids.model.Ship;
+import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
 
-public class Facade {
+public class Facade implements IFacade {
 	/**
 	 * Create a new ship with a default position, velocity, radius and
 	 * direction.
@@ -12,15 +13,24 @@ public class Facade {
 	 * speed is zero.
 	 */
 	public Ship createShip() throws ModelException {
-		return Ship();
+		try {
+			return new Ship();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
+	
 	/**
 	 * Create a new ship with the given position, velocity, radius and
 	 * orientation (in radians).
 	 */
 	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
 			throws ModelException {
-		return Ship(x,y,xVelocity,yVelocity,radius,orientation);
+		try {
+		return new Ship(x,y,xVelocity,yVelocity,radius,orientation);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -28,7 +38,11 @@ public class Facade {
 	 * x-coordinate at index 0 and the y-coordinate at index 1.
 	 */
 	public double[] getShipPosition(Ship ship) throws ModelException {
+		try {
 		return ship.getPosition();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -36,21 +50,33 @@ public class Facade {
 	 * along the X-axis at index 0 and the velocity along the Y-axis at index 1.
 	 */
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		return ship.getVelocity();
+		try {
+			return ship.getVelocity();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
 	 * Return the radius of <code>ship</code>.
 	 */
 	public double getShipRadius(Ship ship) throws ModelException {
-		return ship.getRadius();
+		try {
+			return ship.getRadius();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
 	 * Return the orientation of <code>ship</code> (in radians).
 	 */
 	public double getShipOrientation(Ship ship) throws ModelException {
-		return ship.getOrientation();
+		try {
+			return ship.getOrientation();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -58,7 +84,11 @@ public class Facade {
 	 * seconds at its current velocity.
 	 */
 	public void move(Ship ship, double dt) throws ModelException {
-		ship.move(dt);
+		try {
+			ship.move(dt);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -66,7 +96,11 @@ public class Facade {
 	 * direction and the given <code>amount</code>.
 	 */
 	public void thrust(Ship ship, double amount) throws ModelException {
-		ship.thrust(amount);
+		try {
+			ship.thrust(amount);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -75,7 +109,11 @@ public class Facade {
 	 * negative.
 	 */
 	public void turn(Ship ship, double angle) throws ModelException {
+		try {
 		ship.turn(angle);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -87,7 +125,11 @@ public class Facade {
 	 * and itself is 0.
 	 */
 	public double getDistanceBetween(Ship ship1, Ship ship2) throws ModelException {
-		return ship1.getDistanceBetween(ship2);
+		try {
+			return ship1.getDistanceBetween(ship2);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -95,7 +137,11 @@ public class Facade {
 	 * always overlaps with itself.
 	 */
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
-		return ship1.overlap(ship2);
+		try {
+			return ship1.overlap(ship2);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -104,7 +150,14 @@ public class Facade {
 	 * they never collide. A ship never collides with itself.
 	 */
 	public double getTimeToCollision(Ship ship1, Ship ship2) throws ModelException {
-		
+		try {
+			// dummy implementatie
+			double random_double = 0;
+			return random_double;
+			//return ship1.getTimeToCollision(ship2);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	/**
@@ -117,8 +170,13 @@ public class Facade {
 	 * index 1 represents the y-coordinate.
 	 */
 	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException {
-		
+		try {
+			// dummy implementatie
+			double[] random_double = {0,0};
+			return random_double;
+			//return ship1.getTimeToCollision(ship2);
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
-	
-	// Rode lijntjes bij initialiseren ship??
 }

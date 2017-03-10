@@ -33,24 +33,22 @@ public class Ship {
 	 * 			The orientation of this new ship, in radians. The orientation of a ship 
 	 * 			facing right is 0, a ship facing up is at angle Math.PI/2, a ship facing left 
 	 * 			is at angle Math.PI and a ship facing down is at angle 3*Math.PI/2. 
-	 * 
-	 * @pre 	This new ship can have the given orientation as its orientation. 
-	 * 			| canHaveAsOrientation(orientation)
-	 *      
-	 * @post 	The orientation of this new ship is equal to the given orientation.
-	 *       	| new.getOrientation() == orientation
 	 *       
-	 * @effect 	The radius of this new ship is set to the given radius. 
-	 * 			| this.setRadius(radius)
+	 * @post 	The radius of this new ship is equal to the given radius. 
+	 * 			| new.getRadius() == radius
 	 * 
-	 * 
+	 * @throws 	IllegalRadiusException
+	 *          The given radius is not a valid radius for any ship. 
+	 *          | ! isValidRadius(getRadius()) 
 	 * 
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
 				throws IllegalArgumentException {
 		this.setPosition(x, y);
 		this.setShipVelocity(xVelocity,yVelocity);
-		this.setRadius(radius);
+		if (!canHaveAsRadius(radius))
+			throw new IllegalArgumentException();
+		this.radius = radius;
 		this.setOrientation(orientation);
 	}
 	
@@ -74,7 +72,7 @@ public class Ship {
 	 * 			centered on (0, 0) facing right and with speed zero.
 	 */
 	public Ship() {
-		this(0,0,0,0,minRadius,0);
+		this(0,0,0,0,getMinRadius(),0);
 	}
 
 		
@@ -91,9 +89,9 @@ public class Ship {
 	@Basic
 	@Raw
 	@Immutable
-	public void setOrientation(double orientation) {
+	private void setOrientation(double orientation) {
 		assert this.canHaveAsOrientation(orientation);
-		
+
 		this.orientation = orientation;
 	}
 	
@@ -127,12 +125,6 @@ public class Ship {
 	}
 
 	/**
-	 * Variable registering the orientation of this ship.
-	 */
-	private final double orientation;
-	
-
-	/**
 	 * Return the radius of this ship.
 	 */
 	@Basic
@@ -152,47 +144,20 @@ public class Ship {
 	 * 			| result == radius >= MIN_RADIUS
 	 */
 	private static boolean canHaveAsRadius(double radius) {
-		return (radius > minRadius && !Double.isNaN(radius));
+		return (radius > getMinRadius() && !Double.isNaN(radius));
 	}
 
-	/**
-	 * Set the radius of this ship to the given radius.
-	 * the radius is given in kilometer.
-	 * 
-	 * @param 	radius
-	 *          The new radius for this ship.
-	 *          
-	 * @post 	The radius of this new ship is equal to the given radius. 
-	 * 			| new.getRadius() == radius
-	 * 
-	 * @throws 	IllegalRadiusException
-	 *          The given radius is not a valid radius for any ship. 
-	 *          | ! isValidRadius(getRadius())
-	 */
-	@Raw
-	private void setRadius(double radius) throws IllegalArgumentException {
-		if (!canHaveAsRadius(radius))
-			throw new IllegalArgumentException();
-		this.radius = radius;
-	}
 
 	/**
-	 * Variable registering the radius of this ship.
+	 * Return the lowest possible value for the radius of all ships.
+	 *
+	 * @return 	The lowest possible value for the radius of all ships is 10 km.
+	 *		 	| result == 10
 	 */
-	private final double radius;
-	
 	@Basic
-	public static int getMinRadius() {
+	private static int getMinRadius() {
 		return 10;
-	}
-	
-	/**
-	 * Variable registering the minimum radius of all ships.
-	 */
-	private static final double minRadius = getMinRadius();
-	
-	// Wordt nu MinRadius gebruikt als variabele of getMinRadius??? (zie DigitalClock)
-	
+	}	
 	
 	/**
 	 * Change the ship’s velocity based on the current velocity v, 
@@ -205,7 +170,7 @@ public class Ship {
 	 * 			| canHaveAsA(a)
 	 * 
 	 * @post	The new velocity is slower than or equals the speed of light.
-	 * 			| new velocity <= maxSpeed
+	 * 			| new velocity <= getMaxSpeed()
 	 * 
 	 * @post	The new velocity is equal to the calculated velocity, or when 
 	 * 			it exceeds the speed of light, it's reduced to the speed of light.
@@ -222,10 +187,10 @@ public class Ship {
 		double [] velocity = {getxVelocity(),getyVelocity()};
 		double orientation = this.getOrientation();
 			
-		double new_xVelocity = velocity[0] + a*Math.cos(orientation);
-		double new_yVelocity = velocity[1] + a*Math.sin(orientation);
+		double xVelocity = velocity[0] + a*Math.cos(orientation);
+		double yVelocity = velocity[1] + a*Math.sin(orientation);
 			
-		this.setShipVelocity(new_xVelocity, new_yVelocity);
+		this.setShipVelocity(xVelocity, yVelocity);
 	}	
 	
 	
@@ -304,7 +269,7 @@ public class Ship {
 	 * 			the method returns the x-position of the ship
 	 * 			| result == this.xPosition
 	 */
-	public double getxPosition(){
+	private double getxPosition(){
 		return this.xPosition;
 	}
 	
@@ -317,7 +282,7 @@ public class Ship {
 	 * 			| result == this.xPosition
 	 * 
 	 */
-	public double getyPosition(){
+	private double getyPosition(){
 		return this.yPosition;
 	}
 	
@@ -351,7 +316,7 @@ public class Ship {
 	 * 			| !canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition)
 	 * 
 	 */
-	public void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
+	private void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
 		if (!canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition))
 			throw new IllegalArgumentException();
 		
@@ -406,17 +371,17 @@ public class Ship {
 	 * 				yVelocity = 0 	
 	 * @post 	if the velocity exceeds the maximum speed, the velocity will be lowered, 
 	 * 			in such a way that the direction will stay the same
-	 * 			| if getShipSpeed() > maxSpeed
-	 * 			setShipPosition = getShipVelocity*maxSpeed/speed
+	 * 			| if getShipSpeed() > getMaxSpeed()
+	 * 			setShipPosition = getShipVelocity*getMaxSpeed()/speed
 	 */
-	public void setShipVelocity(double xVelocity,double yVelocity){
+	private void setShipVelocity(double xVelocity,double yVelocity){
 		if (!canHaveAsxVelocity(xVelocity))
 			xVelocity = 0;
 		if (!canHaveAsyVelocity(yVelocity))
 			yVelocity = 0;
 		if (!canHaveAsSpeed(this.getShipSpeed())){
-			this.xVelocity = xVelocity*maxSpeed/(this.getShipSpeed());
-			this.yVelocity = yVelocity*maxSpeed/(this.getShipSpeed());
+			this.xVelocity = xVelocity*getMaxSpeed()/(this.getShipSpeed());
+			this.yVelocity = yVelocity*getMaxSpeed()/(this.getShipSpeed());
 		}
 		if (canHaveAsSpeed(this.getShipSpeed())){
 			this.xVelocity = xVelocity;
@@ -443,7 +408,7 @@ public class Ship {
 	 * @return
 	 * 			returns the xVelocity of the ship in kilometer/s
 	 */
-	public double getxVelocity(){
+	private double getxVelocity(){
 		return this.xVelocity;
 	}
 	
@@ -454,7 +419,7 @@ public class Ship {
 	 * @return
 	 * 			returns the yVelocity of the ship in kilometer/s
 	 */
-	public double getyVelocity(){
+	private double getyVelocity(){
 		return this.yVelocity;
 	}
 	
@@ -464,10 +429,10 @@ public class Ship {
 	 * @param 	speed
 	 * 			the speed the ship has at a given moment
 	 * @return 	true if and only if the speed is less or equal to the maximum speed=the speed of light
-	 * 			| result == speed>maxSpeed
+	 * 			| result == speed > getMaxSpeed()
 	 */
 	private boolean canHaveAsSpeed(double speed){
-		if (speed > maxSpeed || Double.isNaN(speed))
+		if (speed > getMaxSpeed() || Double.isNaN(speed) || speed > 0)
 			return false;
 		return true;
 	}
@@ -507,8 +472,7 @@ public class Ship {
 	public void move(double duration) throws IllegalArgumentException{
 		if (!canHaveAsDuration(duration))
 			throw new IllegalArgumentException();
-		setxPosition(getPositionAfterMoving(duration)[0]);
-		setyPosition(getPositionAfterMoving(duration)[1]);
+		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
 	}
 	
 	/**
@@ -516,7 +480,7 @@ public class Ship {
 	 * 			the duration of the movement			
 	 * @return the new position after moving in a list of two elements.
 	 */	
-	private double [] getPositionAfterMoving(double duration){
+	public double [] getPositionAfterMoving(double duration){
 			return new double[] {getxPosition()+getxVelocity()*duration,
 			getyPosition()+getyVelocity()*duration};	
 	}
@@ -550,17 +514,51 @@ public class Ship {
 		setOrientation(angle+getOrientation());	
 	}
 	
+	/**
+	 * Return the highest possible value for the speed of all ships.
+	 *
+	 * @return 	The highest possible value for the speed of all ships is the speed
+	 * 			of light = 30000 km/s.
+	 *		 	| result == 30000
+	 */
 	@Basic
-	public static int getMaxSpeed() {
+	private static int getMaxSpeed() {
 		return 30000;
 	}
 	
-	private static double maxSpeed = getMaxSpeed();
+	
+	
+	// DECLARATIE VARIABELEN
+	
+	
+	/**
+	 * Variable registering the orientation of this ship.
+	 */
+	private double orientation;
+	
+	/**
+	 * Variable registering the radius of this ship.
+	 */
+	private final double radius;
+	
+	/**
+	 * Variable registering the xPosition of this ship.
+	 */
 	private double xPosition;
+	
+	/**
+	 * Variable registering the yPosition of this ship.
+	 */
 	private double yPosition;
+	
+	/**
+	 * Variable registering the xVelocity of this ship.
+	 */
 	private double xVelocity;
+	
+	/**
+	 * Variable registering the yVelocity of this ship.
+	 */
 	private double yVelocity;
 	
-	// Geef max grenswaardes voor x en y (scherm grenzen) -> en pas aan bij canHaveAsyPosition() canHaveAsxPosition()
-	// Kan negatieve snelheid? (achteruit) -> indien niet: aanpassen canHaveAscVelocity en canHaveAsyVelocity()
 }
