@@ -116,7 +116,7 @@ public class Ship {
 	 * 				0 <= orientation && orientation < 2*Math.PI
 	 */
 	@Raw
-	private boolean canHaveAsOrientation(double orientation) {
+	public boolean canHaveAsOrientation(double orientation) {
 		if (Double.isNaN(orientation))
 			return false;
 		if (0 <= orientation && orientation < 2*Math.PI)
@@ -143,7 +143,7 @@ public class Ship {
 	 * 			minimum radius.
 	 * 			| result == radius >= MIN_RADIUS
 	 */
-	private static boolean canHaveAsRadius(double radius) {
+	public static boolean canHaveAsRadius(double radius) {
 		return (radius > getMinRadius() && !Double.isNaN(radius));
 	}
 
@@ -203,7 +203,7 @@ public class Ship {
 	 * @return	...
 	 * 			...
 	 */
-	private boolean canHaveAsA(double a){
+	public boolean canHaveAsA(double a){
 		return (a>0 && !Double.isNaN(a));
 	}
 	
@@ -333,7 +333,7 @@ public class Ship {
 	 * @return	true if and only if the x-position is greater than or equal to zero
 	 * 			|result == (xPosition >= 0)
 	 */
-	private boolean canHaveAsxPosition(double xPosition){
+	public static boolean canHaveAsxPosition(double xPosition){
 		if (xPosition < 0 || Double.isNaN(xPosition))
 			return false;
 		return true;
@@ -347,7 +347,7 @@ public class Ship {
 	 * @return	true if and only if the y-position is greater than or equal to zero
 	 * 			|result == (yPosition >= 0)
 	 */
-	private boolean canHaveAsyPosition(double yPosition){
+	public static boolean canHaveAsyPosition(double yPosition){
 		if (yPosition < 0 || Double.isNaN(yPosition))
 			return false;
 		return true;
@@ -389,13 +389,13 @@ public class Ship {
 		}
 	}
 	
-	private boolean canHaveAsxVelocity(double xVelocity){
+	public static boolean canHaveAsxVelocity(double xVelocity){
 		if (Double.isNaN(xVelocity) || xVelocity < 0)
 			return false;
 		return true;
 	}
 	
-	private boolean canHaveAsyVelocity(double yVelocity){
+	public static boolean canHaveAsyVelocity(double yVelocity){
 		if (Double.isNaN(yVelocity) || yVelocity < 0)
 			return false;
 		return true;
@@ -431,7 +431,7 @@ public class Ship {
 	 * @return 	true if and only if the speed is less or equal to the maximum speed=the speed of light
 	 * 			| result == speed > getMaxSpeed()
 	 */
-	private boolean canHaveAsSpeed(double speed){
+	public static boolean canHaveAsSpeed(double speed){
 		if (speed > getMaxSpeed() || Double.isNaN(speed) || speed > 0)
 			return false;
 		return true;
@@ -492,7 +492,7 @@ public class Ship {
 	 * @return	true if and only if the duration is greater than or equal to zero
 	 * 			| result == duration >= 0
 	 */
-	private boolean canHaveAsDuration(double duration){
+	public static boolean canHaveAsDuration(double duration){
 		if (duration < 0 || Double.isNaN(duration))
 			return false;
 		return true;
