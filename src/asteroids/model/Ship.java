@@ -561,4 +561,192 @@ public class Ship {
 	 */
 	private double yVelocity;
 	
+	/**
+	 * A method that gives the time between a collision of 2 ships
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to see if this ship collides
+	 * @post	the time to collision will be positive infinity if the ships are moving away from each other
+	 * 			|if this.getDeltaDistanceVelocity(other) >= 0
+	 * 				timeToCollision = Double.POSITIVE_INFINITY
+	 * @post 	the time to collision will be positive infinity if the ships are never separetad 	
+	 * 			by less than the sum of there radii
+	 * 			|if this.getD <= 0
+	 * 				timeToCollision = Double.POSITIVE_INFINITY
+	 * @post	the time to collision will have a value if the previous conditions where false
+	 * 			|timeToCollision =  -(getDeltaDistanceVelocity(other)+
+	 * 								Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */
+	private double getTimeToCollision(Ship other) throws NullPointerException{
+		double timeToCollision;
+		if (this.getDeltaDistanceVelocity(other) >= 0)
+			timeToCollision = Double.POSITIVE_INFINITY;
+		if (other == null || this == null)
+			throw new NullPointerException();
+		if (getD(other) <= 0)
+			timeToCollision = Double.POSITIVE_INFINITY;
+		else
+			timeToCollision = -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other);
+			// d will be negatif if the ships overlap
+		return timeToCollision;
+	}
+	
+	/**
+	 * a method that calculates the distance in x- and y-direction between the centra of the ships 
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate the difference with
+	 * @post 	the deltaDistance will be a list of the difference between the 2 centra of the ship
+	 * 			|deltaDistance =  {other.getxPosition()-this.getxPosition(),
+				other.getyPosition()-this.getyPosition()}
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */
+	private double [] getDeltaDistance(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		double [] deltaDistance = {other.getxPosition()-this.getxPosition(),
+				other.getyPosition()-this.getyPosition()};
+		return deltaDistance;
+	}
+	
+	/**
+	 * a method that calculates the difference in velocity in x- and y-direction between two ships 
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate the difference with
+	 * @post 	the deltaVelocity will be a list of the difference in velocitybetween the 2 ships
+	 * 			| deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
+				other.getyVelocity()-this.getyVelocity()};
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */	
+	private double [] getDeltaVelocity(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		double [] deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
+				other.getyVelocity()-this.getyVelocity()};
+		return deltaVelocity;
+	}
+	
+	/**
+	 * a method that calculates the square of the difference in position between two ships 
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate the difference with
+	 * @post	the deltaPowDistance will be the sum of the squares of the x- and y- in 
+	 * 			distance between the centra of the ships
+	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
+					Math.pow(getDeltaDistance(other)[1],2);
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */		
+	private double getDeltaPowDistance(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		double deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
+					Math.pow(getDeltaDistance(other)[1],2);
+		return deltaPowDistance;
+	}
+
+	/**
+	 * a method that calculates the square of the difference in velocity between two ships 
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate the difference with
+	 * @post	the deltaPowVelocity will be the sum of the squares of the x- and y- difference in 
+	 * 			velocity between the ships
+	 * 			| double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
+					Math.pow(getDeltaVelocity(other)[1], 2);
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */		
+	private double getDeltaPowVelocity(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
+					Math.pow(getDeltaVelocity(other)[1], 2);
+		return deltaPowVelocity;
+	}
+	
+	/**
+	 * a method that calculates the scalarProduct of the difference in position and velocity between two ships 
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate the difference with
+	 * @post 	the deltaDistanceVelocity will be the sum of the product of x- and y-distance and
+	 * 			difference in velocity of the two ships
+	 * 			| deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
+					(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */			
+	private double getDeltaDistanceVelocity(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		double deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
+						(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+		return deltaDistanceVelocity;
+	}
+	/**
+	 * a method that calculates d between two ships 
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate d with
+	 * @post 	the d will be thee square of the deltaDistanceVelocitylowered by the product of 
+	 * 			the deltaPowVelocity with the difference between deltaPowVelocity and 
+	 * 			the distance between the two ships
+	 * 			| d = Math.pow(getDeltaDistanceVelocity(other),2)-
+					(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 */		
+	private double getD(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		double d = Math.pow(getDeltaDistanceVelocity(other),2)-
+					(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
+		return d;
+	}
+	/**
+	 * 
+	 * @param 	other
+	 * 			a second ship with which you want to calculate the collision position with
+	 * @post 	the collisionPoint will be the point where the two ships hit 
+	 * 			| collisionPoint = this.getPositionAfterMoving(time)+
+									this.getRadius()*getDeltaDistance(other)/getD(other),
+	 * @throws 	NullPointerException
+	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			| other == null || this == null
+	 * the method will try to calculate the hitting point, if they neve hit each other, 
+	 * we will catch it with an IllegalArgumentException
+	 */
+	private double [] getCollisionPosition(Ship other) throws NullPointerException{
+		if (other == null || this == null)
+			throw new NullPointerException();
+		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
+			throw new IllegalArgumentException();
+		try{
+			double time = this.getTimeToCollision(other);		
+		double [] collisionPoint = {this.getPositionAfterMoving(time)[0]+
+									this.getRadius()*getDeltaDistance(other)[0]/getD(other),
+									this.getPositionAfterMoving(time)[1]+
+									this.getRadius()*getDeltaDistance(other)[1]/getD(other)};
+		// position of hit = 	position of ship after moving till contact+
+		//						(difference in centra qua x-and y direction*
+		// 						radius of the first schip/distance two centra)
+		return collisionPoint;
+		} catch (IllegalArgumentException noCollision) {
+			return null;
+		}
+	}
 }
