@@ -151,10 +151,7 @@ public class Facade implements IFacade {
 	 */
 	public double getTimeToCollision(Ship ship1, Ship ship2) throws ModelException {
 		try {
-			// dummy implementatie
-			double random_double = 0;
-			return random_double;
-			//return ship1.getTimeToCollision(ship2);
+			return ship1.getTimeToCollision(ship2);
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
@@ -171,10 +168,7 @@ public class Facade implements IFacade {
 	 */
 	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException {
 		try {
-			// dummy implementatie
-			double[] random_double = {0,0};
-			return random_double;
-			//return ship1.getTimeToCollision(ship2);
+			return ship1.getCollisionPosition(ship2);
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}

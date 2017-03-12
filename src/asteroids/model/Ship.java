@@ -91,7 +91,6 @@ public class Ship {
 	@Immutable
 	private void setOrientation(double orientation) {
 		assert this.canHaveAsOrientation(orientation);
-
 		this.orientation = orientation;
 	}
 	
@@ -178,19 +177,21 @@ public class Ship {
 	 * 
 	 */
 	public void thrust(double a) {
-		
-		if (!canHaveAsA(a)){
-			a = 0;
-			return;
+		if (this != null){
+			
+			if (!canHaveAsA(a)){
+				a = 0;
+				return;
+			}
+			
+			double [] velocity = {getxVelocity(),getyVelocity()};
+			double orientation = this.getOrientation();
+				
+			double xVelocity = velocity[0] + a*Math.cos(orientation);
+			double yVelocity = velocity[1] + a*Math.sin(orientation);
+				
+			this.setShipVelocity(xVelocity, yVelocity);
 		}
-		
-		double [] velocity = {getxVelocity(),getyVelocity()};
-		double orientation = this.getOrientation();
-			
-		double xVelocity = velocity[0] + a*Math.cos(orientation);
-		double yVelocity = velocity[1] + a*Math.sin(orientation);
-			
-		this.setShipVelocity(xVelocity, yVelocity);
 	}	
 	
 	
@@ -222,7 +223,7 @@ public class Ship {
 	 * 
 	 */
 	public double getDistanceBetween(Ship ship) throws NullPointerException{
-		if (ship == null)
+		if (ship == null || this == null)
 			throw new NullPointerException();
 		
 		double new_x = this.getxPosition() - ship.getxPosition();
@@ -247,7 +248,7 @@ public class Ship {
 	 * 			| ship == null
 	 */
 	public boolean overlap(Ship ship) throws NullPointerException {
-		if (ship == null)
+		if (ship == null || this == null)
 			throw new NullPointerException();
 		
 		if (this.getDistanceBetween(ship) <= 0)
@@ -334,7 +335,7 @@ public class Ship {
 	 * 			|result == (xPosition >= 0)
 	 */
 	public static boolean canHaveAsxPosition(double xPosition){
-		if (xPosition < 0 || Double.isNaN(xPosition))
+		if (Double.isNaN(xPosition))
 			return false;
 		return true;
 	}
@@ -348,7 +349,7 @@ public class Ship {
 	 * 			|result == (yPosition >= 0)
 	 */
 	public static boolean canHaveAsyPosition(double yPosition){
-		if (yPosition < 0 || Double.isNaN(yPosition))
+		if (Double.isNaN(yPosition))
 			return false;
 		return true;
 	}
@@ -390,13 +391,13 @@ public class Ship {
 	}
 	
 	public static boolean canHaveAsxVelocity(double xVelocity){
-		if (Double.isNaN(xVelocity) || xVelocity < 0)
+		if (Double.isNaN(xVelocity))
 			return false;
 		return true;
 	}
 	
 	public static boolean canHaveAsyVelocity(double yVelocity){
-		if (Double.isNaN(yVelocity) || yVelocity < 0)
+		if (Double.isNaN(yVelocity))
 			return false;
 		return true;
 	}
@@ -432,7 +433,7 @@ public class Ship {
 	 * 			| result == speed > getMaxSpeed()
 	 */
 	public static boolean canHaveAsSpeed(double speed){
-		if (speed > getMaxSpeed() || Double.isNaN(speed) || speed > 0)
+		if (speed > getMaxSpeed() || Double.isNaN(speed) || speed < 0)
 			return false;
 		return true;
 	}
@@ -580,7 +581,7 @@ public class Ship {
 	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
 	 * 			| other == null || this == null
 	 */
-	private double getTimeToCollision(Ship other) throws NullPointerException{
+	public double getTimeToCollision(Ship other) throws NullPointerException{
 		double timeToCollision;
 		if (this.getDeltaDistanceVelocity(other) >= 0)
 			timeToCollision = Double.POSITIVE_INFINITY;
@@ -635,7 +636,8 @@ public class Ship {
 	}
 	
 	/**
-	 * a method that calculates the square of the difference in position between two ships 
+	 * a method that calculates the square of the difference in position between 
+	 * the centres of the two ships 
 	 * 
 	 * @param 	other
 	 * 			a second ship with which you want to calculate the difference with
@@ -730,7 +732,7 @@ public class Ship {
 	 * the method will try to calculate the hitting point, if they neve hit each other, 
 	 * we will catch it with an IllegalArgumentException
 	 */
-	private double [] getCollisionPosition(Ship other) throws NullPointerException{
+	public double [] getCollisionPosition(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
 		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
