@@ -159,16 +159,18 @@ public class TestsPart1 {
 		assertEquals(7,ship.getPosition()[1],EPSILON);	
 	}
 	
+	
 	@Test
 	public void testGetVelocity(){
 		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
 		assertNotNull(ship.getVelocity()[0]);
 		assertNotNull(ship.getVelocity()[1]);
-		assertEquals(-3.1235,ship.getVelocity()[0],EPSILON);
-		assertNotEquals(5,ship.getVelocity()[0],EPSILON);
-		assertEquals(999999,ship.getVelocity()[1],EPSILON);
+		assertEquals(-0.937050937046366,ship.getVelocity()[0],EPSILON);
+		assertNotEquals(456158,ship.getVelocity()[0],EPSILON);
+		assertEquals(300000,ship.getVelocity()[1],EPSILON);
 		assertNotEquals(7,ship.getVelocity()[1],EPSILON);	
 	}
+	
 	
 	@Test
 	public void testCanHaveAsSpeed(){

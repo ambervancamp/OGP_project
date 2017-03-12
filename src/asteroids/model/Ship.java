@@ -72,7 +72,7 @@ public class Ship {
 	 * 
 	 * @post 	If the velocity in y-direction is not accepted, the velocity will 
 	 * 			be set at 0
-	 * 			| if if (!canHaveAsyVelocity(yVelocity))
+	 * 			| if (!canHaveAsyVelocity(yVelocity))
 	 * 				then yVelocity = 0 	
 	 * 
 	 * @post 	If the speed exceeds the maximum speed, the speed will be lowered, 
@@ -146,7 +146,7 @@ public class Ship {
 	@Raw
 	@Immutable
 	private void setOrientation(double orientation) {
-		assert this.canHaveAsOrientation(orientation);
+		assert canHaveAsOrientation(orientation);
 		this.orientation = orientation;
 	}
 	
@@ -190,14 +190,13 @@ public class Ship {
 
 	/**
 	 * Check whether the given radius is a valid radius for any ship.
-	 * The radius is given in kilometer.
 	 * 
 	 * @param 	radius
 	 *          The radius to check.
 	 *          
 	 * @return 	Returns true if and only if the radius is a number bigger 
 	 * 			than or equal to the minimum radius.
-	 * 			| result == (radius >= MIN_RADIUS && !Double.isNaN(radius))
+	 * 			| result == (radius >= getMinRadius() && !Double.isNaN(radius))
 	 */
 	public static boolean canHaveAsRadius(double radius) {
 		return (radius >= getMinRadius() && !Double.isNaN(radius));
@@ -222,17 +221,22 @@ public class Ship {
 	 * @param 	a
 	 * 			Given factor to accelerate this ship.
 	 * 
-	 * @post	a is larger then 0.
-	 * 			| canHaveAsA(a)
+	 * @post	A must be valid, if not, it's set to 0 and the ship will
+	 * 			not accelerate.
+	 * 			| if (!canHaveAsA(a))
+	 *				then a = 0;
 	 * 
 	 * @post	The new velocity is slower than or equals getMaxSpeed().
 	 * 			| new velocity <= getMaxSpeed()
 	 * 
-	 * @post	The new velocity is equal to the calculated velocity, or when 
+	 * @post	The new velocity is equal to the calculated velocity. Or when 
 	 * 			it exceeds getMaxSpeed, it's reduced to getMaxSpeed.
-	 * 			| if getSpeed() > getMaxSpeed()
-	 * 				then setPosition = getVelocity*getMaxSpeed()/speed
-	 * 
+	 * 			|new.getxVelocity = xVelocity;
+	 *			|new.getyVelocity = yVelocity;
+	 *			|if (!canHaveAsSpeed(this.getSpeed())){
+	 *			|	new.getxVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
+	 *			|	new.getyVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
+	
 	 */
 	public void thrust(double a) {
 		if (this != null){
@@ -254,13 +258,14 @@ public class Ship {
 	
 	
 	/**
-	 * ...
+	 * Check whether the given factor a is a valid factor a for any ship.
 	 * 
 	 * @param 	a
-	 * 			...
+	 * 			Factor that determines how much to accelerate a ship.
 	 * 
-	 * @return	...
-	 * 			...
+	 * @return	Returns true if and only if a is a number bigger 
+	 * 			than or equal to 0.
+	 * 			| result == (a>=0 && !Double.isNaN(a)))
 	 */
 	public static boolean canHaveAsA(double a){
 		return (a>=0 && !Double.isNaN(a));
@@ -270,9 +275,14 @@ public class Ship {
 	/**
 	 * 
 	 * Return the distance between the given ship and this ship.
+	 * The distance may be negative if both ships overlap
 	 * 
 	 * @param	ship
-	 * 			The given ship.
+	 * 			The given ship. 
+	 * 
+	 * @post	The distance between a ship and itself is zero.
+	 * 			| if (distance == (-2*this.getRadius()))
+	 *				then return 0;		
 	 * 
 	 * @throws	NullPointerException()
 	 * 			The given ship must exist.
@@ -301,6 +311,9 @@ public class Ship {
 	 * @param 	ship
 	 * 			The given ship.
 	 * 
+	 * @return	Ships overlap if the distance between them is less then or equals 0.
+	 * 			| result == this.getDistanceBetween(ship) <= 0
+	 * 
 	 * @throws 	NullPointerException()
 	 * 			The given ship must exist.
 	 * 			| ship == null
@@ -309,10 +322,7 @@ public class Ship {
 		if (ship == null || this == null)
 			throw new NullPointerException();
 		
-		if (this.getDistanceBetween(ship) <= 0)
-			return true;
-		
-		return false;
+		return this.getDistanceBetween(ship) <= 0;
 	}
 	
 	
@@ -321,11 +331,9 @@ public class Ship {
 		
 	
 	/**
-	 * a method that gives the x coordinate of the ship
-	 * The position is defined in kilometer.
+	 * A method that returns the x coordinate of the ship
 	 * 
-	 * @return 
-	 * 			the method returns the x-position of the ship
+	 * @return 	The method returns the x-position of the ship.
 	 * 			| result == this.xPosition
 	 */
 	private double getxPosition(){
@@ -333,11 +341,9 @@ public class Ship {
 	}
 	
 	/**
-	 * a method that gives the y coordinate of the ship
-	 * the position is defined in kilometer
-	 * 
-	 * @return 
-	 * 			the method returns the y-position of the ship
+	 * A method that returns the y coordinate of the ship.
+	 *  
+	 * @return 	The method returns the y-position of the ship.
 	 * 			| result == this.xPosition
 	 * 
 	 */
@@ -349,7 +355,8 @@ public class Ship {
 	/**
 	 * Calculate the x- and y-coordinate of the position of this ship.
 	 * 
-	 * @return
+	 * @return	The method returns the x-position and y-position of the ship as a double[].
+	 * 			| result == {this.getxPosition(), this.getyPosition()}
 	 */
 	public double[] getPosition(){
 		double[] position = {this.getxPosition(), this.getyPosition()};
@@ -365,10 +372,10 @@ public class Ship {
 	 * @param 	Position
 	 * 			Given y-position.
 	 * 
-	 * @post	the new x-position will be equal to the given x-position
+	 * @post	The new x-position will be equal to the given x-position
 	 * 			|new.getxPosition() == xPosition
 	 * 
-	 * @post	the new y-position will be equal to the given y-position
+	 * @post	The new y-position will be equal to the given y-position
 	 * 			|new.getyPosition() == yPosition
 	 * 
 	 * @throws 	IllegalArgumentException
@@ -386,53 +393,60 @@ public class Ship {
 	
 	
 	/**
-	 * checks whether the given x-position is within the boundary of the play field
+	 * Checks whether the given x-position is valid.
 	 *  
 	 * @param 	xPosition
-	 * 			the given x-position of the ship to check
-	 * @return	true if and only if the x-position is a number.
-	 * 			|result == (xPosition != Double.isNan(xPosition))
+	 * 			The given x-position of the ship to check.
+	 * 
+	 * @return	True if and only if the x-position is a number.
+	 * 			|result == !Double.isNan(xPosition)
 	 */
 	public static boolean canHaveAsxPosition(double xPosition){
-		if (Double.isNaN(xPosition))
-			return false;
-		return true;
+		return !Double.isNaN(xPosition);
 	}
 	
 	/**
-	 * checks whether the given y-position is within the boundary of the play field
+	 * Checks whether the given y-position is valid.
 	 *  
 	 * @param 	yPosition
-	 * 			the given y-position of the ship to check.
-	 * @return	true if and only if the y-position is a number.
-	 * 			|result == (yPosition != Double.isNan(yPosition))
+	 * 			The given y-position of the ship to check.
+	 * 
+	 * @return	True if and only if the y-position is a number.
+	 * 			|result == != Double.isNan(yPosition)
 	 */
 	public static boolean canHaveAsyPosition(double yPosition){
-		if (Double.isNaN(yPosition))
-			return false;
-		return true;
+		return !Double.isNaN(yPosition);
 	}
 	
 	/**
-	 * a method that sets the velocity of the spaceship
+	 * Sets the velocity of the spaceship to the given velocity.
 	 * 
 	 * @param 	xVelocity
-	 * 			the velocity of the ship in the x-direction, in km/s
-	 * @param	yVelocity
-	 * 			the velocity of the ship in the y-direction, in km/s
+	 * 			The velocity of the ship in the x-direction, in kilometer/second.
 	 * 
-	 * @post 	if the velocity in x-direction is not accepted,
-	 * 			the velocity well be set at 0
+	 * @param	yVelocity
+	 * 			The velocity of the ship in the y-direction, in kilometer/second.
+	 * 
+	 * @post 	If the velocity in x-direction is not accepted,
+	 * 			the velocity well be set at 0.
 	 * 			| if (!canHaveAsxVelocity(xVelocity)) 
 	 * 				then xVelocity() = 0 	
-	 * @post 	if the velocity in y-direction is not accepted,
-	 * 			the velocity well be set at 0
+	 * 
+	 * @post 	If the velocity in y-direction is not accepted,
+	 * 			the velocity well be set at 0.
 	 * 			| if if (!canHaveAsyVelocity(yVelocity))
 	 * 				then yVelocity = 0 	
-	 * @post 	if the speed exceeds the maximum speed, the speed will be lowered, 
-	 * 			in such a way that the direction will stay the same
-	 * 			| if getSpeed() > getMaxSpeed()
-	 * 			setPosition = getVelocity*getMaxSpeed()/speed
+	 * 
+	 * @post	The new velocity is slower than or equals getMaxSpeed().
+	 * 			| new velocity <= getMaxSpeed()
+	 * 
+	 * @post	The new velocity is equal to the calculated velocity. Or when 
+	 * 			it exceeds getMaxSpeed, it's reduced to getMaxSpeed.
+	 * 			|new.getxVelocity = xVelocity;
+	 *			|new.getyVelocity = yVelocity;
+	 *			|if (!canHaveAsSpeed(this.getSpeed())){
+	 *			|	new.getxVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
+	 *			|	new.getyVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
 	 */
 	public void setVelocity(double xVelocity,double yVelocity){
 		if (!canHaveAsxVelocity(xVelocity))
@@ -450,58 +464,73 @@ public class Ship {
 		
 	}
 	
-	public static boolean canHaveAsxVelocity(double xVelocity){
-		if (Double.isNaN(xVelocity))
-			return false;
-		return true;
-	}
 	
-	public static boolean canHaveAsyVelocity(double yVelocity){
-		if (Double.isNaN(yVelocity))
-			return false;
-		return true;
+	/**
+	 * Check whether the given xVelocity is a valid xVelocity for any ship.
+	 * 
+	 * @param 	xVelocity
+	 *          The xVelocity to check.
+	 *          
+	 * @return 	Returns true if and only if the xVelocity is a number.
+	 * 			| result == !Double.isNaN(xVelocity)
+	 */
+	public static boolean canHaveAsxVelocity(double xVelocity){
+		return !Double.isNaN(xVelocity);
 	}
 	
 	/**
-	 * a method that gives the velocity of the given ship in x-direction
-	 * the velocity is defined in kilometer/s
+	 * Checks whether the given y-velocity is valid.
+	 *  
+	 * @param 	yVelocity
+	 * 			The given yVelocity of the ship to check.
 	 * 
-	 * @return
-	 * 			returns the xVelocity of the ship in kilometer/s
+	 * @return	True if and only if the y-velocity is a number.
+	 * 			|result == != Double.isNan(yVelocity)
+	 */
+	public static boolean canHaveAsyVelocity(double yVelocity){
+		return !Double.isNaN(yVelocity);
+	}
+	
+	/**
+	 * Gives the velocity of the given ship in x-direction.
+	 * 
+	 * @return 	Returns the xVelocity of the ship in kilometer/second.
+	 * 			|result == new.xVelocity
+	 * 
 	 */
 	private double getxVelocity(){
 		return this.xVelocity;
 	}
 	
 	/**
-	 * a method that gives the velocity of the given ship in y-direction
-	 * the velocity is defined in kilometer/s
+	 * Gives the velocity of the given ship in y-direction.
 	 * 
-	 * @return
-	 * 			returns the yVelocity of the ship in kilometer/s
+	 * @return 	Returns the yVelocity of the ship in kilometer/second.
+	 * 			|result == new.yVelocity
+	 * 
 	 */
 	private double getyVelocity(){
 		return this.yVelocity;
 	}
 	
 	/**
-	 * checks whether the speed is a possible speed
+	 * Checks whether the speed is a possible speed
 	 * 
 	 * @param 	speed
-	 * 			the speed the ship has at a given moment
-	 * @return 	true if and only if the speed is less or equal to the maximum speed=the speed of light
-	 * 			| result == speed > getMaxSpeed()
+	 * 			The given speed to check.
+	 * 
+	 * @return 	True if and only if the speed is a number, less or equal 
+	 * 			to the maximum speed, and bigger then 0.
+	 * 			| result == speed <= getMaxSpeed() && !Double.isNaN(speed) && speed >= 0
 	 */
 	public static boolean canHaveAsSpeed(double speed){
-		if (speed > getMaxSpeed() || Double.isNaN(speed) || speed < 0)
-			return false;
-		return true;
+		return (speed <= getMaxSpeed() && !Double.isNaN(speed) && speed >= 0);
 	}
 	
 	/**
-	 * A method that calculates the total speed of a ship
+	 * A method that calculates the total speed of a ship.
 	 * 
-	 * @effect 	calculates the root of the sum of squares of the x- and y-velocity
+	 * @effect 	Calculates the root of the sum of squares of the x- and y-velocity.
 	 * 			|Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2))
 	 */
 	private double  getSpeed(){
@@ -510,9 +539,10 @@ public class Ship {
 	}
 	
 	/**
-	 * Calculate the x- and y-coordinate of the velocity of this ship.
+	 * Return the x- and y-coordinate of the velocity of this ship.
 	 * 
-	 * @return
+	 * @return	Returns the x- and y-coordinate of the velocity of this ship as a double[].
+	 * 			| result == {this.getxVelocity(), this.getyVelocity()}
 	 */
 	public double[] getVelocity(){
 		double[] velocity = {this.getxVelocity(), this.getyVelocity()};
@@ -520,11 +550,16 @@ public class Ship {
 	}
 	
 	/**
-	 *
+	 * Change the position of the ship based on the current position, 
+	 * velocity and a given time duration. 
+	 * 
 	 * @param 	duration
-	 * 			The duration of the movement
-	 * @post 	the position of the ship will be changed to the new position after the given time, speed and direction
-	 * 			| 
+	 * 			The duration of the movement.
+	 * 
+	 * @post 	The position of the ship will be changed to the 
+	 * 			new position after the given time, speed and direction
+	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
+	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			the duration is not a valid duration
 	 * 			|(!isValidDuration(duration))
@@ -537,36 +572,45 @@ public class Ship {
 	}
 	
 	/**
+	 * Get the position of a ship after it's moved.
+	 * 
 	 * @param 	duration
-	 * 			the duration of the movement			
-	 * @return the new position after moving in a list of two elements.
+	 * 			The duration of the movement.
+	 * 			
+	 * @return 	The new position after moving as a double[].
+	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
+	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
+	 * 			
 	 */	
 	public double [] getPositionAfterMoving(double duration){
 			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
-			getPosition()[0]+getVelocity()[0]*duration};	
+			getPosition()[1]+getVelocity()[1]*duration};	
 	}
 	/**
-	 * checks whether the duration of the movement is a possible duration
+	 * Checks whether the duration of the movement is a valid duration.
 	 * 
 	 * @param 	duration
-	 * 			the duration of the movement
-	 * @return	true if and only if the duration is greater than or equal to zero
-	 * 			| result == duration >= 0
+	 * 			The duration of the movement.
+	 * 
+	 * @return	True if and only if the duration is a number, 
+	 * 			greater than or equal to zero.
+	 * 			| result == duration >= 0 && !Double.isNaN(duration)
 	 */
 	public static boolean canHaveAsDuration(double duration){
-		if (duration < 0 || Double.isNaN(duration))
-			return false;
-		return true;
+		return (duration >= 0 && !Double.isNaN(duration));
 	}
 	
 	/**
-	 * a method that turns the ship around according to the given angle
+	 * A method that turns the ship according to the given angle.
 	 * 
 	 * @param 	angle
-	 * 			the angle where there need to be turned around
-	 * @pre 	the ship can have the extra angle as a possible angle
+	 * 			The angle to turn.
+	 * 
+	 * @pre 	The ship can have the total angle as a valid angle.
 	 * 			| canHaveAsOrientation(angle+getOrientation)
-	 * @post	the new orientation will be changed to the sum of the previous and the new angle
+	 * 
+	 * @post	The new orientation will be changed to the sum of the previous 
+	 * 			and the new angle.
 	 * 			|new.getOrientation() == angle+getOrientation()
 	 * 			
 	 */
@@ -584,7 +628,7 @@ public class Ship {
 	 */
 	@Basic
 	private static int getMaxSpeed() {
-		return 30000;
+		return 300000;
 	}
 	
 	
@@ -623,25 +667,20 @@ public class Ship {
 	private double yVelocity;
 	
 	/**
-	 * A method that gives the time between a collision of 2 ships. This method does not apply on two
-	 * ships that overlap.
+	 * A method that gives the time between a collision of 2 ships. 
+	 * This method does not apply on two ships that overlap.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to see if this ship collides
+	 * 			A second ship to check if this ship collides with.
 	 * 
-	 * @effect	
-	 * @post	the time to collision will be positive infinity if the ships are moving away from each other
-	 * 			|if this.getDeltaDistanceVelocity(other) >= 0
-	 * 				timeToCollision = Double.POSITIVE_INFINITY
-	 * @post 	the time to collision will be positive infinity if the ships are never separetad 	
-	 * 			by less than the sum of there radii
-	 * 			|if this.getD <= 0
-	 * 				timeToCollision = Double.POSITIVE_INFINITY
-	 * @post	the time to collision will have a value if the previous conditions where false
-	 * 			|timeToCollision =  -(getDeltaDistanceVelocity(other)+
-	 * 								Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
+	 * @effect	Returns the time until collision with the other ship.
+	 * 			| new.getTimeToCollision == timeToCollision
+	 * 
+	 * @effect 	The time will be positive infinity if the ships will never collide.
+	 * 			| new.getTimeToCollision == Double.POSITIVE_INFINITY
+	 * 
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			Throw a NullPointerException if one of the 2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */
 	public double getTimeToCollision(Ship other) throws NullPointerException{
@@ -659,15 +698,20 @@ public class Ship {
 	}
 	
 	/**
-	 * a method that calculates the distance in x- and y-direction between the centra of the ships 
+	 * A method that calculates the distance in x- and y-direction between the 
+	 * centres of the ships.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate the difference with
-	 * @post 	the deltaDistance will be a list of the difference between the 2 centra of the ship
+	 * 			The second ship to check the distance between.
+	 * 
+	 * @post 	The deltaDistance will be a list of the difference between 
+	 * 			the 2 centres of the ship.
 	 * 			|deltaDistance =  {other.getxPosition()-this.getxPosition(),
-				other.getyPosition()-this.getyPosition()}
+	 *			other.getyPosition()-this.getyPosition()}
+	 *			
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			the method will throw a NullPointerException if one of the 2 ships 
+	 * 			doesn't exist
 	 * 			| other == null || this == null
 	 */
 	private double [] getDeltaDistance(Ship other) throws NullPointerException{
@@ -679,15 +723,20 @@ public class Ship {
 	}
 	
 	/**
-	 * a method that calculates the difference in velocity in x- and y-direction between two ships 
+	 * A method that calculates the difference in velocity in x- and y-direction 
+	 * between two ships.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate the difference with
-	 * @post 	the deltaVelocity will be a list of the difference in velocitybetween the 2 ships
+	 * 			The second ship to check the difference in velocity between.
+	 * 
+	 * @post 	The deltaVelocity will be a double[] of the difference in 
+	 * 			velocity between the 2 ships.
 	 * 			| deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
-				other.getyVelocity()-this.getyVelocity()};
+	 *			other.getyVelocity()-this.getyVelocity()};
+	 *
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */	
 	private double [] getDeltaVelocity(Ship other) throws NullPointerException{
@@ -699,17 +748,20 @@ public class Ship {
 	}
 	
 	/**
-	 * a method that calculates the square of the difference in position between 
-	 * the centres of the two ships 
+	 * A method that calculates the square of the difference in position between 
+	 * the centres of the two ships.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate the difference with
-	 * @post	the deltaPowDistance will be the sum of the squares of the x- and y- in 
-	 * 			distance between the centra of the ships
+	 * 			The second ship to check the square of the difference in position between.
+	 * 
+	 * @post	The deltaPowDistance will be the sum of the squares of the x- and y- in 
+	 * 			distance between the centres of the ships.
 	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
-					Math.pow(getDeltaDistance(other)[1],2);
+	 *				Math.pow(getDeltaDistance(other)[1],2);
+	 *				
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			the method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */		
 	private double getDeltaPowDistance(Ship other) throws NullPointerException{
@@ -721,16 +773,20 @@ public class Ship {
 	}
 
 	/**
-	 * a method that calculates the square of the difference in velocity between two ships 
+	 * A method that calculates the square of the difference in velocity 
+	 * between two ships.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate the difference with
-	 * @post	the deltaPowVelocity will be the sum of the squares of the x- and y- difference in 
-	 * 			velocity between the ships
+	 * 			The second ship to check the square of the difference in velocity between.
+	 * 
+	 * @post	The deltaPowVelocity will be the sum of the squares of the x- and 
+	 * 			y- difference in velocity between the ships.
 	 * 			| double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
-					Math.pow(getDeltaVelocity(other)[1], 2);
+	 *				Math.pow(getDeltaVelocity(other)[1], 2);
+	 *
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */		
 	private double getDeltaPowVelocity(Ship other) throws NullPointerException{
@@ -742,16 +798,21 @@ public class Ship {
 	}
 	
 	/**
-	 * a method that calculates the scalarProduct of the difference in position and velocity between two ships 
+	 * A method that calculates the scalarProduct of the difference 
+	 * in position and velocity between two ships.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate the difference with
-	 * @post 	the deltaDistanceVelocity will be the sum of the product of x- and y-distance and
-	 * 			difference in velocity of the two ships
+	 * 			The second ship to check the scalarProduct of the difference 
+	 * 			in position and velocity between.
+	 * 
+	 * @post 	The deltaDistanceVelocity will be the sum of the product of x- and 
+	 * 			y-distance and difference in velocity of the two ships.
 	 * 			| deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
-					(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+	 *				(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+	 *
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			The method will throw a nullpointerexception if one of the 
+	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */			
 	private double getDeltaDistanceVelocity(Ship other) throws NullPointerException{
@@ -762,17 +823,20 @@ public class Ship {
 		return deltaDistanceVelocity;
 	}
 	/**
-	 * a method that calculates d between two ships 
+	 * A method that calculates d between two ships.
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate d with
-	 * @post 	the d will be thee square of the deltaDistanceVelocitylowered by the product of 
-	 * 			the deltaPowVelocity with the difference between deltaPowVelocity and 
-	 * 			the distance between the two ships
+	 * 			A second ship with which you want to calculate d with.
+	 * 
+	 * @post 	The d will be the square of the deltaDistanceVelocitylowered by the 
+	 * 			product of the deltaPowVelocity with the difference between 
+	 * 			deltaPowVelocity and the distance between the two ships.
 	 * 			| d = Math.pow(getDeltaDistanceVelocity(other),2)-
-					(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
+	 *				(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
+	 *
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */		
 	private double getD(Ship other) throws NullPointerException{
@@ -783,18 +847,22 @@ public class Ship {
 													-Math.pow((this.getRadius()+other.getRadius()),2));
 		return d;
 	}
+	
 	/**
+	 * Get the point of collision if two ships will ever collide. 
 	 * 
 	 * @param 	other
-	 * 			a second ship with which you want to calculate the collision position with
-	 * @post 	the collisionPoint will be the point where the two ships hit 
+	 * 			A second ship to calculate the collision position with.
+	 * 
+	 * @post 	The collisionPoint will be the point where the two ships hit.
 	 * 			| collisionPoint = this.getPositionAfterMoving(time)+
-									this.getRadius()*getDeltaDistance(other)/getD(other),
+									this.getRadius()*getDeltaDistance(other)/getD(other)
+									
 	 * @throws 	NullPointerException
-	 * 			the method will throw a nullpointerexception if one of the 2 ships doesn't exist
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
-	 * the method will try to calculate the hitting point, if they neve hit each other, 
-	 * we will catch it with an IllegalArgumentException
+	 * 
 	 */
 	public double [] getCollisionPosition(Ship other) throws NullPointerException{
 		if (other == null || this == null)
