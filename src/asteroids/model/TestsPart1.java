@@ -6,6 +6,67 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestsPart1 {
+	
+	@Test
+	public void testCanHaveAsOrientation(){
+		assertFalse(Ship.canHaveAsOrientation(-1));
+		assertFalse(Ship.canHaveAsOrientation(2*Math.PI));
+		assertFalse(Ship.canHaveAsOrientation(Double.NaN));
+		assertTrue(Ship.canHaveAsOrientation(0));
+		assertTrue(Ship.canHaveAsOrientation(2));
+
+	}
+	
+	@Test
+	public void testCanHaveAsRadius(){
+		assertFalse(Ship.canHaveAsRadius(0));
+		assertFalse(Ship.canHaveAsRadius(Double.NaN));
+		assertTrue(Ship.canHaveAsRadius(10));
+		assertTrue(Ship.canHaveAsRadius(15));
+	}
+	
+	@Test
+	public void testgetOrientation(){
+		Ship ship1 = new Ship(4,5,2,3,15,2);
+		Ship ship2 = new Ship();
+		assertNotNull(ship1.getOrientation());
+		assertNotNull(ship2.getOrientation());
+		assertEquals(2, ship1.getOrientation(),0.001);
+		assertEquals(0, ship2.getOrientation(),0.001);
+
+	}
+	
+	@Test
+	public void testGetRadius(){
+		Ship ship1 = new Ship(4,5,2,3,15,2);
+		Ship ship2 = new Ship();
+		assertNotNull(ship1.getRadius());
+		assertNotNull(ship2.getRadius());
+		assertEquals(15, ship1.getRadius(),0.001);
+		assertEquals(10, ship2.getRadius(),0.001);
+
+	}
+	
+	@Test
+	public void testCanHaveAsA() {
+		
+	}
+	
+	@Test
+	public void testGetDistanceBetween() {
+		
+	}
+	
+	@Test
+	public void testOverlap() {
+		
+	}
+	
+	// ANDER IEMAND
+	
+	
+	
+	
 	@Test
 	public void testCanHaveAsxPosition(){
 		assertFalse(Ship.canHaveAsxPosition(-1));

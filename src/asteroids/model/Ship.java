@@ -115,7 +115,7 @@ public class Ship {
 	 * 				0 <= orientation && orientation < 2*Math.PI
 	 */
 	@Raw
-	public boolean canHaveAsOrientation(double orientation) {
+	public static boolean canHaveAsOrientation(double orientation) {
 		if (Double.isNaN(orientation))
 			return false;
 		if (0 <= orientation && orientation < 2*Math.PI)
@@ -143,7 +143,7 @@ public class Ship {
 	 * 			| result == radius >= MIN_RADIUS
 	 */
 	public static boolean canHaveAsRadius(double radius) {
-		return (radius > getMinRadius() && !Double.isNaN(radius));
+		return (radius >= getMinRadius() && !Double.isNaN(radius));
 	}
 
 
