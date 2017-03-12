@@ -45,7 +45,7 @@ public class Ship {
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation)
 				throws IllegalArgumentException {
 		this.setPosition(x, y);
-		this.setShipVelocity(xVelocity,yVelocity);
+		this.setVelocity(xVelocity,yVelocity);
 		if (!canHaveAsRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
@@ -190,7 +190,7 @@ public class Ship {
 			double xVelocity = velocity[0] + a*Math.cos(orientation);
 			double yVelocity = velocity[1] + a*Math.sin(orientation);
 				
-			this.setShipVelocity(xVelocity, yVelocity);
+			this.setVelocity(xVelocity, yVelocity);
 		}
 	}	
 	
@@ -222,14 +222,14 @@ public class Ship {
 	 * 
 	 * 
 	 */
-	public double getDistanceBetween(Ship ship) throws NullPointerException{
-		if (ship == null || this == null)
+	public double getDistanceBetween(Ship other) throws NullPointerException{
+		if (other == null || this == null)
 			throw new NullPointerException();
 		
-		double new_x = this.getxPosition() - ship.getxPosition();
-		double new_y = this.getyPosition() - ship.getyPosition();
+		double new_x = this.getxPosition() - other.getxPosition();
+		double new_y = this.getyPosition() - other.getyPosition();
 		double distance_between_centers = Math.sqrt(Math.pow(new_x, 2) + Math.pow(new_y, 2));
-		double distance = distance_between_centers - this.getRadius() - ship.getRadius();
+		double distance = distance_between_centers - this.getRadius() - other.getRadius();
 		
 		if (distance == 2*this.getRadius())
 			return 0;
@@ -317,7 +317,7 @@ public class Ship {
 	 * 			| !canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition)
 	 * 
 	 */
-	private void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
+	public void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
 		if (!canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition))
 			throw new IllegalArgumentException();
 		
@@ -335,7 +335,7 @@ public class Ship {
 	 * 			|result == (xPosition >= 0)
 	 */
 	public static boolean canHaveAsxPosition(double xPosition){
-		if (Double.isNaN(xPosition))
+		if (Double.isNaN(xPosition) || xPosition<0)
 			return false;
 		return true;
 	}
@@ -349,7 +349,7 @@ public class Ship {
 	 * 			|result == (yPosition >= 0)
 	 */
 	public static boolean canHaveAsyPosition(double yPosition){
-		if (Double.isNaN(yPosition))
+		if (Double.isNaN(yPosition) || yPosition<0)
 			return false;
 		return true;
 	}
@@ -372,19 +372,19 @@ public class Ship {
 	 * 				yVelocity = 0 	
 	 * @post 	if the velocity exceeds the maximum speed, the velocity will be lowered, 
 	 * 			in such a way that the direction will stay the same
-	 * 			| if getShipSpeed() > getMaxSpeed()
-	 * 			setShipPosition = getShipVelocity*getMaxSpeed()/speed
+	 * 			| if getSpeed() > getMaxSpeed()
+	 * 			setPosition = getVelocity*getMaxSpeed()/speed
 	 */
-	private void setShipVelocity(double xVelocity,double yVelocity){
+	public void setVelocity(double xVelocity,double yVelocity){
 		if (!canHaveAsxVelocity(xVelocity))
 			xVelocity = 0;
 		if (!canHaveAsyVelocity(yVelocity))
 			yVelocity = 0;
-		if (!canHaveAsSpeed(this.getShipSpeed())){
-			this.xVelocity = xVelocity*getMaxSpeed()/(this.getShipSpeed());
-			this.yVelocity = yVelocity*getMaxSpeed()/(this.getShipSpeed());
+		if (!canHaveAsSpeed(this.getSpeed())){
+			this.xVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
+			this.yVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
 		}
-		if (canHaveAsSpeed(this.getShipSpeed())){
+		if (canHaveAsSpeed(this.getSpeed())){
 			this.xVelocity = xVelocity;
 			this.yVelocity = yVelocity;
 		}
@@ -444,7 +444,7 @@ public class Ship {
 	 * @effect 	calculates the root of the sum of squares of the x- and y-velocity
 	 * 			|Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2))
 	 */
-	private double  getShipSpeed(){
+	private double  getSpeed(){
 		double speed = Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2));
 		return speed;
 	}
@@ -482,8 +482,8 @@ public class Ship {
 	 * @return the new position after moving in a list of two elements.
 	 */	
 	public double [] getPositionAfterMoving(double duration){
-			return new double[] {getxPosition()+getxVelocity()*duration,
-			getyPosition()+getyVelocity()*duration};	
+			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
+			getPosition()[0]+getVelocity()[0]*duration};	
 	}
 	/**
 	 * checks whether the duration of the movement is a possible duration
@@ -652,8 +652,8 @@ public class Ship {
 	private double getDeltaPowDistance(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
-		double deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
-					Math.pow(getDeltaDistance(other)[1],2);
+		double deltaPowDistance = Math.pow(this.getDeltaDistance(other)[0],2)+
+					Math.pow(this.getDeltaDistance(other)[1],2);
 		return deltaPowDistance;
 	}
 
@@ -673,8 +673,8 @@ public class Ship {
 	private double getDeltaPowVelocity(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
-		double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
-					Math.pow(getDeltaVelocity(other)[1], 2);
+		double deltaPowVelocity = Math.pow(this.getDeltaVelocity(other)[0], 2)+
+					Math.pow(this.getDeltaVelocity(other)[1], 2);
 		return deltaPowVelocity;
 	}
 	
@@ -694,8 +694,8 @@ public class Ship {
 	private double getDeltaDistanceVelocity(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
-		double deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
-						(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+		double deltaDistanceVelocity = (this.getDeltaVelocity(other)[0]*this.getDeltaDistance(other)[0])+
+						(this.getDeltaVelocity(other)[1]*this.getDeltaDistance(other)[1]);
 		return deltaDistanceVelocity;
 	}
 	/**
@@ -715,8 +715,9 @@ public class Ship {
 	private double getD(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
-		double d = Math.pow(getDeltaDistanceVelocity(other),2)-
-					(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
+		double d = Math.pow(this.getDeltaDistanceVelocity(other),2)-
+					(this.getDeltaPowVelocity(other))*(this.getDeltaPowDistance(other)
+													-Math.pow((this.getRadius()+other.getRadius()),2));
 		return d;
 	}
 	/**
@@ -738,11 +739,16 @@ public class Ship {
 		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
 			throw new IllegalArgumentException();
 		try{
-			double time = this.getTimeToCollision(other);		
+			double time = this.getTimeToCollision(other);
+		double dt = this.getTimeToCollision(other);
+		double [] newDeltaDistance = 	{other.getPositionAfterMoving(dt)[0]-this.getPositionAfterMoving(dt)[0],
+										other.getPositionAfterMoving(dt)[1]-this.getPositionAfterMoving(dt)[1]}; 
 		double [] collisionPoint = {this.getPositionAfterMoving(time)[0]+
-									this.getRadius()*getDeltaDistance(other)[0]/getD(other),
+									this.getRadius()*newDeltaDistance[0]/
+									(this.getRadius()+other.getRadius()),
 									this.getPositionAfterMoving(time)[1]+
-									this.getRadius()*getDeltaDistance(other)[1]/getD(other)};
+									this.getRadius()*newDeltaDistance[1]/
+									(this.getRadius()+other.getRadius())};
 		// position of hit = 	position of ship after moving till contact+
 		//						(difference in centra qua x-and y direction*
 		// 						radius of the first schip/distance two centra)

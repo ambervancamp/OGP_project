@@ -7,6 +7,8 @@ import org.junit.Test;
 
 public class TestsPart1 {
 	
+	private static final double EPSILON = 0.0001;
+
 	@Test
 	public void testCanHaveAsOrientation(){
 		assertFalse(Ship.canHaveAsOrientation(-1));
@@ -31,8 +33,8 @@ public class TestsPart1 {
 		Ship ship2 = new Ship();
 		assertNotNull(ship1.getOrientation());
 		assertNotNull(ship2.getOrientation());
-		assertEquals(2, ship1.getOrientation(),0.001);
-		assertEquals(0, ship2.getOrientation(),0.001);
+		assertEquals(2, ship1.getOrientation(),EPSILON);
+		assertEquals(0, ship2.getOrientation(),EPSILON);
 
 	}
 	
@@ -42,8 +44,8 @@ public class TestsPart1 {
 		Ship ship2 = new Ship();
 		assertNotNull(ship1.getRadius());
 		assertNotNull(ship2.getRadius());
-		assertEquals(15, ship1.getRadius(),0.001);
-		assertEquals(10, ship2.getRadius(),0.001);
+		assertEquals(15, ship1.getRadius(),EPSILON);
+		assertEquals(10, ship2.getRadius(),EPSILON);
 
 	}
 	
@@ -110,10 +112,10 @@ public class TestsPart1 {
 		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
 		assertNotNull(ship.getPosition()[0]);
 		assertNotNull(ship.getPosition()[1]);
-		assertNotEquals(4,ship.getPosition()[0],0.001);
-		assertEquals(5,ship.getPosition()[0],0.001);
-		assertNotEquals(4,ship.getPosition()[1],0.001);
-		assertEquals(7,ship.getPosition()[1],0.001);	
+		assertNotEquals(4,ship.getPosition()[0],EPSILON);
+		assertEquals(5,ship.getPosition()[0],EPSILON);
+		assertNotEquals(4,ship.getPosition()[1],EPSILON);
+		assertEquals(7,ship.getPosition()[1],EPSILON);	
 	}
 	
 	@Test
@@ -121,10 +123,10 @@ public class TestsPart1 {
 		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
 		assertNotNull(ship.getVelocity()[0]);
 		assertNotNull(ship.getVelocity()[1]);
-		assertEquals(-3.1235,ship.getVelocity()[0],0.001);
-		assertNotEquals(5,ship.getVelocity()[0],0.001);
-		assertEquals(999999,ship.getVelocity()[1],0.001);
-		assertNotEquals(7,ship.getVelocity()[1],0.001);	
+		assertEquals(-3.1235,ship.getVelocity()[0],EPSILON);
+		assertNotEquals(5,ship.getVelocity()[0],EPSILON);
+		assertEquals(999999,ship.getVelocity()[1],EPSILON);
+		assertNotEquals(7,ship.getVelocity()[1],EPSILON);	
 	}
 	
 	@Test
@@ -136,40 +138,61 @@ public class TestsPart1 {
 		assertTrue(Ship.canHaveAsSpeed(0));
 	}
 	
-	
+	@Test
 	public void testMove(){
 		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
-		double duration = 1;
-		assertEquals(Ship.move(duration)[0]);		
+		ship.move(1);
+		assertEquals(2,ship.getPosition()[0],EPSILON);
+		assertEquals(9,ship.getPosition()[1],EPSILON);		
+		assertNotEquals(7,ship.getPosition()[0],EPSILON);		
+		assertNotEquals(Double.NaN,ship.getPosition()[1],EPSILON);		
 	}
-	// Hier zitten dus problemen met het feit dat de methode move niet static is, 
-	// maar dat die tests wel static zijn?
-	
+
+	@Test	
 	public void testTurn(){
 		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
-		double angle = 1;
-		assertEquals(Ship.move(angle)[0]);		
-	}
-	// Zelfde probleem als bij move
-	
+		ship.turn(-Math.PI/4);
+		assertEquals(Math.PI,ship.getOrientation(),EPSILON);	
+		assertNotEquals(-Math.PI/4,ship.getOrientation(),EPSILON);
+	}	
 	
 	Ship ship;
+	Ship other;
 	@Before
 	public void setup(){
-		ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
-	}
-	public void testSetPosition(){
-		Ship ship = Ship.setPosition(4,3);
-		assertNotNull(ship.getPosition()[0]);
-		assertNotNull(ship.getPosition()[1]);
-		assertEquals(4,ship.getPosition()[0],0.001);
-		assertNotEquals(5,ship.getPosition()[0],0.001);
-		assertEquals(3,ship.getPosition()[1],0.001);
-		assertNotEquals(7,ship.getPosition()[1],0.001);
+		ship = new Ship(10,40,10,5,10,5*Math.PI/4);
+		other =  new Ship(50,50,-10,0,20,2.5);
 	}
 	
-	@Before
+	@Test
+	public void testSetPosition(){
+		ship.setPosition(4,3);
+		assertNotNull(ship.getPosition()[0]);
+		assertNotNull(ship.getPosition()[1]);
+		assertEquals(4,ship.getPosition()[0],EPSILON);
+		assertNotEquals(5,ship.getPosition()[0],EPSILON);
+		assertEquals(3,ship.getPosition()[1],EPSILON);
+		assertNotEquals(7,ship.getPosition()[1],EPSILON);
+	}
+	
+	@Test
 	public void testSetShipVelocity(){
-		
+		ship.setVelocity(3,4);
+		assertEquals(3,ship.getVelocity()[0],EPSILON);
+		assertNotEquals(5,ship.getVelocity()[0],EPSILON);
+		assertEquals(4,ship.getVelocity()[1],EPSILON);
+		assertNotEquals(Double.NaN,ship.getVelocity()[1],EPSILON);	
+	}
+	
+	@Test 
+	public void testGetTimeToCollision(){
+		assertEquals(2-Math.sqrt(36*17)/17,ship.getTimeToCollision(other),EPSILON);
+		assertNotEquals(Double.POSITIVE_INFINITY,ship.getTimeToCollision(other),EPSILON);
+	}
+	
+	@Test 
+	public void testGetCollisionPosition(){
+		// assertEquals(25.14928745,ship.getCollisionPosition(other)[0],EPSILON);
+		assertEquals(45.1492875,ship.getCollisionPosition(other)[1],EPSILON);
 	}
 }
