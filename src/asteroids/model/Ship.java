@@ -130,8 +130,272 @@ public class Ship {
 	public Ship() {
 		this(0,0,0,0,getMinRadius(),0);
 	}
-
+	
+	/**
+	 * A method that returns the x coordinate of the ship
+	 * 
+	 * @return 	The method returns the x-position of the ship.
+	 * 			| result == this.xPosition
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	private double getxPosition(){
+		return this.xPosition;
+	}
+	
+	/**
+	 * A method that returns the y coordinate of the ship.
+	 *  
+	 * @return 	The method returns the y-position of the ship.
+	 * 			| result == this.xPosition
+	 * 
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	private double getyPosition(){
+		return this.yPosition;
+	}
+	
+	
+	/**
+	 * Calculate the x- and y-coordinate of the position of this ship.
+	 * 
+	 * @return	The method returns the x-position and y-position of the ship as a double[].
+	 * 			| result == {this.getxPosition(), this.getyPosition()}
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public double[] getPosition(){
+		double[] position = {this.getxPosition(), this.getyPosition()};
+		return position;
+	}
+	
+	/**
+	 * Set the x-position and y-position of this ship to the given value.
+	 * 
+	 * @param 	xPosition
+	 * 			Given x-position.
+	 * 
+	 * @param 	Position
+	 * 			Given y-position.
+	 * 
+	 * @post	The new x-position will be equal to the given x-position
+	 * 			|new.getxPosition() == xPosition
+	 * 
+	 * @post	The new y-position will be equal to the given y-position
+	 * 			|new.getyPosition() == yPosition
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			The given yPosition and xPosition can't be less than zero.
+	 * 			| !canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition)
+	 * 
+	 */
+	@Raw
+	@Basic
+	public void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
+		if (!canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition))
+			throw new IllegalArgumentException();
 		
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;	
+	}
+	
+	
+	/**
+	 * Checks whether the given x-position is valid.
+	 *  
+	 * @param 	xPosition
+	 * 			The given x-position of the ship to check.
+	 * 
+	 * @return	True if and only if the x-position is a number.
+	 * 			|result == !Double.isNan(xPosition)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsxPosition(double xPosition){
+		return !Double.isNaN(xPosition);
+	}
+	
+	/**
+	 * Checks whether the given y-position is valid.
+	 *  
+	 * @param 	yPosition
+	 * 			The given y-position of the ship to check.
+	 * 
+	 * @return	True if and only if the y-position is a number.
+	 * 			|result == != Double.isNan(yPosition)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsyPosition(double yPosition){
+		return !Double.isNaN(yPosition);
+	}
+	
+	/**
+	 * Gives the velocity of the given ship in x-direction.
+	 * 
+	 * @return 	Returns the xVelocity of the ship in kilometer/second.
+	 * 			|result == new.xVelocity
+	 * 
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	private double getxVelocity(){
+		return this.xVelocity;
+	}
+	
+	/**
+	 * Gives the velocity of the given ship in y-direction.
+	 * 
+	 * @return 	Returns the yVelocity of the ship in kilometer/second.
+	 * 			|result == new.yVelocity
+	 * 
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	private double getyVelocity(){
+		return this.yVelocity;
+	}
+	
+	/**
+	 * A method that calculates the total speed of a ship.
+	 * 
+	 * @effect 	Calculates the root of the sum of squares of the x- and y-velocity.
+	 * 			|Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2))
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	private double  getSpeed(){
+		double speed = Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2));
+		return speed;
+	}
+	
+	/**
+	 * Return the x- and y-coordinate of the velocity of this ship.
+	 * 
+	 * @return	Returns the x- and y-coordinate of the velocity of this ship as a double[].
+	 * 			| result == {this.getxVelocity(), this.getyVelocity()}
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public double[] getVelocity(){
+		double[] velocity = {this.getxVelocity(), this.getyVelocity()};
+		return velocity;
+	}
+	
+	/**
+	 * Sets the velocity of the spaceship to the given velocity.
+	 * 
+	 * @param 	xVelocity
+	 * 			The velocity of the ship in the x-direction, in kilometer/second.
+	 * 
+	 * @param	yVelocity
+	 * 			The velocity of the ship in the y-direction, in kilometer/second.
+	 * 
+	 * @post 	If the velocity in x-direction is not accepted,
+	 * 			the velocity well be set at 0.
+	 * 			| if (!canHaveAsxVelocity(xVelocity)) 
+	 * 				then xVelocity() = 0 	
+	 * 
+	 * @post 	If the velocity in y-direction is not accepted,
+	 * 			the velocity well be set at 0.
+	 * 			| if if (!canHaveAsyVelocity(yVelocity))
+	 * 				then yVelocity = 0 	
+	 * 
+	 * @post	The new velocity is slower than or equals getMaxSpeed().
+	 * 			| new velocity <= getMaxSpeed()
+	 * 
+	 * @post	The new velocity is equal to the calculated velocity. Or when 
+	 * 			it exceeds getMaxSpeed, it's reduced to getMaxSpeed.
+	 * 			|new.getxVelocity = xVelocity;
+	 *			|new.getyVelocity = yVelocity;
+	 *			|if (!canHaveAsSpeed(this.getSpeed())){
+	 *			|	new.getxVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
+	 *			|	new.getyVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
+	 */
+	@Raw
+	public void setVelocity(double xVelocity,double yVelocity){
+		if (!canHaveAsxVelocity(xVelocity))
+			xVelocity = 0;
+		if (!canHaveAsyVelocity(yVelocity))
+			yVelocity = 0;
+		
+		this.xVelocity = xVelocity;
+		this.yVelocity = yVelocity;
+		
+		if (!canHaveAsSpeed(this.getSpeed())){
+			this.xVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
+			this.yVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
+		}
+		
+	}
+	
+	
+	/**
+	 * Check whether the given xVelocity is a valid xVelocity for any ship.
+	 * 
+	 * @param 	xVelocity
+	 *          The xVelocity to check.
+	 *          
+	 * @return 	Returns true if and only if the xVelocity is a number.
+	 * 			| result == !Double.isNaN(xVelocity)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsxVelocity(double xVelocity){
+		return !Double.isNaN(xVelocity);
+	}
+	
+	/**
+	 * Checks whether the given y-velocity is valid.
+	 *  
+	 * @param 	yVelocity
+	 * 			The given yVelocity of the ship to check.
+	 * 
+	 * @return	True if and only if the y-velocity is a number.
+	 * 			|result == != Double.isNan(yVelocity)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsyVelocity(double yVelocity){
+		return !Double.isNaN(yVelocity);
+	}	
+		
+	/**
+	 * Checks whether the speed is a possible speed
+	 * 
+	 * @param 	speed
+	 * 			The given speed to check.
+	 * 
+	 * @return 	True if and only if the speed is a number, less or equal 
+	 * 			to the maximum speed, and bigger then 0.
+	 * 			| result == speed <= getMaxSpeed() && !Double.isNaN(speed) && speed >= 0
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsSpeed(double speed){
+		return (speed <= getMaxSpeed() && !Double.isNaN(speed) && speed >= 0);
+	}
+	
+	/**
+	 * Return the highest possible value for the speed of all ships.
+	 *
+	 * @return 	The highest possible value for the speed of all ships is the speed
+	 * 			of light = 30000 kilometer/second.
+	 *		 	| result == 30000
+	 */
+	@Basic
+	private static int getMaxSpeed() {
+		return 300000;
+	}
+	
 	/**
 	 * Set the orientation of this ship.
 	 * 
@@ -184,6 +448,7 @@ public class Ship {
 	 */
 	@Basic
 	@Raw
+	@Immutable
 	public double getRadius() {
 		return this.radius;
 	}
@@ -198,6 +463,7 @@ public class Ship {
 	 * 			than or equal to the minimum radius.
 	 * 			| result == (radius >= getMinRadius() && !Double.isNaN(radius))
 	 */
+	@Raw
 	public static boolean canHaveAsRadius(double radius) {
 		return (radius >= getMinRadius() && !Double.isNaN(radius));
 	}
@@ -210,9 +476,85 @@ public class Ship {
 	 *		 	| result == 10
 	 */
 	@Basic
+	@Raw
 	private static int getMinRadius() {
 		return 10;
 	}	
+	
+	/**
+	 * Change the position of the ship based on the current position, 
+	 * velocity and a given time duration. 
+	 * 
+	 * @param 	duration
+	 * 			The duration of the movement.
+	 * 
+	 * @post 	The position of the ship will be changed to the 
+	 * 			new position after the given time, speed and direction
+	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			the duration is not a valid duration
+	 * 			|(!isValidDuration(duration))
+	 * 
+	 */
+	@Raw
+	public void move(double duration) throws IllegalArgumentException{
+		if (!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+	}
+	
+	/**
+	 * Get the position of a ship after it's moved.
+	 * 
+	 * @param 	duration
+	 * 			The duration of the movement.
+	 * 			
+	 * @return 	The new position after moving as a double[].
+	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
+	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
+	 * 			
+	 */	
+	@Raw
+	public double [] getPositionAfterMoving(double duration){
+			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
+			getPosition()[1]+getVelocity()[1]*duration};	
+	}
+	/**
+	 * Checks whether the duration of the movement is a valid duration.
+	 * 
+	 * @param 	duration
+	 * 			The duration of the movement.
+	 * 
+	 * @return	True if and only if the duration is a number, 
+	 * 			greater than or equal to zero.
+	 * 			| result == duration >= 0 && !Double.isNaN(duration)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsDuration(double duration){
+		return (duration >= 0 && !Double.isNaN(duration));
+	}
+	
+	/**
+	 * A method that turns the ship according to the given angle.
+	 * 
+	 * @param 	angle
+	 * 			The angle to turn.
+	 * 
+	 * @pre 	The ship can have the total angle as a valid angle.
+	 * 			| canHaveAsOrientation(angle+getOrientation)
+	 * 
+	 * @post	The new orientation will be changed to the sum of the previous 
+	 * 			and the new angle.
+	 * 			|new.getOrientation() == angle+getOrientation()
+	 * 			
+	 */
+	@Raw
+	public void turn(double angle){
+		assert(canHaveAsOrientation(angle+getOrientation()));
+		setOrientation(angle+getOrientation());	
+	}
 	
 	/**
 	 * Change the ships velocity based on the current velocity, 
@@ -238,6 +580,8 @@ public class Ship {
 	 *			|	new.getyVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
 	
 	 */
+	@Raw
+	@Immutable
 	public void thrust(double a) {
 		if (this != null){
 			
@@ -267,6 +611,7 @@ public class Ship {
 	 * 			than or equal to 0.
 	 * 			| result == (a>=0 && !Double.isNaN(a)))
 	 */
+	@Raw
 	public static boolean canHaveAsA(double a){
 		return (a>=0 && !Double.isNaN(a));
 	}
@@ -290,6 +635,8 @@ public class Ship {
 	 * 
 	 * 
 	 */
+	@Raw
+	@Immutable
 	public double getDistanceBetween(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -318,6 +665,8 @@ public class Ship {
 	 * 			The given ship must exist.
 	 * 			| ship == null
 	 */
+	@Raw
+	@Immutable
 	public boolean overlap(Ship ship) throws NullPointerException {
 		if (ship == null || this == null)
 			throw new NullPointerException();
@@ -325,346 +674,6 @@ public class Ship {
 		return this.getDistanceBetween(ship) <= 0;
 	}
 	
-	
-	
-	// ANDER IEMAND
-		
-	
-	/**
-	 * A method that returns the x coordinate of the ship
-	 * 
-	 * @return 	The method returns the x-position of the ship.
-	 * 			| result == this.xPosition
-	 */
-	private double getxPosition(){
-		return this.xPosition;
-	}
-	
-	/**
-	 * A method that returns the y coordinate of the ship.
-	 *  
-	 * @return 	The method returns the y-position of the ship.
-	 * 			| result == this.xPosition
-	 * 
-	 */
-	private double getyPosition(){
-		return this.yPosition;
-	}
-	
-	
-	/**
-	 * Calculate the x- and y-coordinate of the position of this ship.
-	 * 
-	 * @return	The method returns the x-position and y-position of the ship as a double[].
-	 * 			| result == {this.getxPosition(), this.getyPosition()}
-	 */
-	public double[] getPosition(){
-		double[] position = {this.getxPosition(), this.getyPosition()};
-		return position;
-	}
-	
-	/**
-	 * Set the x-position and y-position of this ship to the given value.
-	 * 
-	 * @param 	xPosition
-	 * 			Given x-position.
-	 * 
-	 * @param 	Position
-	 * 			Given y-position.
-	 * 
-	 * @post	The new x-position will be equal to the given x-position
-	 * 			|new.getxPosition() == xPosition
-	 * 
-	 * @post	The new y-position will be equal to the given y-position
-	 * 			|new.getyPosition() == yPosition
-	 * 
-	 * @throws 	IllegalArgumentException
-	 * 			The given yPosition and xPosition can't be less than zero.
-	 * 			| !canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition)
-	 * 
-	 */
-	public void setPosition(double xPosition, double yPosition) throws IllegalArgumentException {
-		if (!canHaveAsxPosition(xPosition) || !canHaveAsyPosition(yPosition))
-			throw new IllegalArgumentException();
-		
-		this.xPosition = xPosition;
-		this.yPosition = yPosition;	
-	}
-	
-	
-	/**
-	 * Checks whether the given x-position is valid.
-	 *  
-	 * @param 	xPosition
-	 * 			The given x-position of the ship to check.
-	 * 
-	 * @return	True if and only if the x-position is a number.
-	 * 			|result == !Double.isNan(xPosition)
-	 */
-	public static boolean canHaveAsxPosition(double xPosition){
-		return !Double.isNaN(xPosition);
-	}
-	
-	/**
-	 * Checks whether the given y-position is valid.
-	 *  
-	 * @param 	yPosition
-	 * 			The given y-position of the ship to check.
-	 * 
-	 * @return	True if and only if the y-position is a number.
-	 * 			|result == != Double.isNan(yPosition)
-	 */
-	public static boolean canHaveAsyPosition(double yPosition){
-		return !Double.isNaN(yPosition);
-	}
-	
-	/**
-	 * Sets the velocity of the spaceship to the given velocity.
-	 * 
-	 * @param 	xVelocity
-	 * 			The velocity of the ship in the x-direction, in kilometer/second.
-	 * 
-	 * @param	yVelocity
-	 * 			The velocity of the ship in the y-direction, in kilometer/second.
-	 * 
-	 * @post 	If the velocity in x-direction is not accepted,
-	 * 			the velocity well be set at 0.
-	 * 			| if (!canHaveAsxVelocity(xVelocity)) 
-	 * 				then xVelocity() = 0 	
-	 * 
-	 * @post 	If the velocity in y-direction is not accepted,
-	 * 			the velocity well be set at 0.
-	 * 			| if if (!canHaveAsyVelocity(yVelocity))
-	 * 				then yVelocity = 0 	
-	 * 
-	 * @post	The new velocity is slower than or equals getMaxSpeed().
-	 * 			| new velocity <= getMaxSpeed()
-	 * 
-	 * @post	The new velocity is equal to the calculated velocity. Or when 
-	 * 			it exceeds getMaxSpeed, it's reduced to getMaxSpeed.
-	 * 			|new.getxVelocity = xVelocity;
-	 *			|new.getyVelocity = yVelocity;
-	 *			|if (!canHaveAsSpeed(this.getSpeed())){
-	 *			|	new.getxVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
-	 *			|	new.getyVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
-	 */
-	public void setVelocity(double xVelocity,double yVelocity){
-		if (!canHaveAsxVelocity(xVelocity))
-			xVelocity = 0;
-		if (!canHaveAsyVelocity(yVelocity))
-			yVelocity = 0;
-		
-		this.xVelocity = xVelocity;
-		this.yVelocity = yVelocity;
-		
-		if (!canHaveAsSpeed(this.getSpeed())){
-			this.xVelocity = xVelocity*getMaxSpeed()/(this.getSpeed());
-			this.yVelocity = yVelocity*getMaxSpeed()/(this.getSpeed());
-		}
-		
-	}
-	
-	
-	/**
-	 * Check whether the given xVelocity is a valid xVelocity for any ship.
-	 * 
-	 * @param 	xVelocity
-	 *          The xVelocity to check.
-	 *          
-	 * @return 	Returns true if and only if the xVelocity is a number.
-	 * 			| result == !Double.isNaN(xVelocity)
-	 */
-	public static boolean canHaveAsxVelocity(double xVelocity){
-		return !Double.isNaN(xVelocity);
-	}
-	
-	/**
-	 * Checks whether the given y-velocity is valid.
-	 *  
-	 * @param 	yVelocity
-	 * 			The given yVelocity of the ship to check.
-	 * 
-	 * @return	True if and only if the y-velocity is a number.
-	 * 			|result == != Double.isNan(yVelocity)
-	 */
-	public static boolean canHaveAsyVelocity(double yVelocity){
-		return !Double.isNaN(yVelocity);
-	}
-	
-	/**
-	 * Gives the velocity of the given ship in x-direction.
-	 * 
-	 * @return 	Returns the xVelocity of the ship in kilometer/second.
-	 * 			|result == new.xVelocity
-	 * 
-	 */
-	private double getxVelocity(){
-		return this.xVelocity;
-	}
-	
-	/**
-	 * Gives the velocity of the given ship in y-direction.
-	 * 
-	 * @return 	Returns the yVelocity of the ship in kilometer/second.
-	 * 			|result == new.yVelocity
-	 * 
-	 */
-	private double getyVelocity(){
-		return this.yVelocity;
-	}
-	
-	/**
-	 * Checks whether the speed is a possible speed
-	 * 
-	 * @param 	speed
-	 * 			The given speed to check.
-	 * 
-	 * @return 	True if and only if the speed is a number, less or equal 
-	 * 			to the maximum speed, and bigger then 0.
-	 * 			| result == speed <= getMaxSpeed() && !Double.isNaN(speed) && speed >= 0
-	 */
-	public static boolean canHaveAsSpeed(double speed){
-		return (speed <= getMaxSpeed() && !Double.isNaN(speed) && speed >= 0);
-	}
-	
-	/**
-	 * A method that calculates the total speed of a ship.
-	 * 
-	 * @effect 	Calculates the root of the sum of squares of the x- and y-velocity.
-	 * 			|Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2))
-	 */
-	private double  getSpeed(){
-		double speed = Math.sqrt(Math.pow(this.getxVelocity(),2)+Math.pow(this.getyVelocity(),2));
-		return speed;
-	}
-	
-	/**
-	 * Return the x- and y-coordinate of the velocity of this ship.
-	 * 
-	 * @return	Returns the x- and y-coordinate of the velocity of this ship as a double[].
-	 * 			| result == {this.getxVelocity(), this.getyVelocity()}
-	 */
-	public double[] getVelocity(){
-		double[] velocity = {this.getxVelocity(), this.getyVelocity()};
-		return velocity;
-	}
-	
-	/**
-	 * Change the position of the ship based on the current position, 
-	 * velocity and a given time duration. 
-	 * 
-	 * @param 	duration
-	 * 			The duration of the movement.
-	 * 
-	 * @post 	The position of the ship will be changed to the 
-	 * 			new position after the given time, speed and direction
-	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
-	 * 
-	 * @throws 	IllegalArgumentException
-	 * 			the duration is not a valid duration
-	 * 			|(!isValidDuration(duration))
-	 * 
-	 */
-	public void move(double duration) throws IllegalArgumentException{
-		if (!canHaveAsDuration(duration))
-			throw new IllegalArgumentException();
-		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
-	}
-	
-	/**
-	 * Get the position of a ship after it's moved.
-	 * 
-	 * @param 	duration
-	 * 			The duration of the movement.
-	 * 			
-	 * @return 	The new position after moving as a double[].
-	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
-	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
-	 * 			
-	 */	
-	public double [] getPositionAfterMoving(double duration){
-			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
-			getPosition()[1]+getVelocity()[1]*duration};	
-	}
-	/**
-	 * Checks whether the duration of the movement is a valid duration.
-	 * 
-	 * @param 	duration
-	 * 			The duration of the movement.
-	 * 
-	 * @return	True if and only if the duration is a number, 
-	 * 			greater than or equal to zero.
-	 * 			| result == duration >= 0 && !Double.isNaN(duration)
-	 */
-	public static boolean canHaveAsDuration(double duration){
-		return (duration >= 0 && !Double.isNaN(duration));
-	}
-	
-	/**
-	 * A method that turns the ship according to the given angle.
-	 * 
-	 * @param 	angle
-	 * 			The angle to turn.
-	 * 
-	 * @pre 	The ship can have the total angle as a valid angle.
-	 * 			| canHaveAsOrientation(angle+getOrientation)
-	 * 
-	 * @post	The new orientation will be changed to the sum of the previous 
-	 * 			and the new angle.
-	 * 			|new.getOrientation() == angle+getOrientation()
-	 * 			
-	 */
-	public void turn(double angle){
-		assert(canHaveAsOrientation(angle+getOrientation()));
-		setOrientation(angle+getOrientation());	
-	}
-	
-	/**
-	 * Return the highest possible value for the speed of all ships.
-	 *
-	 * @return 	The highest possible value for the speed of all ships is the speed
-	 * 			of light = 30000 km/s.
-	 *		 	| result == 30000
-	 */
-	@Basic
-	private static int getMaxSpeed() {
-		return 300000;
-	}
-	
-	
-	
-	// DECLARATIE VARIABELEN
-	
-	
-	/**
-	 * Variable registering the orientation of this ship.
-	 */
-	private double orientation;
-	
-	/**
-	 * Variable registering the radius of this ship.
-	 */
-	private final double radius;
-	
-	/**
-	 * Variable registering the xPosition of this ship.
-	 */
-	private double xPosition;
-	
-	/**
-	 * Variable registering the yPosition of this ship.
-	 */
-	private double yPosition;
-	
-	/**
-	 * Variable registering the xVelocity of this ship.
-	 */
-	private double xVelocity;
-	
-	/**
-	 * Variable registering the yVelocity of this ship.
-	 */
-	private double yVelocity;
 	
 	/**
 	 * A method that gives the time between a collision of 2 ships. 
@@ -683,6 +692,8 @@ public class Ship {
 	 * 			Throw a NullPointerException if one of the 2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */
+	@Raw
+	@Immutable
 	public double getTimeToCollision(Ship other) throws NullPointerException{
 		double timeToCollision;
 		if (this.getDeltaDistanceVelocity(other) >= 0)
@@ -714,6 +725,8 @@ public class Ship {
 	 * 			doesn't exist
 	 * 			| other == null || this == null
 	 */
+	@Raw
+	@Immutable
 	private double [] getDeltaDistance(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -739,6 +752,8 @@ public class Ship {
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
 	 */	
+	@Raw
+	@Immutable
 	private double [] getDeltaVelocity(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -763,7 +778,9 @@ public class Ship {
 	 * 			the method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
-	 */		
+	 */	
+	@Raw
+	@Immutable
 	private double getDeltaPowDistance(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -788,7 +805,9 @@ public class Ship {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
-	 */		
+	 */	
+	@Raw
+	@Immutable
 	private double getDeltaPowVelocity(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -814,7 +833,9 @@ public class Ship {
 	 * 			The method will throw a nullpointerexception if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
-	 */			
+	 */		
+	@Raw
+	@Immutable
 	private double getDeltaDistanceVelocity(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -838,7 +859,9 @@ public class Ship {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
-	 */		
+	 */	
+	@Raw
+	@Immutable
 	private double getD(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -864,6 +887,8 @@ public class Ship {
 	 * 			| other == null || this == null
 	 * 
 	 */
+	@Raw
+	@Immutable
 	public double [] getCollisionPosition(Ship other) throws NullPointerException{
 		if (other == null || this == null)
 			throw new NullPointerException();
@@ -888,4 +913,37 @@ public class Ship {
 			return null;
 		}
 	}
+	
+	
+	/**
+	 * Variable registering the xPosition of this ship.
+	 */
+	private double xPosition;
+	
+	/**
+	 * Variable registering the yPosition of this ship.
+	 */
+	private double yPosition;
+	
+	/**
+	 * Variable registering the xVelocity of this ship.
+	 */
+	private double xVelocity;
+	
+	/**
+	 * Variable registering the yVelocity of this ship.
+	 */
+	private double yVelocity;
+	
+	/**
+	 * Variable registering the orientation of this ship.
+	 */
+	private double orientation;
+	
+	/**
+	 * Variable registering the radius of this ship.
+	 */
+	private final double radius;
+	
+	
 }

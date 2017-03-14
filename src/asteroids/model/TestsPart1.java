@@ -8,7 +8,79 @@ import org.junit.Test;
 public class TestsPart1 {
 	
 	private static final double EPSILON = 0.0001;
+	
+	@Test
+	public void testCanHaveAsxPosition(){
+		assertTrue(Ship.canHaveAsxPosition(-1));
+		assertFalse(Ship.canHaveAsxPosition(Double.NaN));
+		assertTrue(Ship.canHaveAsxPosition(0));
+		assertTrue(Ship.canHaveAsxPosition(5.21));
+		assertTrue(Ship.canHaveAsxPosition(Double.POSITIVE_INFINITY));
+		assertTrue(Ship.canHaveAsxPosition(Double.NEGATIVE_INFINITY));
+	}
+	
+	@Test
+	public void testCanHaveAsyPosition(){
+		assertTrue(Ship.canHaveAsyPosition(-1));
+		assertFalse(Ship.canHaveAsyPosition(Double.NaN));
+		assertTrue(Ship.canHaveAsyPosition(0));
+		assertTrue(Ship.canHaveAsyPosition(5.21));
+		assertTrue(Ship.canHaveAsyPosition(Double.POSITIVE_INFINITY));	
+		assertTrue(Ship.canHaveAsyPosition(Double.NEGATIVE_INFINITY));
+	}
+	
+	
+	@Test
+	public void testGetPosition(){
+		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
+		assertNotNull(ship.getPosition()[0]);
+		assertNotNull(ship.getPosition()[1]);
+		assertNotEquals(4,ship.getPosition()[0],EPSILON);
+		assertEquals(5,ship.getPosition()[0],EPSILON);
+		assertNotEquals(4,ship.getPosition()[1],EPSILON);
+		assertEquals(7,ship.getPosition()[1],EPSILON);	
+	}
 
+	@Test
+	public void testCanHaveAsxVelocity(){
+		assertTrue(Ship.canHaveAsxVelocity(-1));
+		assertFalse(Ship.canHaveAsxVelocity(Double.NaN));
+		assertTrue(Ship.canHaveAsxVelocity(0));
+		assertTrue(Ship.canHaveAsxVelocity(5.21));
+		assertTrue(Ship.canHaveAsxVelocity(Double.POSITIVE_INFINITY));	
+		assertTrue(Ship.canHaveAsxVelocity(Double.NEGATIVE_INFINITY));
+	}
+	@Test
+	public void testCanHaveAsyVelocity(){
+		assertTrue(Ship.canHaveAsyVelocity(-1));
+		assertFalse(Ship.canHaveAsyVelocity(Double.NaN));
+		assertTrue(Ship.canHaveAsyVelocity(0));
+		assertTrue(Ship.canHaveAsyVelocity(5.21));
+		assertTrue(Ship.canHaveAsyVelocity(Double.POSITIVE_INFINITY));	
+		assertTrue(Ship.canHaveAsyVelocity(Double.NEGATIVE_INFINITY));
+	}
+	
+	@Test
+	public void testGetVelocity(){
+		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
+		assertNotNull(ship.getVelocity()[0]);
+		assertNotNull(ship.getVelocity()[1]);
+		assertEquals(-0.937050937046366,ship.getVelocity()[0],EPSILON);
+		assertNotEquals(456158,ship.getVelocity()[0],EPSILON);
+		assertEquals(300000,ship.getVelocity()[1],EPSILON);
+		assertNotEquals(7,ship.getVelocity()[1],EPSILON);	
+	}
+	
+	
+	@Test
+	public void testCanHaveAsSpeed(){
+		assertFalse(Ship.canHaveAsSpeed(-1));
+		assertFalse(Ship.canHaveAsSpeed(Double.NaN));
+		assertFalse(Ship.canHaveAsSpeed(Double.POSITIVE_INFINITY));
+		assertTrue(Ship.canHaveAsSpeed(12543));
+		assertTrue(Ship.canHaveAsSpeed(0));
+	}
+	
 	@Test
 	public void testCanHaveAsOrientation(){
 		assertFalse(Ship.canHaveAsOrientation(-1));
@@ -16,14 +88,6 @@ public class TestsPart1 {
 		assertFalse(Ship.canHaveAsOrientation(Double.NaN));
 		assertTrue(Ship.canHaveAsOrientation(0));
 		assertTrue(Ship.canHaveAsOrientation(2));
-	}
-	
-	@Test
-	public void testCanHaveAsRadius(){
-		assertFalse(Ship.canHaveAsRadius(0));
-		assertFalse(Ship.canHaveAsRadius(Double.NaN));
-		assertTrue(Ship.canHaveAsRadius(10));
-		assertTrue(Ship.canHaveAsRadius(15));
 	}
 	
 	@Test
@@ -38,6 +102,15 @@ public class TestsPart1 {
 	}
 	
 	@Test
+	public void testCanHaveAsRadius(){
+		assertFalse(Ship.canHaveAsRadius(0));
+		assertFalse(Ship.canHaveAsRadius(Double.NaN));
+		assertTrue(Ship.canHaveAsRadius(10));
+		assertTrue(Ship.canHaveAsRadius(15));
+	}
+	
+	
+	@Test
 	public void testGetRadius(){
 		Ship ship1 = new Ship(4,5,2,3,15,2);
 		Ship ship2 = new Ship();
@@ -47,6 +120,24 @@ public class TestsPart1 {
 		assertEquals(10, ship2.getRadius(),EPSILON);
 
 	}
+	
+	@Test
+	public void testMove(){
+		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
+		ship.move(1);
+		assertEquals(2,ship.getPosition()[0],EPSILON);
+		assertEquals(9,ship.getPosition()[1],EPSILON);		
+		assertNotEquals(7,ship.getPosition()[0],EPSILON);		
+		assertNotEquals(Double.NaN,ship.getPosition()[1],EPSILON);		
+	}
+
+	@Test	
+	public void testTurn(){
+		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
+		ship.turn(-Math.PI/4);
+		assertEquals(Math.PI,ship.getOrientation(),EPSILON);	
+		assertNotEquals(-Math.PI/4,ship.getOrientation(),EPSILON);
+	}	
 	
 	@Test
 	public void testThrust(){
@@ -103,100 +194,6 @@ public class TestsPart1 {
 		Ship ship5 = new Ship(0,20,2,3,15,2);
 		Ship ship6 = new Ship(0,5,3,5,10,2);
 		assertTrue(ship5.overlap(ship6));
-	}
-	
-	// ANDER IEMAND
-	
-	
-	
-	
-	@Test
-	public void testCanHaveAsxPosition(){
-		assertTrue(Ship.canHaveAsxPosition(-1));
-		assertFalse(Ship.canHaveAsxPosition(Double.NaN));
-		assertTrue(Ship.canHaveAsxPosition(0));
-		assertTrue(Ship.canHaveAsxPosition(5.21));
-		assertTrue(Ship.canHaveAsxPosition(Double.POSITIVE_INFINITY));
-		assertTrue(Ship.canHaveAsxPosition(Double.NEGATIVE_INFINITY));
-	}
-	
-	@Test
-	public void testCanHaveAsyPosition(){
-		assertTrue(Ship.canHaveAsyPosition(-1));
-		assertFalse(Ship.canHaveAsyPosition(Double.NaN));
-		assertTrue(Ship.canHaveAsyPosition(0));
-		assertTrue(Ship.canHaveAsyPosition(5.21));
-		assertTrue(Ship.canHaveAsyPosition(Double.POSITIVE_INFINITY));	
-		assertTrue(Ship.canHaveAsyPosition(Double.NEGATIVE_INFINITY));
-	}
-
-	@Test
-	public void testCanHaveAsxVelocity(){
-		assertTrue(Ship.canHaveAsxVelocity(-1));
-		assertFalse(Ship.canHaveAsxVelocity(Double.NaN));
-		assertTrue(Ship.canHaveAsxVelocity(0));
-		assertTrue(Ship.canHaveAsxVelocity(5.21));
-		assertTrue(Ship.canHaveAsxVelocity(Double.POSITIVE_INFINITY));	
-		assertTrue(Ship.canHaveAsxVelocity(Double.NEGATIVE_INFINITY));
-	}
-	@Test
-	public void testCanHaveAsyVelocity(){
-		assertTrue(Ship.canHaveAsyVelocity(-1));
-		assertFalse(Ship.canHaveAsyVelocity(Double.NaN));
-		assertTrue(Ship.canHaveAsyVelocity(0));
-		assertTrue(Ship.canHaveAsyVelocity(5.21));
-		assertTrue(Ship.canHaveAsyVelocity(Double.POSITIVE_INFINITY));	
-		assertTrue(Ship.canHaveAsyVelocity(Double.NEGATIVE_INFINITY));
-	}
-	@Test
-	public void testGetPosition(){
-		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
-		assertNotNull(ship.getPosition()[0]);
-		assertNotNull(ship.getPosition()[1]);
-		assertNotEquals(4,ship.getPosition()[0],EPSILON);
-		assertEquals(5,ship.getPosition()[0],EPSILON);
-		assertNotEquals(4,ship.getPosition()[1],EPSILON);
-		assertEquals(7,ship.getPosition()[1],EPSILON);	
-	}
-	
-	
-	@Test
-	public void testGetVelocity(){
-		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4);
-		assertNotNull(ship.getVelocity()[0]);
-		assertNotNull(ship.getVelocity()[1]);
-		assertEquals(-0.937050937046366,ship.getVelocity()[0],EPSILON);
-		assertNotEquals(456158,ship.getVelocity()[0],EPSILON);
-		assertEquals(300000,ship.getVelocity()[1],EPSILON);
-		assertNotEquals(7,ship.getVelocity()[1],EPSILON);	
-	}
-	
-	
-	@Test
-	public void testCanHaveAsSpeed(){
-		assertFalse(Ship.canHaveAsSpeed(-1));
-		assertFalse(Ship.canHaveAsSpeed(Double.NaN));
-		assertFalse(Ship.canHaveAsSpeed(Double.POSITIVE_INFINITY));
-		assertTrue(Ship.canHaveAsSpeed(12543));
-		assertTrue(Ship.canHaveAsSpeed(0));
-	}
-	
-	@Test
-	public void testMove(){
-		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
-		ship.move(1);
-		assertEquals(2,ship.getPosition()[0],EPSILON);
-		assertEquals(9,ship.getPosition()[1],EPSILON);		
-		assertNotEquals(7,ship.getPosition()[0],EPSILON);		
-		assertNotEquals(Double.NaN,ship.getPosition()[1],EPSILON);		
-	}
-
-	@Test	
-	public void testTurn(){
-		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4);
-		ship.turn(-Math.PI/4);
-		assertEquals(Math.PI,ship.getOrientation(),EPSILON);	
-		assertNotEquals(-Math.PI/4,ship.getOrientation(),EPSILON);
 	}	
 	
 	Ship ship;
