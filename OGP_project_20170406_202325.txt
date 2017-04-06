@@ -1,0 +1,5 @@
+ERROR - 20:23:25: java.net.MalformedURLException: unknown protocol: pathmap
+WARNING - 20:23:35: Convert OGP_project
+ERROR - 20:23:35: java.net.MalformedURLException: unknown protocol: pathmap
+WARNING - 20:28:52: Convert OGP_project
+ERROR - 20:28:52: java.net.MalformedURLException: unknown protocol: pathmap

@@ -11,24 +11,13 @@ public class TestsPart1 {
 	
 	@Test
 	public void testCanHaveAsxPosition(){
-		assertTrue(Ship.canHaveAsxPosition(-1));
-		assertFalse(Ship.canHaveAsxPosition(Double.NaN));
-		assertTrue(Ship.canHaveAsxPosition(0));
-		assertTrue(Ship.canHaveAsxPosition(5.21));
-		assertTrue(Ship.canHaveAsxPosition(Double.POSITIVE_INFINITY));
-		assertTrue(Ship.canHaveAsxPosition(Double.NEGATIVE_INFINITY));
+		assertTrue(Ship.canHaveAsPosition(-1,-1));
+		assertFalse(Ship.canHaveAsPosition(Double.NaN,Double.NaN));
+		assertTrue(Ship.canHaveAsPosition(0,0));
+		assertTrue(Ship.canHaveAsPosition(5.21, 5.21));
+		assertTrue(Ship.canHaveAsPosition(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
+		assertTrue(Ship.canHaveAsPosition(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
 	}
-	
-	@Test
-	public void testCanHaveAsyPosition(){
-		assertTrue(Ship.canHaveAsyPosition(-1));
-		assertFalse(Ship.canHaveAsyPosition(Double.NaN));
-		assertTrue(Ship.canHaveAsyPosition(0));
-		assertTrue(Ship.canHaveAsyPosition(5.21));
-		assertTrue(Ship.canHaveAsyPosition(Double.POSITIVE_INFINITY));	
-		assertTrue(Ship.canHaveAsyPosition(Double.NEGATIVE_INFINITY));
-	}
-	
 	
 	@Test
 	public void testGetPosition(){
@@ -43,21 +32,12 @@ public class TestsPart1 {
 
 	@Test
 	public void testCanHaveAsxVelocity(){
-		assertTrue(Ship.canHaveAsxVelocity(-1));
-		assertFalse(Ship.canHaveAsxVelocity(Double.NaN));
-		assertTrue(Ship.canHaveAsxVelocity(0));
-		assertTrue(Ship.canHaveAsxVelocity(5.21));
-		assertTrue(Ship.canHaveAsxVelocity(Double.POSITIVE_INFINITY));	
-		assertTrue(Ship.canHaveAsxVelocity(Double.NEGATIVE_INFINITY));
-	}
-	@Test
-	public void testCanHaveAsyVelocity(){
-		assertTrue(Ship.canHaveAsyVelocity(-1));
-		assertFalse(Ship.canHaveAsyVelocity(Double.NaN));
-		assertTrue(Ship.canHaveAsyVelocity(0));
-		assertTrue(Ship.canHaveAsyVelocity(5.21));
-		assertTrue(Ship.canHaveAsyVelocity(Double.POSITIVE_INFINITY));	
-		assertTrue(Ship.canHaveAsyVelocity(Double.NEGATIVE_INFINITY));
+		assertTrue(Ship.canHaveAsVelocity(-1,-1));
+		assertFalse(Ship.canHaveAsVelocity(Double.NaN, Double.NaN));
+		assertTrue(Ship.canHaveAsVelocity(0,0));
+		assertTrue(Ship.canHaveAsVelocity(5.21, 5.21));
+		assertTrue(Ship.canHaveAsVelocity(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));	
+		assertTrue(Ship.canHaveAsVelocity(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
 	}
 	
 	@Test
@@ -155,10 +135,10 @@ public class TestsPart1 {
 	
 	@Test
 	public void testCanHaveAsA() {
-		assertFalse(Ship.canHaveAsA(-1));
-		assertTrue(Ship.canHaveAsA(0));
-		assertFalse(Ship.canHaveAsA(Double.NaN));
-		assertTrue(Ship.canHaveAsA(3));
+		assertFalse(Ship.canHaveAsAcceleration(-1));
+		assertTrue(Ship.canHaveAsAcceleration(0));
+		assertFalse(Ship.canHaveAsAcceleration(Double.NaN));
+		assertTrue(Ship.canHaveAsAcceleration(3));
 	}
 	
 	@Test
