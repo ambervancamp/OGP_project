@@ -4,8 +4,9 @@ import java.util.Collection;
 import java.util.Set;
 
 import asteroids.model.*;
+
 import asteroids.part2.CollisionListener;
-import asteroids.part2.facade.IFacade;
+
 import asteroids.util.ModelException;
 
 public class Facade implements asteroids.part2.facade.IFacade {
