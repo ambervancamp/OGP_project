@@ -605,7 +605,7 @@ public abstract class RoundEntity {
 	
 	
 	/**
-	 * Get the position of a ship after it's moved.
+	 * Get the position of a round entity after it's moved, given a duration.
 	 * 
 	 * @param 	duration
 	 * 			The duration of the movement.
@@ -623,19 +623,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * 
-	 * Return the distance between the given ship and this ship.
-	 * The distance may be negative if both ships overlap
+	 * Return the distance between the given round entity and this round entity.
+	 * The distance may be negative if both ships overlap.
 	 * 
-	 * @param	ship
-	 * 			The given ship. 
+	 * @param	other
+	 * 			The given round entity. 
 	 * 
-	 * @post	The distance between a ship and itself is zero.
+	 * @post	The distance between a round entity and itself is zero.
 	 * 			| if (distance == (-2*this.getRadius()))
 	 *				then return 0;		
 	 * 
 	 * @throws	NullPointerException()
-	 * 			The given ship must exist.
-	 * 			| ship == null
+	 * 			The given round entity must exist.
+	 * 			| other == null
 	 */
 	@Raw
 	@Immutable
@@ -655,43 +655,43 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Check if the given ship overlaps this ship.
+	 * Check if the given round entity overlaps this round entity.
 	 * 
-	 * @param 	ship
-	 * 			The given ship.
+	 * @param 	other
+	 * 			The given round entity.
 	 * 
-	 * @return	Ships overlap if the distance between them is less then or equals 0.
-	 * 			| result == this.getDistanceBetween(ship) <= 0
+	 * @return	Round entities overlap if the distance between them is less then or equals 0.
+	 * 			| result == this.getDistanceBetween(other) <= 0
 	 * 
 	 * @throws 	NullPointerException()
-	 * 			The given ship must exist.
-	 * 			| ship == null
+	 * 			The given round entity must exist.
+	 * 			| other == null
 	 */
 	@Raw
 	@Immutable
-	public boolean overlap(RoundEntity ship) throws NullPointerException {
-		if (ship == null)
+	public boolean overlap(RoundEntity other) throws NullPointerException {
+		if (other == null)
 			throw new NullPointerException();
 		
-		return this.getDistanceBetween(ship) <= 0;
+		return this.getDistanceBetween(other) <= 0;
 	}
 	
 	
 	/**
-	 * A method that gives the time between a collision of 2 ships. 
-	 * This method does not apply on two ships that overlap.
+	 * A method that gives the time between a collision of 2 round entities. 
+	 * This method does not apply on two round entities that overlap.
 	 * 
 	 * @param 	other
-	 * 			A second ship to check if this ship collides with.
+	 * 			A second round entity to check if this round entity collides with.
 	 * 
-	 * @return	Returns the time until collision with the other ship.
+	 * @return	Returns the time until collision with the other round entity.
 	 * 			| result == -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
 	 * 
-	 * @return 	The time will be positive infinity if the ships will never collide.
+	 * @return 	The time will be positive infinity if the round entities will never collide.
 	 * 			| result == Double.POSITIVE_INFINITY
 	 * 
 	 * @throws 	NullPointerException
-	 * 			Throw a NullPointerException if one of the 2 ships doesn't exist.
+	 * 			Throw a NullPointerException if one of the 2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 */
 	@Raw
@@ -712,19 +712,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the distance in x- and y-direction between the 
-	 * centres of the ships.
+	 * centres of the round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the distance between.
+	 * 			The second round entity to check the distance between.
 	 * 
 	 * @post 	The deltaDistance will be a list of the difference between 
-	 * 			the 2 centres of the ship.
-	 * 			|deltaDistance =  {other.getxPosition()-this.getxPosition(),
-	 *			other.getyPosition()-this.getyPosition()}
+	 * 			the 2 centres of the round entities.
+	 * 			| deltaDistance =  {other.getxPosition()-this.getxPosition(),
+	 *			| other.getyPosition()-this.getyPosition()}
 	 *			
 	 * @throws 	NullPointerException
-	 * 			the method will throw a NullPointerException if one of the 2 ships 
-	 * 			doesn't exist
+	 * 			The method will throw a NullPointerException if one of the 2 round entities 
+	 * 			doesn't exist.
 	 * 			| other == null || this == null
 	 */
 	@Raw
@@ -739,19 +739,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the difference in velocity in x- and y-direction 
-	 * between two ships.
+	 * between two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the difference in velocity between.
+	 * 			The second round entity to check the difference in velocity between.
 	 * 
 	 * @post 	The deltaVelocity will be a double[] of the difference in 
-	 * 			velocity between the 2 ships.
+	 * 			velocity between the 2 round entities.
 	 * 			| deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
-	 *			other.getyVelocity()-this.getyVelocity()};
+	 *			| other.getyVelocity()-this.getyVelocity()};
 	 *
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 */	
 	@Raw
@@ -766,19 +766,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the square of the difference in position between 
-	 * the centres of the two ships.
+	 * the centres of the two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the square of the difference in position between.
+	 * 			The second round entity to check the square of the difference in position between.
 	 * 
 	 * @post	The deltaPowDistance will be the sum of the squares of the x- and y- in 
-	 * 			distance between the centres of the ships.
+	 * 			distance between the centres of the round entities.
 	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
-	 *				Math.pow(getDeltaDistance(other)[1],2);
+	 *			|	Math.pow(getDeltaDistance(other)[1],2);
 	 *				
 	 * @throws 	NullPointerException
-	 * 			the method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 */	
 	@Raw
@@ -793,19 +793,19 @@ public abstract class RoundEntity {
 
 	/**
 	 * A method that calculates the square of the difference in velocity 
-	 * between two ships.
+	 * between two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the square of the difference in velocity between.
+	 * 			The second round entity to check the square of the difference in velocity between.
 	 * 
 	 * @post	The deltaPowVelocity will be the sum of the squares of the x- and 
-	 * 			y- difference in velocity between the ships.
+	 * 			y- difference in velocity between the round entities.
 	 * 			| double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
-	 *				Math.pow(getDeltaVelocity(other)[1], 2);
+	 *			|	Math.pow(getDeltaVelocity(other)[1], 2);
 	 *
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 */	
 	@Raw
@@ -820,20 +820,20 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the scalarProduct of the difference 
-	 * in position and velocity between two ships.
+	 * in position and velocity between two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the scalarProduct of the difference 
+	 * 			The second round entity to check the scalarProduct of the difference 
 	 * 			in position and velocity between.
 	 * 
 	 * @post 	The deltaDistanceVelocity will be the sum of the product of x- and 
-	 * 			y-distance and difference in velocity of the two ships.
+	 * 			y-distance and difference in velocity of the two round entities.
 	 * 			| deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
-	 *				(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+	 *			|	(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
 	 *
 	 * @throws 	NullPointerException
-	 * 			The method will throw a nullpointerexception if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 */		
 	@Raw
@@ -846,21 +846,22 @@ public abstract class RoundEntity {
 		return deltaDistanceVelocity;
 	}
 	/**
-	 * A method that calculates d between two ships. D is a value described by a mathematical formula,
+	 * A method that calculates d between two round entities. 
+	 * D is a value described by a mathematical formula,
 	 * as seen in the body of this function. It is a value needed in other functions.
 	 * 
 	 * @param 	other
-	 * 			A second ship with which you want to calculate d with.
+	 * 			A second round entity with which you want to calculate d with.
 	 * 
 	 * @post 	The d will be the square of the deltaDistanceVelocitylowered by the 
 	 * 			product of the deltaPowVelocity with the difference between 
-	 * 			deltaPowVelocity and the distance between the two ships.
+	 * 			deltaPowVelocity and the distance between the two round entities.
 	 * 			| d = Math.pow(getDeltaDistanceVelocity(other),2)-
 	 *				(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
 	 *
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 */	
 	@Raw
@@ -875,18 +876,18 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Get the point of collision if two ships will ever collide. 
+	 * Get the point of collision, if two round entities will ever collide. 
 	 * 
 	 * @param 	other
-	 * 			A second ship to calculate the collision position with.
+	 * 			A second round entity to calculate the collision position with.
 	 * 
-	 * @post 	The collisionPoint will be the point where the two ships hit.
+	 * @post 	The collisionPoint will be the point where the two round entities hit.
 	 * 			| collisionPoint = this.getPositionAfterMoving(time)+
-									this.getRadius()*getDeltaDistance(other)/getD(other)
-									
+	 *			|					this.getRadius()*getDeltaDistance(other)/getD(other)
+	 *								
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * 
 	 */
