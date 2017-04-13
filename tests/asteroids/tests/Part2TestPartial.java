@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import asteroids.model.Bullet;
 import asteroids.model.Ship;
+import asteroids.model.Space;
 import asteroids.model.World;
 import asteroids.facade.Facade;
 import asteroids.part2.facade.IFacade;
@@ -23,6 +24,7 @@ public class Part2TestPartial {
 	public void setUp() {
 		facade = new Facade();
 	}
+	
 
 	@Test
 	public void testCreateWorld() throws ModelException {

@@ -7,6 +7,7 @@ public class World extends Space {
 	@Raw 
 	public World(double width, double height) throws IllegalArgumentException{
 		super(width,height);
+		
 	}
 
 }

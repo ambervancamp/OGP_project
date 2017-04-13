@@ -1,5 +1,5 @@
 package asteroids.model;
 
-public class Bullet {
+public class Bullet extends RoundEntity {
 
 }

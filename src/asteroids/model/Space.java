@@ -31,13 +31,20 @@ public abstract class Space {
 	 */
 	@Raw 
 	@Model
-	protected Space(double width, double height, Ship ship, Bullet bullet) throws IllegalArgumentException{
+	protected Space(double width, double height) throws IllegalArgumentException{
 		setWidth(width);
 		setHeight(height);
-		setShip(ship);
-		setBullet(bullet);
+		for (Entity allEntities : entities)
+			addEntity(allEntities);
 	}
 	
+	
+	public double[] getSpaceSize(Space space) throws IllegalArgumentException{
+		if (!this.isTerminated())
+			return new double[] {this.getWidth(), this.getHeight()};
+		return new double[] {Double.MAX_VALUE,Double.MAX_VALUE};
+		
+	}
 	/**
 	 * Check whether this world still exists.
 	 */
@@ -154,7 +161,7 @@ public abstract class Space {
 			return false;
 	}
 	
-	
+
 	/**
 	 * 
 	 * @param 	entity
@@ -239,15 +246,12 @@ public abstract class Space {
 		for (Entity otherEntity : entities)
 			if (otherEntity == entity)
 				entities.remove(entity);
+		
 		/**
-		 * entity moet ook nog uit de world
+		 * entity moet ook nog uit de world?
 		 */
 		
 	}
-	
-	private Ship ship;
-	private Bullet bullet;
-	private List<Entity> entities = new ArrayList<Entity>();
 	
 	/**
 	 * 
@@ -296,5 +300,9 @@ public abstract class Space {
 		
 	}
 	
-	private double smallestTimeToCollision = Double.POSITIVE_INFINITY;
+	/**
+	 * a list of all the entities that are located in this world
+	 */
+	private List<Entity> entities = new ArrayList<Entity>();
+	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

@@ -10,7 +10,7 @@ public class TestsPart1 {
 	private static final double EPSILON = 0.0001;
 	
 	@Test
-	public void testCanHaveAsxPosition(){
+	public void testCanHaveAsPosition(){
 		assertTrue(Ship.canHaveAsPosition(-1,-1));
 		assertFalse(Ship.canHaveAsPosition(Double.NaN,Double.NaN));
 		assertTrue(Ship.canHaveAsPosition(0,0));
@@ -31,7 +31,7 @@ public class TestsPart1 {
 	}
 
 	@Test
-	public void testCanHaveAsxVelocity(){
+	public void testCanHaveAsVelocity(){
 		assertTrue(Ship.canHaveAsVelocity(-1,-1));
 		assertFalse(Ship.canHaveAsVelocity(Double.NaN, Double.NaN));
 		assertTrue(Ship.canHaveAsVelocity(0,0));
