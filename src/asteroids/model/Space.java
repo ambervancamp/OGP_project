@@ -2,6 +2,7 @@ package asteroids.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
@@ -154,166 +155,147 @@ public abstract class Space {
 			return false;
 	}
 	
-	/**
-	 * Return the ships in this world
-	 */
-	public List<Ship> getShip(){
-		return new ArrayList<Ship>();
-	}
 	
 	/**
 	 * 
-	 * @param 	ship
-	 * 			The ship to check
-	 * @return	If this ship is terminated, true if and only if
-	 * 			the given ship is not effective.
+	 * @param 	entity
+	 * 			The entity to check
+	 * @return	If this entity is terminated, true if and only if
+	 * 			the given intity is not effective.
 	 * 			| if(this.isTermiated())
-	 * 			| then result == (ship==null)
-	 * @return	False if and only if the ship is already located in this world
-	 * 			| ship in ships
-	 * @return	True if and only if the given ship is 
-	 * 			either not effective, not terminated and not yet positioned in this world
-	 * 			| else result == (ship==null) || (!ship.isTereminated())
+	 * 			| then result == (entity==null)
+	 * @return	False if and only if the entity is already located in this world
+	 * 			| entity in entities
+	 * @return	False if and only if the entity doesn't fit the boundaries of this world.
+	 * 			@see implempentation
+	 * @return	False if and only if the given intity is 
+	 * 			either not effective and not terminated
+	 * 			| else result == (entity==null) || (!ship.isTerminated())
 	 */
 	@Raw 
-	public boolean canHaveAsShip(Ship ship){
+	public boolean canHaveAsEntity(Entity entity){
 		if (this.isTerminated())
-			return(ship == null);
-		for (Ship otherShip : ships)
-			if (otherShip == ship)
+			return(entity == null);
+		for (Entity otherEntity : entities)
+			if (otherEntity == entity)
 				return false;
-		if (ship==null || !ship.isTerminated())
+		else if (entity==null || !entity.isTerminated())
+			return  false;
+		else if (fitBoundary(entity) == true)
 			return true;
 	}
 	
 	/**
+	 * Check whether the given entity can be put in the world.
 	 * 
-	 * @param 	ship
-	 * 			The new ship in this world.
-	 * @throws 	IllegalArgumentException
-	 * 			The given ship is not effective or can not be placed in this world
-	 * 			| (ship == null)||
-	 * 			| !canHaveAsShip(ship)
+	 * @param 	entity
+	 * 			The entity to check
+	 * @return 	@see implementation
 	 */
-	public void addShip(Ship ship) throws IllegalArgumentException{
-		if (ship == null || !canHaveAsShip(ship))
+	public boolean fitBoundary(Entity entity){
+		if (entity.isTerminated())
+			return true;
+		else if (this.isTerminated())
+			return true;
+		else if (entity.getxPosition()+entity.getRadius() > this.getWidth() ||
+				entity.getxPosition()-entity.getRadius() < 0 ||
+				entity.getyPosition()+entity.getRadius() > this.getWidth() ||
+				entity.getyPosition()-entity.getRadius() < 0 ||)
+			return false;
+		
+	}
+
+	/**
+	 * 
+	 * @param 	entity
+	 * 			The new entity in this world.
+	 * @throws 	IllegalArgumentException
+	 * 			The given entity is not effective or can not be placed in this world
+	 * 			| (entity == null)||
+	 * 			| !canHaveAsEntity(entity)
+	 */
+	public void addEntity(Entity entity) throws IllegalArgumentException{
+		if (entity == null || !canHaveAsEntity(entity))
 			throw new IllegalArgumentException();
-		for (Ship otherShip : ships){
-			if (ship.overlap(otherShip))
-				throw new IllegalArgumentException();
-		}
-		for (Bullet otherBullet : bullets){
-			/ methode overlap zou moeten bestaan in bullet
-			if (ship.overlap(otherBullet))
+		for (Entity otherEntity : entities){
+			if (entity.overlap(otherEntity))
 				throw new IllegalArgumentException();
 		}					
-		ships.add(ship);
+		entities.add(entity);
 		/** 
-		 * ship moet ook in de world bijkomen
+		 * entity moet ook in de world bijkomen
 		 */
 	}
 	
 	/**
 	 * 
-	 * @param 	ship
-	 * 			the ship we want to remove from this world
-	 * @post	The ship will not be in the lists of ships in this world
-	 * 			| !hasAsShip(ship)	
+	 * @param 	entity
+	 * 			the entity we want to remove from this world
+	 * @post	The entity will not be in the lists of entities in this world
+	 * 			| !hasAsEntity(entity)	
 	 */
-	public void deleteShip(Ship ship) throws IllegalArgumentException{
-		if (ship == null)
+	public void deleteEntity(Entity entity) throws IllegalArgumentException{
+		if (entity == null)
 			throw new IllegalArgumentException();
-		for (Ship otherShip : ships)
-			if (otherShip == ship)
-				ships.remove(ship);
+		for (Entity otherEntity : entities)
+			if (otherEntity == entity)
+				entities.remove(entity);
 		/**
 		 * ship moet ook nog uit de world
 		 */
 		
 	}
 	
-
-	/**
-	 * Return the bullets in this world
-	 */
-	public List<Bullet> getBullet(){
-		return new ArrayList<Bullet>();
-	}
+	private Ship ship;
+	private Bullet bullet;
+	private List<Entity> entities = new ArrayList<Entity>();
 	
 	/**
 	 * 
-	 * @param bullet
-	 * 			The bullet to check
-	 * @return	If this bullet is terminated, true if and only if
-	 * 			the given bullet is not effective.
-	 * 			| if(this.isTermiated())
-	 * 			| then result == (bullet==null)
-	 * @return	False if and only if the bullet is already located in this world
-	 * 			| bullet in bullets
-	 * @return	True if and only if the given bullets 
-	 * 			either not effective, not terminated and not yet positioned in this world
-	 * 			| else result == (bullet==null) || (!bullet.isTereminated())
+	 * @param 	xPosition
+	 * 			The given x-position of the coordinate we want to check.
+	 * @param 	yPosition
+	 * 			The given x-position of the coordinate we want to check.
+	 * @return	The entity, if one, which is located at the given position
 	 */
-	@Raw 
-	public boolean canHaveAsBullet(Bullet bullet){
+	public Entity coincidePosition(Double xPosition, Double yPosition){
 		if (this.isTerminated())
-			return(bullet == null);
-		for (Bullet otherBullet : bullets)
-			if (otherBullet == bullet)
-				return false;
-		/ methode die kijkt of de bullet nog bestaat 
-		if (bullet==null || !bullet.isTerminated())
-			return true;
-	}
-	
-	/**
-	 * 
-	 * @param 	bullet
-	 * 			The new bullet in this world.
-	 * @throws 	IllegalArgumentException
-	 * 			The given bullet is not effective or can not be placed in this world
-	 * 			| (bullet == null)||
-	 * 			| !canHaveAsBullet(bullet)
-	 */
-	public void addBullet(Bullet bullet) throws IllegalArgumentException{
-		if (bullet == null || !canHaveAsBullet(bullet))
-			throw new IllegalArgumentException();
-		for (Ship otherShip : ships){
-			if (bullet.overlap(otherShip))
-				throw new IllegalArgumentException();
+			return null;
+		for (Entity entity : entities)
+			if (entity.getPosition[0] == xPosition && entity.getPosition[1] == yPosition)
+				return entity;
+		return null;
 		}
-		for (Bullet otherBullet : bullets){
-			/ methode overlap zou moeten bestaan in bullet
-			if (bullet.overlap(otherBullet))
-				throw new IllegalArgumentException();
-		}					
-		bullets.add(bullet);
-		/** 
-		 * bullet moet ook in de world bijkomen
-		 */
-	}
 	
 	/**
-	 * 
-	 * @param 	ship
-	 * 			the ship we want to remove from this world
-	 * @post	The ship will not be in the lists of ships in this world
-	 * 			| !hasAsShip(ship)	
+	 * This method evolves the world with a given duration time
+	 * @param 	duration
+	 * 			the duration of the time we want the world to evolve
+	 * @throws 	IllegalArgumentException
+	 * 			if and only if the world doesn't exist, the duration is negative or not a number
+	 * 			| this.isTerminated() ||
+	 * 			| duration<0 || 
+	 * 			| duration == Double.NaN
+	 * @effect 	the entities are located on other position conform to the rules of 
+	 * 			movement
 	 */
-	public void deleteBullet(Bullet bullet) throws IllegalArgumentException{
-		if (bullet == null)
+	public void evolve(double duration) throws IllegalArgumentException{
+		if (this.isTerminated() || duration<0 || duration == Double.NaN)
 			throw new IllegalArgumentException();
-		for (Bullet otherBullet : bullets)
-			if (otherBullet == bullet)
-				bullets.remove(bullet);
-		/**
-		 * bullet moet ook nog uit de world
-		 */
+		
+		for (Entity firstEntity : entities)
+			for (Entity secondEntity : entities)
+				if (firstEntity.getTimeToCollision(secondEntity) < smallestTimeToCollision)
+					smallestTimeToCollision = firstEntity.getTimeToCollision(secondEntity);
+		for (Entity otherEntity : entities)
+			if (smallestTimeToCollision > duration)
+				otherEntity.getPositionAfterMoving(duration);
+			else 
+				otherEntity.getPositionAfterMoving(smallestTimeToCollision);
+		duration = duration-smallestTimeToCollision;
+		evolve(duration);
 		
 	}
 	
-	private Ship ship;
-	private Bullet bullet;
-	private final List<Ship> ships = new ArrayList<Ship>();
-	private final List<Bullet> bullets = new ArrayList<Bullet>();
+	private double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 
