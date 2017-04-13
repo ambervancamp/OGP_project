@@ -31,13 +31,20 @@ public abstract class Space {
 	 */
 	@Raw 
 	@Model
-	protected Space(double width, double height, Ship ship, Bullet bullet) throws IllegalArgumentException{
+	protected Space(double width, double height) throws IllegalArgumentException{
 		setWidth(width);
 		setHeight(height);
-		setShip(ship);
-		setBullet(bullet);
+		for (RoundEntity allEntities : entities)
+			addEntity(allEntities);
 	}
 	
+	
+	public double[] getSpaceSize(Space space) throws IllegalArgumentException{
+		if (!this.isTerminated())
+			return new double[] {this.getWidth(), this.getHeight()};
+		return new double[] {Double.MAX_VALUE,Double.MAX_VALUE};
+		
+	}
 	/**
 	 * Check whether this world still exists.
 	 */
@@ -59,7 +66,7 @@ public abstract class Space {
 	 * 			
 	 */
 	public void terminate(){
-		for (Entity allEntities : entities)
+		for (RoundEntity allEntities : entities)
 			deleteEntity(allEntities);
 		this.width = Double.NaN;
 		this.height = Double.NaN;
@@ -155,6 +162,10 @@ public abstract class Space {
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
+	public List getEntity(){
+		return entities;
+	}
 	/**
 	 * 
 	 * @param 	entity
@@ -172,16 +183,17 @@ public abstract class Space {
 	 * 			| else result == (entity==null) || (!ship.isTerminated())
 	 */
 	@Raw 
-	public boolean canHaveAsEntity(Entity entity){
+	public boolean canHaveAsEntity(RoundEntity entity){
 		if (this.isTerminated())
 			return(entity == null);
-		for (Entity otherEntity : entities)
-			if (otherEntity == entity)
-				return false;
-		else if (entity==null || !entity.isTerminated())
-			return  false;
+		for (RoundEntity otherEntity : entities)
+			if (otherEntity != entity)
+				return true;
+		else if (entity!=null && entity.isTerminated())
+			return  true;
 		else if (fitBoundary(entity) == true)
 			return true;
+		return false;
 	}
 	
 	/**
@@ -191,17 +203,17 @@ public abstract class Space {
 	 * 			The entity to check
 	 * @return 	@see implementation
 	 */
-	public boolean fitBoundary(Entity entity){
+	public boolean fitBoundary(RoundEntity entity){
 		if (entity.isTerminated())
 			return true;
 		else if (this.isTerminated())
 			return true;
-		else if (entity.getxPosition()+entity.getRadius() > this.getWidth() ||
-				entity.getxPosition()-entity.getRadius() < 0 ||
-				entity.getyPosition()+entity.getRadius() > this.getWidth() ||
-				entity.getyPosition()-entity.getRadius() < 0)
-			return false;
-		
+		else if (entity.getxPosition()+entity.getRadius() <= this.getWidth() &&
+				entity.getxPosition()-entity.getRadius() >= 0 &&
+				entity.getyPosition()+entity.getRadius() <= this.getHeight() &&
+				entity.getyPosition()-entity.getRadius() >= 0)
+			return true;
+		return false;
 	}
 
 	/**
@@ -213,10 +225,10 @@ public abstract class Space {
 	 * 			| (entity == null)||
 	 * 			| !canHaveAsEntity(entity)
 	 */
-	public void addEntity(Entity entity) throws IllegalArgumentException{
+	public void addEntity(RoundEntity entity) throws IllegalArgumentException{
 		if (entity == null || !canHaveAsEntity(entity))
 			throw new IllegalArgumentException();
-		for (Entity otherEntity : entities){
+		for (RoundEntity otherEntity : entities){
 			if (entity.overlap(otherEntity))
 				throw new IllegalArgumentException();
 		}					
@@ -233,21 +245,18 @@ public abstract class Space {
 	 * @post	The entity will not be in the lists of entities in this world
 	 * 			| !hasAsEntity(entity)	
 	 */
-	public void deleteEntity(Entity entity) throws IllegalArgumentException{
+	public void deleteEntity(RoundEntity entity) throws IllegalArgumentException{
 		if (entity == null)
 			throw new IllegalArgumentException();
-		for (Entity otherEntity : entities)
+		for (RoundEntity otherEntity : entities)
 			if (otherEntity == entity)
 				entities.remove(entity);
+		
 		/**
-		 * entity moet ook nog uit de world
+		 * entity moet ook nog uit de world?
 		 */
 		
 	}
-	
-	private Ship ship;
-	private Bullet bullet;
-	private List<Entity> entities = new ArrayList<Entity>();
 	
 	/**
 	 * 
@@ -257,11 +266,11 @@ public abstract class Space {
 	 * 			The given x-position of the coordinate we want to check.
 	 * @return	The entity, if one, which is located at the given position
 	 */
-	public Entity coincidePosition(Double xPosition, Double yPosition){
+	public RoundEntity coincidePosition(Double xPosition, Double yPosition){
 		if (this.isTerminated())
 			return null;
-		for (Entity entity : entities)
-			if (entity.getPosition[0] == xPosition && entity.getPosition[1] == yPosition)
+		for (RoundEntity entity : entities)
+			if (entity.xPosition == xPosition && entity.yPosition == yPosition)
 				return entity;
 		return null;
 		}
@@ -282,11 +291,11 @@ public abstract class Space {
 		if (this.isTerminated() || duration<0 || duration == Double.NaN)
 			throw new IllegalArgumentException();
 		
-		for (Entity firstEntity : entities)
-			for (Entity secondEntity : entities)
+		for (RoundEntity firstEntity : entities)
+			for (RoundEntity secondEntity : entities)
 				if (firstEntity.getTimeToCollision(secondEntity) < smallestTimeToCollision)
 					smallestTimeToCollision = firstEntity.getTimeToCollision(secondEntity);
-		for (Entity otherEntity : entities)
+		for (RoundEntity otherEntity : entities)
 			if (smallestTimeToCollision > duration)
 				otherEntity.getPositionAfterMoving(duration);
 			else 
@@ -296,5 +305,9 @@ public abstract class Space {
 		
 	}
 	
-	private double smallestTimeToCollision = Double.POSITIVE_INFINITY;
+	/**
+	 * a list of all the entities that are located in this world
+	 */
+	private List<RoundEntity> entities = new ArrayList<RoundEntity>();
+	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

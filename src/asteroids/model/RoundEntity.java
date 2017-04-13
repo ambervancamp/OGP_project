@@ -514,6 +514,98 @@ public abstract class RoundEntity {
 		else
 			return true;
 	}
+<<<<<<< HEAD
+	// Terminate functies voor SPACE moeten bestaan
+	// OPM: import statement nodig om functies van Space te gebruiken?
+	
+	/**
+	 * Check whether this round entity has a proper space.
+	 * 
+	 * @return True if and only if this round entity can have its space
+	 *         as its space, and if that space, if it is effective, in turn references
+	 *         this round entity.
+	 *       | result ==
+	 *       |   canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this)
+	 *
+	 * @return
+	 */
+	public boolean hasProperSpace() {
+		return canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this);
+	}
+	// equivalent in Space: checkers en setters voor meervoudigheid
+	// bv ship of bullet mag niet al ergens anders in zitten
+	
+	/**
+	 * Check whether this round entity has a space.
+	 *
+	 * @return 	True if this person references an effective space,
+	 *         	false otherwise.
+	 *       	| result == (this.getSpace != null)
+	 */
+	public boolean hasSpace(){
+		return (this.getSpace != null);
+	}
+	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
+	
+	/**
+	 * 
+	 * @param space
+	 * @throws IllegalArgumentException
+	 */
+	public void placeInSpace(Space space) throws IllegalArgumentException {
+		if ((!canHaveAsSpace(space)))
+			throw new IllegalArgumentException();
+		if (this.hasSpace()){
+			this.RemoveOutSpace();
+			this.setSpace(space);
+			space.addEntity(this);
+		}
+		else {
+			this.setSpace(space);
+			space.addEntity(this);	
+		}
+	}
+	// SPACE moet een functie 'setEntity' hebben.
+	// used in subclasses in constructor to place in space
+	
+	/**
+	 * Remove this round entity from the space it's in, if any.
+	 * 
+	 * @return 	The round entity will not be placed in any space.
+	 * 			| !new.hasSpace()
+	 * 
+	 * @post	The former space of this round entity, if any, is no longer
+	 *		   	its space.
+	 *       	| if (this.hasSpace())
+	 *       	|   then ! (new (this.getSpace())).hasEntity(this)) 
+	 */
+	private void removeOutSpace(){
+		// If statement in principle not necessary, because RemoveOutSpace() is only used when
+		// sure the round entity has a space (no boundary case).
+		if (this.hasSpace()){
+			getSpace().deleteEntity(this);
+			this.space = null;
+			// Can not use 'setSpace' because it does not allow to set a space to null.	
+		}		
+	}
+	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
+	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
+	//OF NET WORDT AANGEMAAKT.
+	//SPACE MOET EEN FUNCTIE 'RemoveEntity' HEBBEN
+	//SPACE MOET EEN FUNCTIE 'hasEntity' HEBBEN
+	
+	/**
+	 * Variable registering the space this round entity is placed in.
+	 */
+	protected Space space = null;
+	// SPACE ALS SUPER KLASSE -> WORLD / UNBOUND SPACE
+	// ELKE BULLET EN SHIP MOETEN IN 1 EN SLECHTS 1 SPACE ZITTEN;
+	// TENZIJ: BULLETS KUNNEN OOK IN SHIPS ZITTEN (MEERVOUDIGE ASSOCIATION VOOR SHIP)
+	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
+	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
+	// ingesteld worden.	
+}
+=======
 	// Terminate functies voor SPACE moeten bestaan -> OK
 	// OPM: import statement nodig om functies van Space te gebruiken?
 	
@@ -531,6 +623,7 @@ public abstract class RoundEntity {
 	public boolean hasProperSpace() {
 		return canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this);
 	}
+
 	// equivalent in Space: checkers en setters voor meervoudigheid
 	// bv ship of bullet mag niet al ergens anders in zitten
 	
@@ -917,3 +1010,4 @@ public abstract class RoundEntity {
 		}
 	}
 }
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
