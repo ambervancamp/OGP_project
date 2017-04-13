@@ -59,8 +59,8 @@ public abstract class Space {
 	 * 			
 	 */
 	public void terminate(){
-		unsetShip();
-		unsetBullets();
+		for (Entity allEntities : entities)
+			deleteEntity(allEntities);
 		this.width = Double.NaN;
 		this.height = Double.NaN;
 	}
@@ -96,7 +96,6 @@ public abstract class Space {
 	 * 			The given height is not a possible height for this world.
 	 * 			| !canHaveAsHeight(height)
 	 */
-	public
 	public void setHeight(double height){
 		if (!canHaveAsWidth(width))
 			this.height=maxHeight;
@@ -200,7 +199,7 @@ public abstract class Space {
 		else if (entity.getxPosition()+entity.getRadius() > this.getWidth() ||
 				entity.getxPosition()-entity.getRadius() < 0 ||
 				entity.getyPosition()+entity.getRadius() > this.getWidth() ||
-				entity.getyPosition()-entity.getRadius() < 0 ||)
+				entity.getyPosition()-entity.getRadius() < 0)
 			return false;
 		
 	}
@@ -241,7 +240,7 @@ public abstract class Space {
 			if (otherEntity == entity)
 				entities.remove(entity);
 		/**
-		 * ship moet ook nog uit de world
+		 * entity moet ook nog uit de world
 		 */
 		
 	}
