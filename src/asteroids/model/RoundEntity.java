@@ -84,36 +84,22 @@ public abstract class RoundEntity {
 		this.radius = radius;
 	}
 	
-//	/**
-//	 * Create a new round entity with a default position, velocity and radius. 
-//	 * 
-//	 * @post  	The position of this new ship is (0,0).
-//	 *        	| new.getPosition() == {0,0}
-//	 *        
-//	 * @post  	The velocity of this new ship is (0,0).
-//	 *        	| new.getVelocity() == {0,0}
-//	 *        
-//	 * @post  	The radius of this new ship is getMinRadius.
-//	 *        	| new.getRadius() == getMinRadius()
-//	 *        
-//	 * @effect 	The result is a circle with radius getMinRadius() centered on (0, 0) with no speed.
-//	 */
-//	protected RoundEntity() throws IllegalArgumentException {
-//		this(0,0,0,0,getMinRadius());
-//	}
-	
 	/**
 	 * Terminate this round entity.
 	 *
-	 * @post   This round entity is terminated.
-	 *       | new.isTerminated()
+	 * @post   	This round entity is terminated.
+	 *       	| new.isTerminated()
+	 *       
+	 * @effect	If this round entity is in a space, it is removed.
+	 * 			| if (this.getSpace()!=null)
+	 * 			| 	then this.removeOutSpace()
 	 */
 	public void terminate() {
-		// SET ROUND ENTITY FREE OF ITS LOCATION IT IS IN
-		// IN DOCUMENTATIE: @effect this round entity is freed from its space its in
-		// 					| this.setapart()
+		if (this.getSpace()!=null)
+			this.removeOutSpace();
 		this.isTerminated = true;
 	}
+	// OVERRIDE IN BULLET
 
 	/**
 	 * Return a boolean indicating whether or not this round entity
@@ -496,6 +482,7 @@ public abstract class RoundEntity {
 	}
 	
 	/**
+	 * Checks whether the given space is a valid space for any round entity.
 	 * 
 	 * @param 	space
 	 * 			| The given space to check if this round entity can be placed in.
@@ -506,7 +493,7 @@ public abstract class RoundEntity {
 	 *       
 	 * @return	True if all the above isn't true.
 	 * 			| else
-	 * 				result == true
+	 * 			|	result == true
 	 */
 	public boolean canHaveAsSpace(Space space){
 		if (space == null || (space.isTerminated()) || (this.isTerminated()))
@@ -514,20 +501,16 @@ public abstract class RoundEntity {
 		else
 			return true;
 	}
-<<<<<<< HEAD
-	// Terminate functies voor SPACE moeten bestaan
 	// OPM: import statement nodig om functies van Space te gebruiken?
 	
 	/**
 	 * Check whether this round entity has a proper space.
 	 * 
-	 * @return True if and only if this round entity can have its space
-	 *         as its space, and if that space, if it is effective, in turn references
-	 *         this round entity.
-	 *       | result ==
-	 *       |   canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this)
-	 *
-	 * @return
+	 * @return 	True if and only if this round entity can have its space
+	 *         	as its space, and if that space, if it is effective, in turn references
+	 *         	this round entity.
+	 *       	| result ==
+	 *       	|   canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this)
 	 */
 	public boolean hasProperSpace() {
 		return canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this);
@@ -543,20 +526,35 @@ public abstract class RoundEntity {
 	 *       	| result == (this.getSpace != null)
 	 */
 	public boolean hasSpace(){
-		return (this.getSpace != null);
+		return (this.getSpace() != null);
 	}
 	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
 	
 	/**
+	 * Set space from this round entity to given space. If it's already in a space, it's replaced to 
+	 * the new place. Also places round entity in given space.
 	 * 
-	 * @param space
-	 * @throws IllegalArgumentException
+	 * @param 	space
+	 * 			The given space to put the round entity in.
+	 * 
+	 * @effect	The given space will be the new space of this round entity.
+	 * 			| this.setSpace(space)
+	 * 
+	 * @post 	If the round entity's already placed in a space, first it will be removed from
+	 * 			that space. Then it will set space as its space.
+	 * 			| if (this.hasSpace()){
+	 *			|	then this.removeOutSpace();
+	 *			|	this.setSpace(space);		
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			If the space is not valid.
+	 * 			| !canHaveAsSpace(space)
 	 */
 	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();
 		if (this.hasSpace()){
-			this.RemoveOutSpace();
+			this.removeOutSpace();
 			this.setSpace(space);
 			space.addEntity(this);
 		}
@@ -565,11 +563,11 @@ public abstract class RoundEntity {
 			space.addEntity(this);	
 		}
 	}
-	// SPACE moet een functie 'setEntity' hebben.
 	// used in subclasses in constructor to place in space
 	
 	/**
-	 * Remove this round entity from the space it's in, if any.
+	 * Remove the space from this round entity, if any. It is not placed into a new space.
+	 * The round entity is also removed from the space.
 	 * 
 	 * @return 	The round entity will not be placed in any space.
 	 * 			| !new.hasSpace()
@@ -591,100 +589,8 @@ public abstract class RoundEntity {
 	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
 	//OF NET WORDT AANGEMAAKT.
-	//SPACE MOET EEN FUNCTIE 'RemoveEntity' HEBBEN
-	//SPACE MOET EEN FUNCTIE 'hasEntity' HEBBEN
-	
-	/**
-	 * Variable registering the space this round entity is placed in.
-	 */
-	protected Space space = null;
-	// SPACE ALS SUPER KLASSE -> WORLD / UNBOUND SPACE
-	// ELKE BULLET EN SHIP MOETEN IN 1 EN SLECHTS 1 SPACE ZITTEN;
-	// TENZIJ: BULLETS KUNNEN OOK IN SHIPS ZITTEN (MEERVOUDIGE ASSOCIATION VOOR SHIP)
-	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
-	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
-	// ingesteld worden.	
-}
-=======
-	// Terminate functies voor SPACE moeten bestaan -> OK
-	// OPM: import statement nodig om functies van Space te gebruiken?
-	
-	/**
-	 * Check whether this round entity has a proper space.
-	 * 
-	 * @return True if and only if this round entity can have its space
-	 *         as its space, and if that space, if it is effective, in turn references
-	 *         this round entity.
-	 *       | result ==
-	 *       |   canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this)
-	 *
-	 * @return
-	 */
-	public boolean hasProperSpace() {
-		return canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this);
-	}
 
-	// equivalent in Space: checkers en setters voor meervoudigheid
-	// bv ship of bullet mag niet al ergens anders in zitten
-	
-	/**
-	 * Check whether this round entity has a space.
-	 *
-	 * @return 	True if this person references an effective space,
-	 *         	false otherwise.
-	 *       	| result == (this.getSpace != null)
-	 */
-	public boolean hasSpace(){
-		return (this.getSpace() != null);
-	}
-	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
-	
-	/**
-	 * 
-	 * @param space
-	 * @throws IllegalArgumentException
-	 */
-	public void PlaceInSpace(Space space) throws IllegalArgumentException {
-		if ((!canHaveAsSpace(space)))
-			throw new IllegalArgumentException();
-		if (this.hasSpace()){
-			this.RemoveOutSpace();
-			this.setSpace(space);
-			space.addEntity(this);
-		}
-		else {
-			this.setSpace(space);
-			space.addEntity(this);	
-		}
-	}
-	// SPACE moet een functie 'setEntity' hebben -> OK
-	// used in subclasses in constructor to place in space -> OK
-	
-	/**
-	 * Remove this round entity from the space it's in, if any.
-	 * 
-	 * @return 	The round entity will not be placed in any space.
-	 * 			| !new.hasSpace()
-	 * 
-	 * @post	The former space of this round entity, if any, is no longer
-	 *		   	its space.
-	 *       	| if (this.hasSpace())
-	 *       	|   then ! (new (this.getSpace())).hasEntity(this)) 
-	 */
-	private void RemoveOutSpace(){
-		// If statement in principle not necessary, because RemoveOutSpace() is only used when
-		// sure the round entity has a space (no boundary case).
-		if (this.hasSpace()){
-			this.getSpace().deleteEntity();
-			this.space = null;
-			// Can not use 'setSpace' because it does not allow to set a space to null.	
-		}		
-	}
-	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
-	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
-	//OF NET WORDT AANGEMAAKT.
-	//SPACE MOET EEN FUNCTIE 'RemoveEntity' HEBBEN -> OK
-	
+
 	/**
 	 * Variable registering the space this round entity is placed in.
 	 */
@@ -694,8 +600,7 @@ public abstract class RoundEntity {
 	// TENZIJ: BULLETS KUNNEN OOK IN SHIPS ZITTEN (MEERVOUDIGE ASSOCIATION VOOR SHIP)
 	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
 	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
-	// ingesteld worden.	
-	
+	// ingesteld worden.		
 	
 	/**
 	 * Get the position of a round entity after it's moved, given a duration.
@@ -706,12 +611,33 @@ public abstract class RoundEntity {
 	 * @return 	The new position after moving as a double[].
 	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
 	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
-	 * 			
+	 *
+	 * @throws 	IllegalArgumentException
+	 * 			The duration is not a valid duration.
+	 * 			| (!canHaveAsDuration(duration))
 	 */	
 	@Raw
 	public double [] getPositionAfterMoving(double duration){
-			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
+		if (!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		return new double[] {getPosition()[0]+getVelocity()[0]*duration,
 			getPosition()[1]+getVelocity()[1]*duration};	
+	}
+	
+	/**
+	 * Checks whether the duration of the movement is a valid duration.
+	 * 
+	 * @param 	duration
+	 * 			The duration of the movement.
+	 * 
+	 * @return	True if and only if the duration is a number, 
+	 * 			greater than or equal to zero.
+	 * 			| result == duration >= 0 && !Double.isNaN(duration)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsDuration(double duration){
+		return (!Double.isNaN(duration) && duration >= 0);
 	}
 	
 	/**
@@ -1010,4 +936,3 @@ public abstract class RoundEntity {
 		}
 	}
 }
->>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git

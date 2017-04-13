@@ -18,6 +18,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  * @author Amber Van Camp & Jasper Vanmeerbeeck
  *
  */
+@Value
 public abstract class Space {
 	
 	/**

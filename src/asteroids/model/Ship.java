@@ -321,33 +321,10 @@ public class Ship extends RoundEntity {
 	 * @effect 	The position of the ship will be changed to the 
 	 * 			new position after the given time, speed and direction
 	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
-	 * 
-	 * @throws 	IllegalArgumentException
-	 * 			The duration is not a valid duration.
-	 * 			| (!isValidDuration(duration))
-	 * 
 	 */
 	@Raw
 	public void move(double duration) throws IllegalArgumentException{
-		if (!canHaveAsDuration(duration))
-			throw new IllegalArgumentException();
 		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
-	}
-	
-	/**
-	 * Checks whether the duration of the movement is a valid duration.
-	 * 
-	 * @param 	duration
-	 * 			The duration of the movement.
-	 * 
-	 * @return	True if and only if the duration is a number, 
-	 * 			greater than or equal to zero.
-	 * 			| result == duration >= 0 && !Double.isNaN(duration)
-	 */
-	@Raw
-	@Immutable
-	public static boolean canHaveAsDuration(double duration){
-		return (!Double.isNaN(duration) && duration >= 0);
 	}
 	
 	/**
