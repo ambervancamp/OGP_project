@@ -1,7 +1,6 @@
 package asteroids.facade;
 
 import asteroids.model.*;
-import asteroids.part1.facade.IFacade;
 import asteroids.part2.facade.IFacade;
 import asteroids.util.ModelException;
 

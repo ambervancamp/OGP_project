@@ -514,7 +514,7 @@ public abstract class RoundEntity {
 		else
 			return true;
 	}
-	// Terminate functies voor SPACE moeten bestaan
+	// Terminate functies voor SPACE moeten bestaan -> OK
 	// OPM: import statement nodig om functies van Space te gebruiken?
 	
 	/**
@@ -542,7 +542,7 @@ public abstract class RoundEntity {
 	 *       	| result == (this.getSpace != null)
 	 */
 	public boolean hasSpace(){
-		return (this.getSpace != null);
+		return (this.getSpace() != null);
 	}
 	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
 	
@@ -557,15 +557,15 @@ public abstract class RoundEntity {
 		if (this.hasSpace()){
 			this.RemoveOutSpace();
 			this.setSpace(space);
-			space.setEntity(this);
+			space.addEntity(this);
 		}
 		else {
 			this.setSpace(space);
-			space.setEntity(this);	
+			space.addEntity(this);	
 		}
 	}
-	// SPACE moet een functie 'setEntity' hebben.
-	// used in subclasses in constructor to place in space
+	// SPACE moet een functie 'setEntity' hebben -> OK
+	// used in subclasses in constructor to place in space -> OK
 	
 	/**
 	 * Remove this round entity from the space it's in, if any.
@@ -582,7 +582,7 @@ public abstract class RoundEntity {
 		// If statement in principle not necessary, because RemoveOutSpace() is only used when
 		// sure the round entity has a space (no boundary case).
 		if (this.hasSpace()){
-			this.getSpace().RemoveEntity();
+			this.getSpace().deleteEntity();
 			this.space = null;
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
@@ -590,8 +590,7 @@ public abstract class RoundEntity {
 	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
 	//OF NET WORDT AANGEMAAKT.
-	//SPACE MOET EEN FUNCTIE 'RemoveEntity' HEBBEN
-	//SPACE MOET EEN FUNCTIE 'hasEntity' HEBBEN
+	//SPACE MOET EEN FUNCTIE 'RemoveEntity' HEBBEN -> OK
 	
 	/**
 	 * Variable registering the space this round entity is placed in.
@@ -603,4 +602,317 @@ public abstract class RoundEntity {
 	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
 	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
 	// ingesteld worden.	
+	
+	
+	/**
+	 * Get the position of a ship after it's moved.
+	 * 
+	 * @param 	duration
+	 * 			The duration of the movement.
+	 * 			
+	 * @return 	The new position after moving as a double[].
+	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
+	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
+	 * 			
+	 */	
+	@Raw
+	public double [] getPositionAfterMoving(double duration){
+			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
+			getPosition()[1]+getVelocity()[1]*duration};	
+	}
+	
+	/**
+	 * 
+	 * Return the distance between the given ship and this ship.
+	 * The distance may be negative if both ships overlap
+	 * 
+	 * @param	ship
+	 * 			The given ship. 
+	 * 
+	 * @post	The distance between a ship and itself is zero.
+	 * 			| if (distance == (-2*this.getRadius()))
+	 *				then return 0;		
+	 * 
+	 * @throws	NullPointerException()
+	 * 			The given ship must exist.
+	 * 			| ship == null
+	 */
+	@Raw
+	@Immutable
+	public double getDistanceBetween(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		
+		double new_x = this.getxPosition() - other.getxPosition();
+		double new_y = this.getyPosition() - other.getyPosition();
+		double distance_between_centers = Math.sqrt(Math.pow(new_x, 2) + Math.pow(new_y, 2));
+		double distance = distance_between_centers - this.getRadius() - other.getRadius();
+		
+		if (distance == (-2*this.getRadius()))
+			return 0;
+		
+		return distance;	
+	}
+	
+	/**
+	 * Check if the given ship overlaps this ship.
+	 * 
+	 * @param 	ship
+	 * 			The given ship.
+	 * 
+	 * @return	Ships overlap if the distance between them is less then or equals 0.
+	 * 			| result == this.getDistanceBetween(ship) <= 0
+	 * 
+	 * @throws 	NullPointerException()
+	 * 			The given ship must exist.
+	 * 			| ship == null
+	 */
+	@Raw
+	@Immutable
+	public boolean overlap(RoundEntity ship) throws NullPointerException {
+		if (ship == null)
+			throw new NullPointerException();
+		
+		return this.getDistanceBetween(ship) <= 0;
+	}
+	
+	
+	/**
+	 * A method that gives the time between a collision of 2 ships. 
+	 * This method does not apply on two ships that overlap.
+	 * 
+	 * @param 	other
+	 * 			A second ship to check if this ship collides with.
+	 * 
+	 * @return	Returns the time until collision with the other ship.
+	 * 			| result == -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
+	 * 
+	 * @return 	The time will be positive infinity if the ships will never collide.
+	 * 			| result == Double.POSITIVE_INFINITY
+	 * 
+	 * @throws 	NullPointerException
+	 * 			Throw a NullPointerException if one of the 2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 */
+	@Raw
+	@Immutable
+	public double getTimeToCollision(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		
+		if (this.getDeltaDistanceVelocity(other) >= 0)
+			return Double.POSITIVE_INFINITY;
+		
+		if (getD(other) <= 0)
+			return Double.POSITIVE_INFINITY;
+		
+		return -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other);
+		// d will be negative if the ships overlap
+	}
+	
+	/**
+	 * A method that calculates the distance in x- and y-direction between the 
+	 * centres of the ships.
+	 * 
+	 * @param 	other
+	 * 			The second ship to check the distance between.
+	 * 
+	 * @post 	The deltaDistance will be a list of the difference between 
+	 * 			the 2 centres of the ship.
+	 * 			|deltaDistance =  {other.getxPosition()-this.getxPosition(),
+	 *			other.getyPosition()-this.getyPosition()}
+	 *			
+	 * @throws 	NullPointerException
+	 * 			the method will throw a NullPointerException if one of the 2 ships 
+	 * 			doesn't exist
+	 * 			| other == null || this == null
+	 */
+	@Raw
+	@Immutable
+	private double [] getDeltaDistance(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		double [] deltaDistance = {other.getxPosition()-this.getxPosition(),
+				other.getyPosition()-this.getyPosition()};
+		return deltaDistance;
+	}
+	
+	/**
+	 * A method that calculates the difference in velocity in x- and y-direction 
+	 * between two ships.
+	 * 
+	 * @param 	other
+	 * 			The second ship to check the difference in velocity between.
+	 * 
+	 * @post 	The deltaVelocity will be a double[] of the difference in 
+	 * 			velocity between the 2 ships.
+	 * 			| deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
+	 *			other.getyVelocity()-this.getyVelocity()};
+	 *
+	 * @throws 	NullPointerException
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 */	
+	@Raw
+	@Immutable
+	private double [] getDeltaVelocity(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		double [] deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
+				other.getyVelocity()-this.getyVelocity()};
+		return deltaVelocity;
+	}
+	
+	/**
+	 * A method that calculates the square of the difference in position between 
+	 * the centres of the two ships.
+	 * 
+	 * @param 	other
+	 * 			The second ship to check the square of the difference in position between.
+	 * 
+	 * @post	The deltaPowDistance will be the sum of the squares of the x- and y- in 
+	 * 			distance between the centres of the ships.
+	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
+	 *				Math.pow(getDeltaDistance(other)[1],2);
+	 *				
+	 * @throws 	NullPointerException
+	 * 			the method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 */	
+	@Raw
+	@Immutable
+	private double getDeltaPowDistance(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		double deltaPowDistance = Math.pow(this.getDeltaDistance(other)[0],2)+
+					Math.pow(this.getDeltaDistance(other)[1],2);
+		return deltaPowDistance;
+	}
+
+	/**
+	 * A method that calculates the square of the difference in velocity 
+	 * between two ships.
+	 * 
+	 * @param 	other
+	 * 			The second ship to check the square of the difference in velocity between.
+	 * 
+	 * @post	The deltaPowVelocity will be the sum of the squares of the x- and 
+	 * 			y- difference in velocity between the ships.
+	 * 			| double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
+	 *				Math.pow(getDeltaVelocity(other)[1], 2);
+	 *
+	 * @throws 	NullPointerException
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 */	
+	@Raw
+	@Immutable
+	private double getDeltaPowVelocity(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		double deltaPowVelocity = Math.pow(this.getDeltaVelocity(other)[0], 2)+
+					Math.pow(this.getDeltaVelocity(other)[1], 2);
+		return deltaPowVelocity;
+	}
+	
+	/**
+	 * A method that calculates the scalarProduct of the difference 
+	 * in position and velocity between two ships.
+	 * 
+	 * @param 	other
+	 * 			The second ship to check the scalarProduct of the difference 
+	 * 			in position and velocity between.
+	 * 
+	 * @post 	The deltaDistanceVelocity will be the sum of the product of x- and 
+	 * 			y-distance and difference in velocity of the two ships.
+	 * 			| deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
+	 *				(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+	 *
+	 * @throws 	NullPointerException
+	 * 			The method will throw a nullpointerexception if one of the 
+	 * 			2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 */		
+	@Raw
+	@Immutable
+	private double getDeltaDistanceVelocity(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		double deltaDistanceVelocity = (this.getDeltaVelocity(other)[0]*this.getDeltaDistance(other)[0])+
+						(this.getDeltaVelocity(other)[1]*this.getDeltaDistance(other)[1]);
+		return deltaDistanceVelocity;
+	}
+	/**
+	 * A method that calculates d between two ships. D is a value described by a mathematical formula,
+	 * as seen in the body of this function. It is a value needed in other functions.
+	 * 
+	 * @param 	other
+	 * 			A second ship with which you want to calculate d with.
+	 * 
+	 * @post 	The d will be the square of the deltaDistanceVelocitylowered by the 
+	 * 			product of the deltaPowVelocity with the difference between 
+	 * 			deltaPowVelocity and the distance between the two ships.
+	 * 			| d = Math.pow(getDeltaDistanceVelocity(other),2)-
+	 *				(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
+	 *
+	 * @throws 	NullPointerException
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 */	
+	@Raw
+	@Immutable
+	private double getD(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		double d = Math.pow(this.getDeltaDistanceVelocity(other),2)-
+					(this.getDeltaPowVelocity(other))*(this.getDeltaPowDistance(other)
+													-Math.pow((this.getRadius()+other.getRadius()),2));
+		return d;
+	}
+	
+	/**
+	 * Get the point of collision if two ships will ever collide. 
+	 * 
+	 * @param 	other
+	 * 			A second ship to calculate the collision position with.
+	 * 
+	 * @post 	The collisionPoint will be the point where the two ships hit.
+	 * 			| collisionPoint = this.getPositionAfterMoving(time)+
+									this.getRadius()*getDeltaDistance(other)/getD(other)
+									
+	 * @throws 	NullPointerException
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 ships doesn't exist.
+	 * 			| other == null || this == null
+	 * 
+	 */
+	@Raw
+	@Immutable
+	public double [] getCollisionPosition(RoundEntity other) throws NullPointerException{
+		if (other == null)
+			throw new NullPointerException();
+		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
+			throw new IllegalArgumentException();
+		try{
+		double dt = this.getTimeToCollision(other);
+		double [] newDeltaDistance = 	{other.getPositionAfterMoving(dt)[0]-this.getPositionAfterMoving(dt)[0],
+										other.getPositionAfterMoving(dt)[1]-this.getPositionAfterMoving(dt)[1]}; 
+		double [] collisionPoint = {this.getPositionAfterMoving(dt)[0]+
+									this.getRadius()*newDeltaDistance[0]/
+									(this.getRadius()+other.getRadius()),
+									this.getPositionAfterMoving(dt)[1]+
+									this.getRadius()*newDeltaDistance[1]/
+									(this.getRadius()+other.getRadius())};
+		// position of hit = 	position of ship after moving till contact+
+		//						(difference in centra qua x-and y direction*
+		// 						radius of the first schip/distance two centres)
+		return collisionPoint;
+		} catch (IllegalArgumentException noCollision) {
+			return null;
+		}
+	}
 }
