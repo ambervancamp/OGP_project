@@ -24,15 +24,20 @@ public abstract class RoundEntity {
 	/**
 	 * Initialize this new round entity with given parameters.
 	 *
-	 * @param x
+	 * @param	x
+	 * 			The x-coordinate of the position of this new round entity, in kilometer.
 	 * 
-	 * @param y
+	 * @param	y
+	 * 			The y-coordinate of the position of this new round entity, in kilometer.
 	 * 
-	 * @param xVelocity
+	 * @param 	xVelocity
+	 *			The x-coordinate velocity for this new round entity, in kilometer/second.
+	 *
+	 * @param 	yVelocity
+	 * 			The y-coordinate velocity for this new round entity, in kilometer/second.
 	 * 
-	 * @param yVelocity
-	 * 
-	 * @param radius
+	 * @param	radius
+	 * 			The radius of this new round entity, in kilometer.
 	 * 
 	 * @post	The xPosition will be equal to the given x-coordinate and 
 	 * 			the yPosition will be equal to the given y-coordinate.
@@ -99,7 +104,7 @@ public abstract class RoundEntity {
 			this.removeOutSpace();
 		this.isTerminated = true;
 	}
-	// OVERRIDE IN BULLET
+	// OVERRIDE IN BULLET & SPACE
 
 	/**
 	 * Return a boolean indicating whether or not this round entity
@@ -344,7 +349,7 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Return the highest possible value for the speed of round entities, always
+	 * Return the highest possible value for the speed of this round entity, always
 	 * smaller or equal to the absolute max speed.
 	 *
 	 * @return 	The highest possible value for the speed of round entities is by default
@@ -352,7 +357,7 @@ public abstract class RoundEntity {
 	 *		 	| result == ABSOLUTE_MAX_SPEED
 	 */
 	@Basic
-	protected static double getMaxSpeed() {
+	protected double getMaxSpeed() {
 		return ABSOLUTE_MAX_SPEED;
 	}
 	// Depends on the round entity it is used on.
@@ -405,8 +410,8 @@ public abstract class RoundEntity {
 	 * 			| result == (!Double.isNaN(radius) && radius >= getMinRadius())
 	 */
 	@Raw
-	public static boolean canHaveAsRadius(double radius) {
-		return (!Double.isNaN(radius) && radius >= getMinRadius());
+	public boolean canHaveAsRadius(double radius) {
+		return (!Double.isNaN(radius) && radius >= this.getMinRadius());
 	}
 	// PROBLEEM MET GEBRUIK VAN GETMINRADIUS HIER OMDAT DEZE NIET ALS STATIC STAAT AANGEDUID
 	// STATIC LUKT NIET BIJ GETMINRADIUS OMDAT DEZE ABSTRACT IS
@@ -454,7 +459,6 @@ public abstract class RoundEntity {
 	
 	/**
 	 * Return the space where this round entity is placed in.
-	 * A round entity always needs to be placed in a space, and can't therefore be null.
 	 * 
 	 * @return	Returns the space this round entity is placed in.
 	 * 			| result == this.space
@@ -464,12 +468,14 @@ public abstract class RoundEntity {
 	public Space getSpace(){
 		return this.space;
 	}
+	// A ship always needs to be placed in a space, and can't therefore be null.
+	// a bullet can be places on a ship, and then space can be null
 	
 	/**
 	 * Register the given space as the space where this round entity is placed in.
 	 * 
 	 * @param 	space
-	 * 			| The given space to set the round entity in.
+	 * 			The given space to set the round entity in.
 	 * 		
 	 * @throws 	IllegalArgumentException
 	 * 			The given space is not valid.
@@ -485,7 +491,7 @@ public abstract class RoundEntity {
 	 * Checks whether the given space is a valid space for any round entity.
 	 * 
 	 * @param 	space
-	 * 			| The given space to check if this round entity can be placed in.
+	 * 			The given space to check if this round entity can be placed in.
 	 * 
 	 * @return 	False if the given space is not effective or null, or this round entity is terminated.
 	 *       	| if (space == null || (space.isTerminated()) || (this.isTerminated()))
@@ -510,13 +516,14 @@ public abstract class RoundEntity {
 	 *         	as its space, and if that space, if it is effective, in turn references
 	 *         	this round entity.
 	 *       	| result ==
-	 *       	|   canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this)
+	 *       	|   canHaveAsSpace(this.getSpace()) && (this.getSpace().hasEntity(this))
 	 */
 	public boolean hasProperSpace() {
-		return canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this);
+		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasEntity(this));
 	}
 	// equivalent in Space: checkers en setters voor meervoudigheid
 	// bv ship of bullet mag niet al ergens anders in zitten
+	// SPACE MOET METHODE 'HASENTITY' BEVATTEN
 	
 	/**
 	 * Check whether this round entity has a space.
@@ -589,6 +596,10 @@ public abstract class RoundEntity {
 	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
 	//OF NET WORDT AANGEMAAKT.
+	
+	// When dealing with 'death', use terminate to destroy a bullet or ship
+	// Use placeInSpace to relocate it to an unbound space
+	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
 
 
 	/**

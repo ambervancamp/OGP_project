@@ -61,6 +61,9 @@ public class Ship extends RoundEntity {
 	 *      	| if (canHaveAsMass(mass))
 	 *       	|   then new.getMass() == mass
 	 *       	|   else new.getMass() == 5.948*Math.pow(10,15)
+	 *       
+	 * @effect	This ship is placed in a new unbound space.
+	 * 			| this.placeInSpace(unboundspace)
      * 
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation, 
@@ -80,7 +83,7 @@ public class Ship extends RoundEntity {
 		// No 'else' needed, setMass sets the new defined mass.
 		
 		UnboundSpace unboundspace = UnboundSpace(width, height);
-		this.PlaceInSpace(unboundspace);
+		this.placeInSpace(unboundspace);
 		// Ships need to be associated with an unbound space until associated with a world.
 		// Wait for definition of uboundspace constructor for width and height.
 	}
@@ -112,6 +115,7 @@ public class Ship extends RoundEntity {
 	public Ship() {
 		this(0,0,0,0,getMinRadius(),0,5.948*Math.pow(10,15));
 	}
+	//DEFAULT LOCATIE 0,0??
 		
 	/**
 	 * Set the orientation of this ship.
@@ -207,6 +211,7 @@ public class Ship extends RoundEntity {
 	public static double getMinRadius() {
 		return 10;
 	}
+	//OVERRIDE PROBLEEM MET STATIC GETMINRADIUS
 
 	/**
 	 * Return the mass of this ship. This is the mass of the ship itself, 
@@ -252,6 +257,7 @@ public class Ship extends RoundEntity {
 	}
 	//Canhaveasmass hangt af van radius, dit verschilt van schip to schip dus is bijgevolg
 	//geen static functie.
+	//mass < Double.MAX_VALUE -> eigenlijk niet nodig, want aanname dat het altijd kleiner gaat zijn
 	
 	
 	/**
@@ -290,10 +296,11 @@ public class Ship extends RoundEntity {
 	/**
 	 * Check whether this ship can have the given density as its density.
 	 *  
-	 * @param  density
-	 *         The density to check.
-	 * @return 
-	 *       | result == 
+	 * @param  	density
+	 *         	The density to check.
+	 *         
+	 * @return 	The density must be a number bigger than the MIN_DENSITY
+	 *       	| result == !Double.isNaN(density) && density >= MIN_DENSITY
 	*/
 	@Raw
 	public boolean canHaveAsDensity(double density) {
@@ -369,18 +376,80 @@ public class Ship extends RoundEntity {
 	@Raw
 	@Immutable
 	public void thrust(double a) {
-		if (this != null){
-			
-			if (!canHaveAsAcceleration(a)){
-				return;
-			}
+		if (!canHaveAsAcceleration(a))
+			return;
 				
-			double xVelocity = this.getxVelocity() + a*Math.cos(this.getOrientation());
-			double yVelocity = this.getyVelocity() + a*Math.sin(this.getOrientation());
+		double xVelocity = this.getxVelocity() + a*Math.cos(this.getOrientation());
+		double yVelocity = this.getyVelocity() + a*Math.sin(this.getOrientation());
 				
-			this.setVelocity(xVelocity, yVelocity);
-		}
+		this.setVelocity(xVelocity, yVelocity);
+		//setvelocity zorgt dat de snelheid nooit buiten zijn limiet zal geraken!
 	}	
+	
+	//DELTA T BEPAALD MEE DE NIEUWE SNELHEID?????
+	
+	/**
+	 * Return a boolean indicating whether or not this round entity's thruster is enabled.
+	 * 
+	 * @return 	Returns the status of the ship's thruster.
+	 *         	| result == this.thruster
+	 */
+	public boolean isThrusterOn() {
+		return this.thruster;
+	}
+
+	/**
+	 * Turn on the thruster.
+	 * 
+	 * @post   The status of the thruster is now on.
+	 *         | this.thruster = true
+	 */
+	public void thrustOn() {
+		this.thruster = true;
+	}
+
+	/**
+ 	 * Turn off the thruster.	 
+ 	 *
+ 	 * @post   The status of the thruster is now off.
+	 *         | thruster = false
+	 */
+	public void thrustOff() {
+		this.thruster = false;
+	}
+
+	/**
+	 * Return the acceleration of this ship. If the thruster is on, it has an acceleration,
+	 * derived by the force it is driven by and the mass of this ship (a = F/m).
+	 *
+	 * @return 	Returns the acceleration of this ship if thruster is enabled.
+	 *         	| result == this.getForce()/this.getMass()
+	 *         
+	 * @return	Returns acceleration = 0 if thruster is not enabled.
+	 * 			| result == 0       
+	 */
+	public double getAcceleration() {
+		if (!thruster) 
+			return 0;
+		return this.getForce()/this.getMass();
+	}
+	
+	/**
+	 * Get the driving force behind the acceleration of a ship.
+	 * 
+	 * @return	The default value of the driving force is 1.1*Math.pow(10, 21).
+	 * 			| result == 1.1*Math.pow(10, 21)
+	 */
+	public double getForce(){
+		return 1.1*Math.pow(10, 21);
+	}
+	//Can vary for ships in future
+	
+	
+	/**
+	 * Variable registering whether the thruster of this round entity is enabled or disabled.
+	 */
+	private boolean thruster = false;
 	
 	
 	/**
