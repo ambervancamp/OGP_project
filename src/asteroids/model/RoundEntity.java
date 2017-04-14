@@ -604,7 +604,7 @@ public abstract class RoundEntity {
 	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
 	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
 	// ingesteld worden.	
-}
+
 =======
 	// Terminate functies voor SPACE moeten bestaan -> OK
 	// OPM: import statement nodig om functies van Space te gebruiken?
@@ -713,21 +713,6 @@ public abstract class RoundEntity {
 	}
 	
 
-	/**
-	 * a method to check whether an entity may collide with the 'wall' of the world
-	 * @param 	Space
-	 * 			The world to which 'wall' the entity may collide.
-	 * @return	True if and only if the entity and space exist and the entity is located in the world
-	 * 			|!Entity.isTerminated() &&
-	 * 			| !space.isTerminated() &&
-	 * 			| Entity.getSpace() == space
-	 */
-	public boolean canHitWall(Space space){
-		if (!this.isTerminated() && !space.isTerminated() && this.getSpace() == space)
-			return true;
-		return false;
-	}
-	
 	/**
 	 * Get the position of a ship after it's moved.
 	 * 
@@ -1078,7 +1063,8 @@ public abstract class RoundEntity {
 			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
-		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) )
+		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) ||
+				this.getTimeToFirstCollision(other) != this.getTimeToCollision(other))
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
@@ -1098,5 +1084,71 @@ public abstract class RoundEntity {
 			return null;
 		}
 	}
+
+	/**
+	 * Get the time for a ship to hit the wall of its world
+	 * 
+	 * @return	Double.POSITIVE_INFINITY if and only if the entity is terminated or will never hit the wall
+	 * 			| this.isTerminated() || (this.getyVelocity() == 0 && this.getyVelocity() == 0)
+	 * @return 	zero if and only if the entity already hits a wall 
+	 * 			| @see implemantation
+	 * @return	the smallest possible time of hit with a wall
+	 * 			| @see implementation
+	 */	
+	public double getTimeToHitWall(){
+		if(this.isTerminated() || (this.getyVelocity() == 0 && this.getyVelocity() == 0))
+			return Double.POSITIVE_INFINITY;
+		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
+			this.getxPosition() - this.getRadius() == 0 ||
+			this.getyPosition() + this.getRadius() == this.getSpace().getWidth() ||
+			this.getyPosition() - this.getRadius() == 0)
+			return 0;
+		// the ship may hit the wall above
+		double timeToHitUpperYWall;
+		double timeToHitLowerYWall;
+		double timeToHitUpperXWall;
+		double timeToHitLowerXWall;
+		if (this.getyVelocity() > 0)
+			timeToHitUpperYWall = (space.getHeight()-this.getyPosition())/this.getyVelocity();
+		else if (this.getyVelocity() < 0)
+			timeToHitLowerYWall = (-this.getyPosition()/this.getyVelocity());
+		if (this.getxVelocity() > 0)
+			timeToHitUpperXWall = (space.getWidth()-this.getxPosition())/this.getxVelocity();
+		else if (this.getxVelocity() < 0)
+			timeToHitLowerXWall = (-this.getxPosition()/this.getxVelocity());
+		// returns the minimal time to hit a wall
+		return Math.min(Math.min(timeToHitUpperXWall, timeToHitLowerXWall),
+						Math.min(timeToHitUpperYWall, timeToHitLowerYWall));
+	}
+	
+	
+	public double [] getPositionOfHitWall(RoundEntity other){
+		if (this.isTerminated() )
+			return {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+		if (this.getTimeToHitWall() != this.getTimeToFirstCollision(other)
+				return null;
+			
+		double [] collisionPoint;
+		if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius() == space.getWidth())
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius(),
+										this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
+		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius() == 0)	
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius(),
+					this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
+		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius() == space.getHeight())
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
+										this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius()}
+		else
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
+					this.getPositionAfterMoving(this.getTimeToHitWall())[1]-this.getRadius()};
+		return collisionPoint;
+	}
+	
+	public double getTimeToFirstCollision(RoundEntity other){
+		if (other.isTerminated())
+			return this.getTimeToHitWall();
+		return Math.min(this.getTimeToHitWall(), this.getTimeToCollision(other));
+	}
+	
 }
 >>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
