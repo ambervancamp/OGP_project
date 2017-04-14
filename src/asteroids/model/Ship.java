@@ -1,4 +1,6 @@
 package asteroids.model;
+
+import java.util.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -18,15 +20,16 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar	Each ship must have a proper space.
  * 			| hasProperSpace()
  *  
- * @invar	Each ship must have a proper bullet.
- * 			| hasProperBullet()
+ * @invar	Each ship must have a proper bullets.
+ * 			| hasProperBullets()
  *        
  * @author Amber_000 && Jasper_000
  */
 
 public class Ship extends RoundEntity {
 	/**
-	 * Initialize this new ship with the given parameters.
+	 * Initialize this new ship with the given parameters, as a non-terminated ship with 
+	 * no bullets yet.
 	 * 
 	 * @param	x
 	 * 			The x-coordinate of the position of this new ship, in kilometer.
@@ -71,8 +74,12 @@ public class Ship extends RoundEntity {
 	 * @effect	This ship is placed in a new unbound space.
 	 * 			| UnboundSpace unboundspace = UnboundSpace()
 	 * 			| this.placeInSpace(unboundspace)
+	 * 
+	 * @post   	This new ship has no bullets yet.
+	 *       	| new.getNbBullets() == 0
      * 
 	 */
+	@Raw
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation, 
 			double mass) throws IllegalArgumentException {
 		super(x, y, xVelocity, yVelocity, radius);
@@ -128,20 +135,23 @@ public class Ship extends RoundEntity {
 	/**
 	 * Terminate this round entity.
 	 *
-	 * @post   	This round entity is terminated.
-	 *       	| new.isTerminated()
+	 * @post   	If this ship isn't already terminated, it is terminated.
+	 *       	| if (!this.isTerminated())
+	 *       	|	then new.isTerminated()
 	 *       
-	 * @effect	If this round entity is in a space, it is removed.
-	 * 			| if (this.getSpace()!=null)
+	 * @effect	If this ship is in a space, it is removed.
+	 * 			| if (this.hasSpace())
 	 * 			| 	then this.removeOutSpace()
 	 */
 	@Override
 	public void terminate() {
-		if (this.getSpace()!=null)
-			this.removeOutSpace();			
-		this.isTerminated = true;
+		if (!this.isTerminated()){
+			if (this.hasSpace())
+				this.removeOutSpace();
+			// IF HASBULLET
+			this.isTerminated = true;
+		}
 	}
-	// OVERRIDE IN BULLET & SPACE
 	
 	/**
 	 * Set the orientation of this ship.
@@ -382,15 +392,23 @@ public class Ship extends RoundEntity {
 	
 	/**
 	 * Change the ships velocity based on the current velocity, 
-	 * its orientation, and a given amount a. 
+	 * its orientation, a given amount a and a duration.
 	 * 
 	 * @param 	a
 	 * 			Given factor to accelerate this ship.
 	 * 
-	 * @post	A must be valid, if not, the ship will not accelerate
+	 * @param	duration
+	 * 			Given duration to calculate acceleration with.
+	 * 
+	 * @post	a must be valid, if not, the ship will not accelerate
 	 * 			and keep its previous velocity.
 	 * 			| if (!canHaveAsAcceleration(a))
-	 *				then new.getVelocity = this.getVelocity;
+	 *			|	then new.getVelocity = this.getVelocity;
+	 *
+	 *@post		Duration must be valid, if not, the ship will not accelerate
+	 *			and keep its previous velocity.
+	 *			| if (!canHaveAsDuration(duration))
+	 *			|	then new.getVelocity = this.getVelocity;
 	 *
 	 * @post 	The ship will accelerate with a factor a and keep its orientation.
 	 * 			The new xVelocity and yVelocity are set as the xVelocity and yVelocity
@@ -401,7 +419,10 @@ public class Ship extends RoundEntity {
 	 */
 	@Raw
 	@Immutable
-	public void thrust(double a) {
+	public void thrust(double a, double duration) {
+		if (!canHaveAsDuration(duration))
+			return;
+		
 		if (!canHaveAsAcceleration(a))
 			return;
 				
@@ -409,10 +430,9 @@ public class Ship extends RoundEntity {
 		double yVelocity = this.getyVelocity() + a*Math.sin(this.getOrientation());
 				
 		this.setVelocity(xVelocity, yVelocity);
-		//setvelocity zorgt dat de snelheid nooit buiten zijn limiet zal geraken!
+		// setVelocity() makes sure that the speed will never exceed max_speed.
 	}	
-	
-	//DELTA T BEPAALD MEE DE NIEUWE SNELHEID?????
+	//Duration juist aangeaptk?
 	
 	/**
 	 * Return a boolean indicating whether or not this round entity's thruster is enabled.
@@ -469,7 +489,7 @@ public class Ship extends RoundEntity {
 	public double getForce(){
 		return 1.1*Math.pow(10, 21);
 	}
-	//Can vary for ships in future
+	// Can vary for ships in future.
 	
 	
 	/**
@@ -492,5 +512,385 @@ public class Ship extends RoundEntity {
 	public static boolean canHaveAsAcceleration(double a){
 		return (!Double.isNaN(a) && a>=0);
 	}
-		
+	
+	
+//	/**
+//	 * Return the purchase associated with this share at the
+//	 * given index.
+//	 * 
+//	 * @param  index
+//	 *         The index of the purchase to return.
+//	 * @throws IndexOutOfBoundsException
+//	 *         The given index is not positive or it exceeds the
+//	 *         number of purchases for this share.
+//	 *       | (index < 1) || (index > getNbPurchases())
+//	 */
+//	@Basic
+//	@Raw
+//	public Purchase getPurchaseAt(int index) throws IndexOutOfBoundsException {
+//		return purchases.get(index - 1);
+//	}
+//
+//	/**
+//	 * Return the number of purchases associated with this share.
+//	 */
+//	@Basic
+//	@Raw
+//	public int getNbPurchases() {
+//		return purchases.size();
+//	}
+//
+//	/**
+//	 * Check whether this share can have the given purchase
+//	 * as one of its purchases.
+//	 * 
+//	 * @param  purchase
+//	 *         The purchase to check.
+//	 * @return True if and only if the given purchase is effective
+//	 *         and that purchase can have this share as its share.
+//	 *       | result ==
+//	 *       |   (purchase != null) &&
+//	 *       |   purchase.canHaveAsShare(this)
+//	 */
+//	@Raw
+//	public boolean canHaveAsPurchase(Bullet bullet) {
+//		return (purchase != null) && (purchase.canHaveAsShare(this));
+//	}
+//
+//	/**
+//	 * Check whether this share can have the given purchase
+//	 * as one of its purchases at the given index.
+//	 * 
+//	 * @param  purchase
+//	 *         The purchase to check.
+//	 * @return False if the given index is not positive or exceeds the
+//	 *         number of purchases for this share + 1.
+//	 *       | if ( (index < 1) || (index > getNbPurchases()+1) )
+//	 *       |   then result == false
+//	 *         Otherwise, false if this share cannot have the given
+//	 *         purchase as one of its purchases.
+//	 *       | else if ( ! this.canHaveAsPurchase(purchase) )
+//	 *       |   then result == false
+//	 *         Otherwise, true if and only if the given purchase is
+//	 *         not registered at another index than the given index.
+//	 *       | else result ==
+//	 *       |   for each I in 1..getNbPurchases():
+//	         |     (index == I) || (getPurchaseAt(I) != purchase)
+//	 */
+//	@Raw
+//	public boolean canHaveAsPurchaseAt(Purchase purchase, int index) {
+//		if ((index < 1) || (index > getNbPurchases() + 1))
+//			return false;
+//		if (!this.canHaveAsPurchase(purchase))
+//			return false;
+//		for (int i = 1; i < getNbPurchases(); i++)
+//			if ((i != index) && (getPurchaseAt(i) == purchase))
+//				return false;
+//		return true;
+//	}
+//
+//	/**
+//	 * Check whether this share has proper purchases attached to it.
+//	 * 
+//	 * @return True if and only if this share can have each of the
+//	 *         purchases attached to it as a purchase at the given index,
+//	 *         and if each of these purchases references this share as
+//	 *         the share to which they are attached.
+//	 *       | result ==
+//	 *       |   for each I in 1..getNbPurchases():
+//	 *       |     ( this.canHaveAsPurchaseAt(purchase,I) &&
+//	 *       |       (purchase.getShare() == this) )
+//	 */
+//	public boolean hasProperPurchases() {
+//		for (int i = 1; i <= getNbPurchases(); i++) {
+//			if (!canHaveAsPurchaseAt(getPurchaseAt(i), i))
+//				return false;
+//			if (getPurchaseAt(i).getShare() != this)
+//				return false;
+//		}
+//		return true;
+//	}
+//
+//	/**
+//	 * Check whether this share has the given purchase as one of its
+//	 * purchases.
+//	 * 
+//	 * @param  purchase
+//	 * 		   The purchase to check.
+//	 * @return The given purchase is registered at some position as
+//	 *         a purchase of this share.
+//	 *       | for some I in 1..getNbPurchases():
+//	 *       |   getPurchaseAt(I) == purchase
+//	 */
+//	public boolean hasAsBullet(@Raw Bullet bullet) {
+//		return purchases.contains(purchase);
+//		// A more efficient implementation would be possible if
+//		// the consistency imposed on the bi-directional association
+//		// would be guaranteed.
+//		// return (purchase != null) && (purchase.getShare() == this);
+//	}
+//
+//	/**
+//	 * Add the given purchase to the list of purchases of this share.
+//	 * 
+//	 * @param  purchase
+//	 *         The purchase to be added.
+//	 * @pre    The given purchase is effective and already references
+//	 *         this share, and this share does not yet have the given
+//	 *         purchase as one of its purchases.
+//	 *       | (purchase != null) && (purchase.getShare() == this) &&
+//	 *       | (! this.hasAsPurchase(purchase))
+//	 * @post   The number of purchases of this share is
+//	 *         incremented by 1.
+//	 *       | new.getNbPurchases() == getNbPurchases() + 1
+//	 * @post   This share has the given purchase as its very last purchase.
+//	 *       | new.getPurchaseAt(getNbPurchases()+1) == purchase
+//	 */
+//	public void addBullet(@Raw Bullet bullet) {
+//		assert (purchase != null) && (purchase.getShare() == this)
+//				&& (!this.hasAsPurchase(purchase));
+//		purchases.add(purchase);
+//	}
+//
+//	/**
+//	 * Remove the given purchase from the list of purchases of this share.
+//	 * 
+//	 * @param  purchase
+//	 *         The purchase to be removed.
+//	 * @pre    The given purchase is effective, this share has the
+//	 *         given purchase as one of its purchases, and the given
+//	 *         purchase does not reference any share.
+//	 *       | (purchase != null) &&
+//	 *       | this.hasAsPurchase(purchase) &&
+//	 *       | (purchase.getShare() == null)
+//	 * @post   The number of purchases of this share is
+//	 *         decremented by 1.
+//	 *       | new.getNbPurchases() == getNbPurchases() - 1
+//	 * @post    his share no longer has the given purchase as
+//	 *         one of its purchases.
+//	 *       | ! new.hasAsPurchase(purchase)
+//	 * @post   All purchases registered at an index beyond the index at
+//	 *         which the given purchase was registered, are shifted
+//	 *         one position to the left.
+//	 *       | for each I,J in 1..getNbPurchases():
+//	 *       |   if ( (getPurchaseAt(I) == purchase) and (I < J) )
+//	 *       |     then new.getPurchaseAt(J-1) == getPurchaseAt(J)
+//	 */
+//	@Raw
+//	public void removeBullet(Bullet bullet) {
+//		assert (purchase != null) && this.hasAsPurchase(purchase)
+//				&& (purchase.getShare() == null);
+//		purchases.remove(purchase);
+//	}
+//
+//	/**
+//	 * Variable referencing a list collecting all the bullets carried by this ship.
+//	 * 
+//	 * @invar  	The referenced list is effective.
+//	 *       	| bullets != null
+//	 *       
+//	 * @invar  	Each bullet registered in the referenced list is
+//	 *         	effective and not yet terminated.
+//	 *       	| for each bullet in bullets:
+//	 *       	|   ( (bullet != null) &&
+//	 *       	|     (! bullet.isTerminated()) )
+//	 *       
+//	 * @invar  	No bullet is registered at several positions
+//	 *         	in the referenced list.
+//	 *       	| for each I,J in 0..bullets.size()-1:
+//	 *       	|   ( (I == J) ||
+//	 *       	|     (bullets.get(I) != bullets.get(J))
+//	 */
+//	private final List<Bullet> bullets = new ArrayList<Bullet>();
+	
+
+	/**
+	 * Return the bullet associated with this ship at the
+	 * given index.
+	 * 
+	 * @param  	index
+	 *         	The index of the bullet to return.
+	 *         
+	 * @throws 	IndexOutOfBoundsException
+	 *         	The given index is not positive or it exceeds the
+	 *         	number of bullets for this ship.
+	 *       	| (index < 1) || (index > getNbBullets())
+	 */
+	@Basic
+	@Raw
+	public Bullet getBulletAt(int index) throws IndexOutOfBoundsException {
+		return bullets.get(index - 1);
+	}
+
+	/**
+	 * Return the number of bullets associated with this ship.
+	 */
+	@Basic
+	@Raw
+	public int getNbBullets() {
+		return bullets.size();
+	}
+
+	/**
+	 * Check whether this ship can have the given bullet
+	 * as one of its bullets.
+	 * 
+	 * @param  	bullet
+	 *         	The bullet to check.
+	 *         
+	 * @return 	True if and only if the given bullet is effective
+	 *         	and that bullet can have this ship as its ship.
+	 *       	| result ==
+	 *       	|   (bullet != null) &&
+	 *       	|   bullet.canHaveAsShip(this)
+	 */
+	@Raw
+	public boolean canHaveAsBullet(Bullet bullet) {
+		return (bullet != null) && (bullet.canHaveAsShip(this));
+	}
+
+	/**
+	 * Check whether this ship can have the given bullet
+	 * as one of its bullets at the given index.
+	 * 
+	 * @param  bullet
+	 *         The bullet to check.
+	 * @return False if the given index is not positive or exceeds the
+	 *         number of bullets for this ship + 1.
+	 *       | if ( (index < 1) || (index > getNbBullets()+1) )
+	 *       |   then result == false
+	 *         Otherwise, false if this ship cannot have the given
+	 *         bullet as one of its bullets.
+	 *       | else if ( ! this.canHaveAsBullet(bullet) )
+	 *       |   then result == false
+	 *         Otherwise, true if and only if the given bullet is
+	 *         not registered at another index than the given index.
+	 *       | else result ==
+	 *       |   for each I in 1..getNbBullets():
+	 *       |     (index == I) || (getBulletAt(I) != bullet)
+	 */
+	@Raw
+	public boolean canHaveAsBulletAt(Bullet bullet, int index) {
+		if ((index < 1) || (index > getNbBullets() + 1))
+			return false;
+		if (!this.canHaveAsBullet(bullet))
+			return false;
+		for (int i = 1; i < getNbBullets(); i++)
+			if ((i != index) && (getBulletAt(i) == bullet))
+				return false;
+		return true;
+	}
+
+	/**
+	 * Check whether this ship has proper bullets attached to it.
+	 * 
+	 * @return True if and only if this ship can have each of the
+	 *         bullets attached to it as a bullet at the given index,
+	 *         and if each of these bullets references this ship as
+	 *         the ship to which they are attached.
+	 *       | result ==
+	 *       |   for each I in 1..getNbBullets():
+	 *       |     ( this.canHaveAsBulletAt(getBulletAt(I) &&
+	 *       |       (getBulletAt(I).getShip() == this) )
+	 */
+	public boolean hasProperBullets() {
+		for (int i = 1; i <= getNbBullets(); i++) {
+			if (!canHaveAsBulletAt(getBulletAt(i), i))
+				return false;
+			if (getBulletAt(i).getShip() != this)
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check whether this ship has the given bullet as one of its
+	 * bullets.
+	 * 
+	 * @param  bullet
+	 *         The bullet to check.
+	 * @return The given bullet is registered at some position as
+	 *         a bullet of this ship.
+	 *       | for some I in 1..getNbBullets():
+	 *       |   getBulletAt(I) == bullet
+	 */
+	public boolean hasAsBullet(@Raw Bullet bullet) {
+		return bullets.contains(bullet);
+	}
+
+	/**
+	 * Add the given bullet to the list of bullets of this ship.
+	 * 
+	 * @param  bullet
+	 *         The bullet to be added.
+	 * @pre    The given bullet is effective and already references
+	 *         this ship, and this ship does not yet have the given
+	 *         bullet as one of its bullets.
+	 *       | (bullet != null) && (bullet.getShip() == this) &&
+	 *       | (! this.hasAsBullet(bullet))
+	 * @post   The number of bullets of this ship is
+	 *         incremented by 1.
+	 *       | new.getNbBullets() == getNbBullets() + 1
+	 * @post   This ship has the given bullet as its very last bullet.
+	 *       | new.getBulletAt(getNbBullets()+1) == bullet
+	 */
+	public void addBullet(@Raw Bullet bullet) {
+		assert (bullet != null) && (bullet.getShip() == this)
+				&& (!this.hasAsBullet(bullet));
+		bullets.add(bullet);
+	}
+
+	/**
+	 * Remove the given bullet from the list of bullets of this ship.
+	 * 
+	 * @param  bullet
+	 *         The bullet to be removed.
+	 *         
+	 * @pre    The given bullet is effective, this ship has the
+	 *         given bullet as one of its bullets, and the given
+	 *         bullet does not reference any ship.
+	 *       | (bullet != null) &&
+	 *       | this.hasAsBullet(bullet) &&
+	 *       | (bullet.getShip() == null)
+	 * @post   The number of bullets of this ship is
+	 *         decremented by 1.
+	 *       | new.getNbBullets() == getNbBullets() - 1
+	 * @post   This ship no longer has the given bullet as
+	 *         one of its bullets.
+	 *       | ! new.hasAsBullet(bullet)
+	 * @post   All bullets registered at an index beyond the index at
+	 *         which the given bullet was registered, are shifted
+	 *         one position to the left.
+	 *       | for each I,J in 1..getNbBullets():
+	 *       |   if ( (getBulletAt(I) == bullet) and (I < J) )
+	 *       |     then new.getBulletAt(J-1) == getBulletAt(J)
+	 */
+	@Raw
+	public void removePurchase(Bullet bullet) {
+		assert (bullet != null) && this.hasAsBullet(bullet)
+				&& (bullet.getShip() == null);
+		bullets.remove(bullet);
+	}
+
+	/**
+	 * Variable referencing a list collecting all the bullets
+	 * of this ship.
+	 * 
+	 * @invar  	The referenced list is effective.
+	 *       	| bullets != null
+	 *       
+	 * @invar  	Each bullet registered in the referenced list is
+	 *         	effective and not yet terminated.
+	 *       	| for each bullet in bullets:
+	 *       	|   ( (bullet != null) &&
+	 *       	|     (! bullet.isTerminated()) )
+	 *       
+	 * @invar  	No bullet is registered at several positions
+	 *         	in the referenced list.
+	 *       	| for each I,J in 0..bullets.size()-1:
+	 *       	|   ( (I == J) ||
+	 *       	|     (bullets.get(I) != bullets.get(J))
+	 */
+	private final List<Bullet> bullets = new ArrayList<Bullet>();
+
 }

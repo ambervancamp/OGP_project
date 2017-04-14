@@ -97,18 +97,15 @@ public abstract class RoundEntity {
 	/**
 	 * Terminate this round entity.
 	 *
-	 * @post   	This round entity is terminated.
+	 * @post   	If this round entity isn't already terminated, it is terminated.
 	 *       	| new.isTerminated()
-	 *       
-	 * @effect	If this round entity is in a space, it is removed.
-	 * 			| if (this.getSpace()!=null)
-	 * 			| 	then this.removeOutSpace()
 	 */
 	public void terminate() {
-		this.isTerminated = true;
+		if (!this.isTerminated())	
+			this.isTerminated = true;
 	}
-	// OVERRIDE IN BULLET & SPACE -> worlds, bullets en ships moeten losgekoppeld worden van elkaar
-
+	// Overrided in Bullet and Ship. Not absolutely necessary implementation.
+	
 	/**
 	 * Return a boolean indicating whether or not this round entity
 	 * is terminated.
@@ -616,6 +613,33 @@ public abstract class RoundEntity {
 	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
 	// ingesteld worden.		
 	
+	
+	
+	
+	
+	/**
+	 * COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS 
+	 */
+	
+	
+	
+	
+	/**
+	 * a method to check whether two entities may collide
+	 * @param 	entity
+	 * 			The entity with which we could collide
+	 * @return	True if and only if the 2 entities exist and are in the some world
+	 * 			|!entity.isTerminated() &&
+	 * 			| !this.isTerminated() &&
+	 * 			| entity.getSpace() == this.getSpace()
+	 */
+	public boolean canAsCollision(RoundEntity entity){
+		if (!entity.isTerminated() && !this.isTerminated() && entity.getSpace() == this.getSpace())
+			return true;
+		return false;
+	}
+	
+
 	/**
 	 * Get the position of a round entity after it's moved, given a duration.
 	 * 
@@ -667,14 +691,22 @@ public abstract class RoundEntity {
 	 *				then return 0;		
 	 * 
 	 * @throws	NullPointerException()
+	 * 			The given ship must exist.
+	 * 			| ship == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 * 			The given round entity must exist.
 	 * 			| other == null
 	 */
 	@Raw
 	@Immutable
-	public double getDistanceBetween(RoundEntity other) throws NullPointerException{
+	public double getDistanceBetween(RoundEntity other)
+		throws NullPointerException, IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		
 		double new_x = this.getxPosition() - other.getxPosition();
 		double new_y = this.getyPosition() - other.getyPosition();
@@ -697,16 +729,23 @@ public abstract class RoundEntity {
 	 * 			| result == this.getDistanceBetween(other) <= 0
 	 * 
 	 * @throws 	NullPointerException()
-	 * 			The given round entity must exist.
-	 * 			| other == null
+	 * 			The given ship must exist.
+	 * 			| ship == null
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	public boolean overlap(RoundEntity other) throws NullPointerException {
-		if (other == null)
+	public boolean overlap(RoundEntity ship) 
+			throws NullPointerException,IllegalArgumentException {
+		if (ship == null)
 			throw new NullPointerException();
+		if (!canAsCollision(ship))
+			throw new IllegalArgumentException();
 		
-		return this.getDistanceBetween(other) <= 0;
+		return this.getDistanceBetween(ship) <= 0;
 	}
 	
 	
@@ -726,12 +765,18 @@ public abstract class RoundEntity {
 	 * @throws 	NullPointerException
 	 * 			Throw a NullPointerException if one of the 2 round entities doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	public double getTimeToCollision(RoundEntity other) throws NullPointerException{
+	public double getTimeToCollision(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		
 		if (this.getDeltaDistanceVelocity(other) >= 0)
 			return Double.POSITIVE_INFINITY;
@@ -745,13 +790,13 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the distance in x- and y-direction between the 
-	 * centres of the round entities.
+	 * centers of the round entities.
 	 * 
 	 * @param 	other
 	 * 			The second round entity to check the distance between.
 	 * 
 	 * @post 	The deltaDistance will be a list of the difference between 
-	 * 			the 2 centres of the round entities.
+	 * 			the 2 centers of the round entities.
 	 * 			| deltaDistance =  {other.getxPosition()-this.getxPosition(),
 	 *			| other.getyPosition()-this.getyPosition()}
 	 *			
@@ -759,12 +804,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 2 round entities 
 	 * 			doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	private double [] getDeltaDistance(RoundEntity other) throws NullPointerException{
+	private double [] getDeltaDistance(RoundEntity other)
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double [] deltaDistance = {other.getxPosition()-this.getxPosition(),
 				other.getyPosition()-this.getyPosition()};
 		return deltaDistance;
@@ -786,12 +837,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double [] getDeltaVelocity(RoundEntity other) throws NullPointerException{
+	private double [] getDeltaVelocity(RoundEntity other)
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double [] deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
 				other.getyVelocity()-this.getyVelocity()};
 		return deltaVelocity;
@@ -799,13 +856,13 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the square of the difference in position between 
-	 * the centres of the two round entities.
+	 * the centers of the two round entities.
 	 * 
 	 * @param 	other
 	 * 			The second round entity to check the square of the difference in position between.
 	 * 
 	 * @post	The deltaPowDistance will be the sum of the squares of the x- and y- in 
-	 * 			distance between the centres of the round entities.
+	 * 			distance between the centers of the round entities.
 	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
 	 *			|	Math.pow(getDeltaDistance(other)[1],2);
 	 *				
@@ -813,12 +870,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double getDeltaPowDistance(RoundEntity other) throws NullPointerException{
+	private double getDeltaPowDistance(RoundEntity other) 
+			throws NullPointerException, IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double deltaPowDistance = Math.pow(this.getDeltaDistance(other)[0],2)+
 					Math.pow(this.getDeltaDistance(other)[1],2);
 		return deltaPowDistance;
@@ -840,12 +903,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double getDeltaPowVelocity(RoundEntity other) throws NullPointerException{
+	private double getDeltaPowVelocity(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double deltaPowVelocity = Math.pow(this.getDeltaVelocity(other)[0], 2)+
 					Math.pow(this.getDeltaVelocity(other)[1], 2);
 		return deltaPowVelocity;
@@ -868,12 +937,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */		
 	@Raw
 	@Immutable
-	private double getDeltaDistanceVelocity(RoundEntity other) throws NullPointerException{
+	private double getDeltaDistanceVelocity(RoundEntity other)
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double deltaDistanceVelocity = (this.getDeltaVelocity(other)[0]*this.getDeltaDistance(other)[0])+
 						(this.getDeltaVelocity(other)[1]*this.getDeltaDistance(other)[1]);
 		return deltaDistanceVelocity;
@@ -896,12 +971,19 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double getD(RoundEntity other) throws NullPointerException{
+	private double getD(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double d = Math.pow(this.getDeltaDistanceVelocity(other),2)-
 					(this.getDeltaPowVelocity(other))*(this.getDeltaPowDistance(other)
 													-Math.pow((this.getRadius()+other.getRadius()),2));
@@ -923,13 +1005,19 @@ public abstract class RoundEntity {
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide and if they may collide, they also collide .
+	 * 			| !canAsCollision(other)
+	 * 
 	 */
 	@Raw
 	@Immutable
-	public double [] getCollisionPosition(RoundEntity other) throws NullPointerException{
+	public double [] getCollisionPosition(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
-		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
+		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) ||
+				this.getTimeToFirstCollision(other) != this.getTimeToCollision(other))
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
@@ -949,4 +1037,73 @@ public abstract class RoundEntity {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get the time for a ship to hit the wall of its world
+	 * 
+	 * @return	Double.POSITIVE_INFINITY if and only if the entity is terminated or will never hit the wall
+	 * 			| this.isTerminated() || (this.getyVelocity() == 0 && this.getyVelocity() == 0)
+	 * @return 	zero if and only if the entity already hits a wall 
+	 * 			| @see implemantation
+	 * @return	the smallest possible time of hit with a wall
+	 * 			| @see implementation
+	 */	
+	public double getTimeToHitWall(){
+		if(this.isTerminated() || (this.getyVelocity() == 0 && this.getyVelocity() == 0))
+			return Double.POSITIVE_INFINITY;
+		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
+			this.getxPosition() - this.getRadius() == 0 ||
+			this.getyPosition() + this.getRadius() == this.getSpace().getWidth() ||
+			this.getyPosition() - this.getRadius() == 0)
+			return 0;
+		// the ship may hit the wall above
+		double timeToHitUpperYWall;
+		double timeToHitLowerYWall;
+		double timeToHitUpperXWall;
+		double timeToHitLowerXWall;
+		if (this.getyVelocity() > 0)
+			timeToHitUpperYWall = (space.getHeight()-this.getyPosition())/this.getyVelocity();
+		else if (this.getyVelocity() < 0)
+			timeToHitLowerYWall = (-this.getyPosition()/this.getyVelocity());
+		if (this.getxVelocity() > 0)
+			timeToHitUpperXWall = (space.getWidth()-this.getxPosition())/this.getxVelocity();
+		else if (this.getxVelocity() < 0)
+			timeToHitLowerXWall = (-this.getxPosition()/this.getxVelocity());
+		// returns the minimal time to hit a wall
+		return Math.min(Math.min(timeToHitUpperXWall, timeToHitLowerXWall),
+						Math.min(timeToHitUpperYWall, timeToHitLowerYWall));
+	}
+	
+	
+	public double [] getPositionOfHitWall(RoundEntity other){
+		if (this.isTerminated() )
+			return {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+		if (this.getTimeToHitWall() != this.getTimeToFirstCollision(other)
+				return null;
+			
+		double [] collisionPoint;
+		if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius() == space.getWidth())
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius(),
+										this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
+		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius() == 0)	
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius(),
+					this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
+		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius() == space.getHeight())
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
+										this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius()}
+		else
+			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
+					this.getPositionAfterMoving(this.getTimeToHitWall())[1]-this.getRadius()};
+		return collisionPoint;
+	}
+	
+	public double getTimeToFirstCollision(RoundEntity other){
+		if (other.isTerminated())
+			return this.getTimeToHitWall();
+		return Math.min(this.getTimeToHitWall(), this.getTimeToCollision(other));
+	}
+	
 }
+	
+	
+	

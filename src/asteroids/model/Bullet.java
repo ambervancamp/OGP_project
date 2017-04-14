@@ -72,7 +72,7 @@ public class Bullet extends RoundEntity {
 	/**
 	 * Terminate this bullet.
 	 *
-	 * @post   	This round entity is terminated.
+	 * @post   	If this bullet isn't already terminated, it is terminated.
 	 *       
 	 * @effect	If this bullet is in a space, it is removed.
 	 * 
@@ -80,9 +80,11 @@ public class Bullet extends RoundEntity {
 	 */
 	@Override
 	public void terminate() {
-		this.removeOutSpace();
-		this.removeOutShip();
-		this.isTerminated = true;
+		if (!this.isTerminated()){	
+			this.removeOutSpace();
+			this.removeOutShip();
+			this.isTerminated = true;
+		}
 	}
 	
 	/**
@@ -173,9 +175,8 @@ public class Bullet extends RoundEntity {
 	 *         	this bullet.
 	 */
 	public boolean hasProperShip() {
-		return canHaveAsShip(this.getShip()) && (this.getShip().hasBullet(this));
+		return canHaveAsShip(this.getShip()) && (this.getShip().hasAsBullet(this));
 	}
-	// SHIP MUST HAVE A METHOD 'HASBULLET'
 	
 	/**
 	 * Checks if this bullet is located in a ship.
@@ -229,7 +230,6 @@ public class Bullet extends RoundEntity {
 		}
 		// Else statement can only be reached in constructor, when bullet has no ship nor space yet.
 	}
-	//SHIP IS EXPECTED TO HAVE METHOD 'ADDBULLET'
 	
 	/**
 	 * Remove the ship from this bullet, if any. It is not placed into a new ship.
@@ -242,7 +242,7 @@ public class Bullet extends RoundEntity {
 	 */
 	private void removeOutShip(){
 		if (this.hasShip()){
-			this.getShip().deleteBullet(this);
+			this.getShip().removeBullet(this);
 			this.ship = null;
 			// Can not use setShip() because it does not allow to set a ship to null.	
 		}		
@@ -254,9 +254,7 @@ public class Bullet extends RoundEntity {
 	// When dealing with 'death', use terminate to destroy a bullet or ship
 	// Use placeInSpace to relocate it to an unbound space
 	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
-	
-	//SHIP IS EXPECTED TO HAVE METHOD DELETEBULLET
-	
+		
 	/**
 	 * Set space from this bullet to given space. If the bullet is already in a space, it's replaced to 
 	 * the new space. If the bullet is already in a ship, it's replaced to the new space.
