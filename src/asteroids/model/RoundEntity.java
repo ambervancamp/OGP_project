@@ -14,6 +14,9 @@ import be.kuleuven.cs.som.annotate.*;
  *        
  * @invar  	Each ship can have its radius as radius.
  *        	| canHaveAsRadius(this.getRadius())
+ *        
+ * @invar  	Each round entity must have a proper space.
+ *       	| hasProperSpace()
  * 
  * @author amber_000
  */
@@ -24,15 +27,20 @@ public abstract class RoundEntity {
 	/**
 	 * Initialize this new round entity with given parameters.
 	 *
-	 * @param x
+	 * @param	x
+	 * 			The x-coordinate of the position of this new round entity, in kilometer.
 	 * 
-	 * @param y
+	 * @param	y
+	 * 			The y-coordinate of the position of this new round entity, in kilometer.
 	 * 
-	 * @param xVelocity
+	 * @param 	xVelocity
+	 *			The x-coordinate velocity for this new round entity, in kilometer/second.
+	 *
+	 * @param 	yVelocity
+	 * 			The y-coordinate velocity for this new round entity, in kilometer/second.
 	 * 
-	 * @param yVelocity
-	 * 
-	 * @param radius
+	 * @param	radius
+	 * 			The radius of this new round entity, in kilometer.
 	 * 
 	 * @post	The xPosition will be equal to the given x-coordinate and 
 	 * 			the yPosition will be equal to the given y-coordinate.
@@ -78,42 +86,28 @@ public abstract class RoundEntity {
 			this.xVelocity = 0;
 			this.yVelocity = 0;
 		}
+		// Default value because of total programming style
 		this.setVelocity(xVelocity, yVelocity);
 		if (!canHaveAsRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
+		// No setter for density because radius is final variable
 	}
-	
-//	/**
-//	 * Create a new round entity with a default position, velocity and radius. 
-//	 * 
-//	 * @post  	The position of this new ship is (0,0).
-//	 *        	| new.getPosition() == {0,0}
-//	 *        
-//	 * @post  	The velocity of this new ship is (0,0).
-//	 *        	| new.getVelocity() == {0,0}
-//	 *        
-//	 * @post  	The radius of this new ship is getMinRadius.
-//	 *        	| new.getRadius() == getMinRadius()
-//	 *        
-//	 * @effect 	The result is a circle with radius getMinRadius() centered on (0, 0) with no speed.
-//	 */
-//	protected RoundEntity() throws IllegalArgumentException {
-//		this(0,0,0,0,getMinRadius());
-//	}
 	
 	/**
 	 * Terminate this round entity.
 	 *
-	 * @post   This round entity is terminated.
-	 *       | new.isTerminated()
+	 * @post   	This round entity is terminated.
+	 *       	| new.isTerminated()
+	 *       
+	 * @effect	If this round entity is in a space, it is removed.
+	 * 			| if (this.getSpace()!=null)
+	 * 			| 	then this.removeOutSpace()
 	 */
 	public void terminate() {
-		// SET ROUND ENTITY FREE OF ITS LOCATION IT IS IN
-		// IN DOCUMENTATIE: @effect this round entity is freed from its space its in
-		// 					| this.setapart()
 		this.isTerminated = true;
 	}
+	// OVERRIDE IN BULLET & SPACE -> worlds, bullets en ships moeten losgekoppeld worden van elkaar
 
 	/**
 	 * Return a boolean indicating whether or not this round entity
@@ -358,7 +352,7 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Return the highest possible value for the speed of round entities, always
+	 * Return the highest possible value for the speed of this round entity, always
 	 * smaller or equal to the absolute max speed.
 	 *
 	 * @return 	The highest possible value for the speed of round entities is by default
@@ -419,8 +413,8 @@ public abstract class RoundEntity {
 	 * 			| result == (!Double.isNaN(radius) && radius >= getMinRadius())
 	 */
 	@Raw
-	public static boolean canHaveAsRadius(double radius) {
-		return (!Double.isNaN(radius) && radius >= getMinRadius());
+	public boolean canHaveAsRadius(double radius) {
+		return (!Double.isNaN(radius) && radius >= this.getMinRadius());
 	}
 	// PROBLEEM MET GEBRUIK VAN GETMINRADIUS HIER OMDAT DEZE NIET ALS STATIC STAAT AANGEDUID
 	// STATIC LUKT NIET BIJ GETMINRADIUS OMDAT DEZE ABSTRACT IS
@@ -468,7 +462,6 @@ public abstract class RoundEntity {
 	
 	/**
 	 * Return the space where this round entity is placed in.
-	 * A round entity always needs to be placed in a space, and can't therefore be null.
 	 * 
 	 * @return	Returns the space this round entity is placed in.
 	 * 			| result == this.space
@@ -478,27 +471,30 @@ public abstract class RoundEntity {
 	public Space getSpace(){
 		return this.space;
 	}
+	// A ship always needs to be placed in a space, and can't therefore be null.
+	// a bullet can be places on a ship, and then space can be null
 	
 	/**
 	 * Register the given space as the space where this round entity is placed in.
 	 * 
 	 * @param 	space
-	 * 			| The given space to set the round entity in.
+	 * 			The given space to set the round entity in.
 	 * 		
 	 * @throws 	IllegalArgumentException
 	 * 			The given space is not valid.
 	 * 			| !canHaveAsSpace(space)
 	 */
-	private void setSpace(Space space) throws IllegalArgumentException{
+	protected void setSpace(Space space) throws IllegalArgumentException{
 		if (!canHaveAsSpace(space))
 			throw new IllegalArgumentException();
 		this.space = space;
 	}
 	
 	/**
+	 * Checks whether the given space is a valid space for any round entity.
 	 * 
 	 * @param 	space
-	 * 			| The given space to check if this round entity can be placed in.
+	 * 			The given space to check if this round entity can be placed in.
 	 * 
 	 * @return 	False if the given space is not effective or null, or this round entity is terminated.
 	 *       	| if (space == null || (space.isTerminated()) || (this.isTerminated()))
@@ -506,7 +502,7 @@ public abstract class RoundEntity {
 	 *       
 	 * @return	True if all the above isn't true.
 	 * 			| else
-	 * 				result == true
+	 * 			|	result == true
 	 */
 	public boolean canHaveAsSpace(Space space){
 		if (space == null || (space.isTerminated()) || (this.isTerminated()))
@@ -514,26 +510,23 @@ public abstract class RoundEntity {
 		else
 			return true;
 	}
-<<<<<<< HEAD
-	// Terminate functies voor SPACE moeten bestaan
 	// OPM: import statement nodig om functies van Space te gebruiken?
 	
 	/**
 	 * Check whether this round entity has a proper space.
 	 * 
-	 * @return True if and only if this round entity can have its space
-	 *         as its space, and if that space, if it is effective, in turn references
-	 *         this round entity.
-	 *       | result ==
-	 *       |   canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this)
-	 *
-	 * @return
+	 * @return 	True if and only if this round entity can have its space
+	 *         	as its space, and if that space, if it is effective, in turn references
+	 *         	this round entity.
+	 *       	| result ==
+	 *       	|   canHaveAsSpace(this.getSpace()) && (this.getSpace().hasEntity(this))
 	 */
 	public boolean hasProperSpace() {
-		return canHaveAsSpace(this.getSpace()) && (this.getSpace().getEntity() == this);
+		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasEntity(this));
 	}
 	// equivalent in Space: checkers en setters voor meervoudigheid
 	// bv ship of bullet mag niet al ergens anders in zitten
+<<<<<<< HEAD
 	
 	/**
 	 * Check whether this round entity has a space.
@@ -626,6 +619,9 @@ public abstract class RoundEntity {
 
 	// equivalent in Space: checkers en setters voor meervoudigheid
 	// bv ship of bullet mag niet al ergens anders in zitten
+=======
+	// SPACE MOET METHODE 'HASENTITY' BEVATTEN
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
 	
 	/**
 	 * Check whether this round entity has a space.
@@ -640,15 +636,30 @@ public abstract class RoundEntity {
 	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
 	
 	/**
+	 * Set space from this round entity to given space. If it's already in a space, it's replaced to 
+	 * the new space. Also places round entity in given space.
 	 * 
-	 * @param space
-	 * @throws IllegalArgumentException
+	 * @param 	space
+	 * 			The given space to put the round entity in.
+	 * 
+	 * @effect	The given space will be the new space of this round entity.
+	 * 			| this.setSpace(space)
+	 * 
+	 * @post 	If the round entity's already placed in a space, first it will be removed from
+	 * 			that space. Then it will set space as its space.
+	 * 			| if (this.hasSpace()){
+	 *			|	then this.removeOutSpace();
+	 *			|	this.setSpace(space);		
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			If the space is not valid.
+	 * 			| !canHaveAsSpace(space)
 	 */
-	public void PlaceInSpace(Space space) throws IllegalArgumentException {
+	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();
 		if (this.hasSpace()){
-			this.RemoveOutSpace();
+			this.removeOutSpace();
 			this.setSpace(space);
 			space.addEntity(this);
 		}
@@ -657,11 +668,11 @@ public abstract class RoundEntity {
 			space.addEntity(this);	
 		}
 	}
-	// SPACE moet een functie 'setEntity' hebben -> OK
-	// used in subclasses in constructor to place in space -> OK
+	// used in subclasses in constructor to place in space
 	
 	/**
-	 * Remove this round entity from the space it's in, if any.
+	 * Remove the space from this round entity, if any. It is not placed into a new space.
+	 * The round entity is also removed from the space.
 	 * 
 	 * @return 	The round entity will not be placed in any space.
 	 * 			| !new.hasSpace()
@@ -671,11 +682,15 @@ public abstract class RoundEntity {
 	 *       	| if (this.hasSpace())
 	 *       	|   then ! (new (this.getSpace())).hasEntity(this)) 
 	 */
-	private void RemoveOutSpace(){
+	protected void removeOutSpace(){
 		// If statement in principle not necessary, because RemoveOutSpace() is only used when
 		// sure the round entity has a space (no boundary case).
 		if (this.hasSpace()){
+<<<<<<< HEAD
 			getSpace().deleteEntity(this);
+=======
+			this.getSpace().deleteEntity(this);
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
 			this.space = null;
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
@@ -683,8 +698,12 @@ public abstract class RoundEntity {
 	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
 	//OF NET WORDT AANGEMAAKT.
-	//SPACE MOET EEN FUNCTIE 'RemoveEntity' HEBBEN -> OK
 	
+	// When dealing with 'death', use terminate to destroy a bullet or ship
+	// Use placeInSpace to relocate it to an unbound space
+	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
+
+
 	/**
 	 * Variable registering the space this round entity is placed in.
 	 */
@@ -694,8 +713,7 @@ public abstract class RoundEntity {
 	// TENZIJ: BULLETS KUNNEN OOK IN SHIPS ZITTEN (MEERVOUDIGE ASSOCIATION VOOR SHIP)
 	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
 	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
-	// ingesteld worden.	
-	
+	// ingesteld worden.		
 	
 	/**
 	 * a method to check whether two entities may collide
@@ -714,7 +732,7 @@ public abstract class RoundEntity {
 	
 
 	/**
-	 * Get the position of a ship after it's moved.
+	 * Get the position of a round entity after it's moved, given a duration.
 	 * 
 	 * @param 	duration
 	 * 			The duration of the movement.
@@ -722,32 +740,58 @@ public abstract class RoundEntity {
 	 * @return 	The new position after moving as a double[].
 	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
 	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
-	 * 			
+	 *
+	 * @throws 	IllegalArgumentException
+	 * 			The duration is not a valid duration.
+	 * 			| (!canHaveAsDuration(duration))
 	 */	
 	@Raw
 	public double [] getPositionAfterMoving(double duration){
-			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
+		if (!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		return new double[] {getPosition()[0]+getVelocity()[0]*duration,
 			getPosition()[1]+getVelocity()[1]*duration};	
 	}
 	
 	/**
+	 * Checks whether the duration of the movement is a valid duration.
 	 * 
-	 * Return the distance between the given ship and this ship.
-	 * The distance may be negative if both ships overlap
+	 * @param 	duration
+	 * 			The duration of the movement.
 	 * 
-	 * @param	ship
-	 * 			The given ship. 
+	 * @return	True if and only if the duration is a number, 
+	 * 			greater than or equal to zero.
+	 * 			| result == duration >= 0 && !Double.isNaN(duration)
+	 */
+	@Raw
+	@Immutable
+	public static boolean canHaveAsDuration(double duration){
+		return (!Double.isNaN(duration) && duration >= 0);
+	}
+	
+	/**
 	 * 
-	 * @post	The distance between a ship and itself is zero.
+	 * Return the distance between the given round entity and this round entity.
+	 * The distance may be negative if both ships overlap.
+	 * 
+	 * @param	other
+	 * 			The given round entity. 
+	 * 
+	 * @post	The distance between a round entity and itself is zero.
 	 * 			| if (distance == (-2*this.getRadius()))
 	 *				then return 0;		
 	 * 
 	 * @throws	NullPointerException()
+<<<<<<< HEAD
 	 * 			The given ship must exist.
 	 * 			| ship == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
 	 * 			| !canAsCollision(other)
+=======
+	 * 			The given round entity must exist.
+	 * 			| other == null
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
 	 */
 	@Raw
 	@Immutable
@@ -770,49 +814,59 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Check if the given ship overlaps this ship.
+	 * Check if the given round entity overlaps this round entity.
 	 * 
-	 * @param 	ship
-	 * 			The given ship.
+	 * @param 	other
+	 * 			The given round entity.
 	 * 
-	 * @return	Ships overlap if the distance between them is less then or equals 0.
-	 * 			| result == this.getDistanceBetween(ship) <= 0
+	 * @return	Round entities overlap if the distance between them is less then or equals 0.
+	 * 			| result == this.getDistanceBetween(other) <= 0
 	 * 
 	 * @throws 	NullPointerException()
+<<<<<<< HEAD
 	 * 			The given ship must exist.
 	 * 			| ship == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
 	 * 			| !canAsCollision(other)
+=======
+	 * 			The given round entity must exist.
+	 * 			| other == null
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
 	 */
 	@Raw
 	@Immutable
+<<<<<<< HEAD
 	public boolean overlap(RoundEntity ship) 
 			throws NullPointerException,IllegalArgumentException {
 		if (ship == null)
+=======
+	public boolean overlap(RoundEntity other) throws NullPointerException {
+		if (other == null)
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
 			throw new NullPointerException();
 		if (!canAsCollision(ship))
 			throw new IllegalArgumentException();
 		
-		return this.getDistanceBetween(ship) <= 0;
+		return this.getDistanceBetween(other) <= 0;
 	}
 	
 	
 	/**
-	 * A method that gives the time between a collision of 2 ships. 
-	 * This method does not apply on two ships that overlap.
+	 * A method that gives the time between a collision of 2 round entities. 
+	 * This method does not apply on two round entities that overlap.
 	 * 
 	 * @param 	other
-	 * 			A second ship to check if this ship collides with.
+	 * 			A second round entity to check if this round entity collides with.
 	 * 
-	 * @return	Returns the time until collision with the other ship.
+	 * @return	Returns the time until collision with the other round entity.
 	 * 			| result == -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
 	 * 
-	 * @return 	The time will be positive infinity if the ships will never collide.
+	 * @return 	The time will be positive infinity if the round entities will never collide.
 	 * 			| result == Double.POSITIVE_INFINITY
 	 * 
 	 * @throws 	NullPointerException
-	 * 			Throw a NullPointerException if one of the 2 ships doesn't exist.
+	 * 			Throw a NullPointerException if one of the 2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
@@ -839,19 +893,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the distance in x- and y-direction between the 
-	 * centres of the ships.
+	 * centres of the round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the distance between.
+	 * 			The second round entity to check the distance between.
 	 * 
 	 * @post 	The deltaDistance will be a list of the difference between 
-	 * 			the 2 centres of the ship.
-	 * 			|deltaDistance =  {other.getxPosition()-this.getxPosition(),
-	 *			other.getyPosition()-this.getyPosition()}
+	 * 			the 2 centres of the round entities.
+	 * 			| deltaDistance =  {other.getxPosition()-this.getxPosition(),
+	 *			| other.getyPosition()-this.getyPosition()}
 	 *			
 	 * @throws 	NullPointerException
-	 * 			the method will throw a NullPointerException if one of the 2 ships 
-	 * 			doesn't exist
+	 * 			The method will throw a NullPointerException if one of the 2 round entities 
+	 * 			doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
@@ -872,19 +926,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the difference in velocity in x- and y-direction 
-	 * between two ships.
+	 * between two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the difference in velocity between.
+	 * 			The second round entity to check the difference in velocity between.
 	 * 
 	 * @post 	The deltaVelocity will be a double[] of the difference in 
-	 * 			velocity between the 2 ships.
+	 * 			velocity between the 2 round entities.
 	 * 			| deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
-	 *			other.getyVelocity()-this.getyVelocity()};
+	 *			| other.getyVelocity()-this.getyVelocity()};
 	 *
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
@@ -905,19 +959,19 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the square of the difference in position between 
-	 * the centres of the two ships.
+	 * the centres of the two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the square of the difference in position between.
+	 * 			The second round entity to check the square of the difference in position between.
 	 * 
 	 * @post	The deltaPowDistance will be the sum of the squares of the x- and y- in 
-	 * 			distance between the centres of the ships.
+	 * 			distance between the centres of the round entities.
 	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
-	 *				Math.pow(getDeltaDistance(other)[1],2);
+	 *			|	Math.pow(getDeltaDistance(other)[1],2);
 	 *				
 	 * @throws 	NullPointerException
-	 * 			the method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
@@ -938,19 +992,19 @@ public abstract class RoundEntity {
 
 	/**
 	 * A method that calculates the square of the difference in velocity 
-	 * between two ships.
+	 * between two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the square of the difference in velocity between.
+	 * 			The second round entity to check the square of the difference in velocity between.
 	 * 
 	 * @post	The deltaPowVelocity will be the sum of the squares of the x- and 
-	 * 			y- difference in velocity between the ships.
+	 * 			y- difference in velocity between the round entities.
 	 * 			| double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
-	 *				Math.pow(getDeltaVelocity(other)[1], 2);
+	 *			|	Math.pow(getDeltaVelocity(other)[1], 2);
 	 *
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
@@ -971,20 +1025,20 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method that calculates the scalarProduct of the difference 
-	 * in position and velocity between two ships.
+	 * in position and velocity between two round entities.
 	 * 
 	 * @param 	other
-	 * 			The second ship to check the scalarProduct of the difference 
+	 * 			The second round entity to check the scalarProduct of the difference 
 	 * 			in position and velocity between.
 	 * 
 	 * @post 	The deltaDistanceVelocity will be the sum of the product of x- and 
-	 * 			y-distance and difference in velocity of the two ships.
+	 * 			y-distance and difference in velocity of the two round entities.
 	 * 			| deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
-	 *				(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
+	 *			|	(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
 	 *
 	 * @throws 	NullPointerException
-	 * 			The method will throw a nullpointerexception if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			The method will throw a NullPointerException if one of the 
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
@@ -1003,21 +1057,22 @@ public abstract class RoundEntity {
 		return deltaDistanceVelocity;
 	}
 	/**
-	 * A method that calculates d between two ships. D is a value described by a mathematical formula,
+	 * A method that calculates d between two round entities. 
+	 * D is a value described by a mathematical formula,
 	 * as seen in the body of this function. It is a value needed in other functions.
 	 * 
 	 * @param 	other
-	 * 			A second ship with which you want to calculate d with.
+	 * 			A second round entity with which you want to calculate d with.
 	 * 
 	 * @post 	The d will be the square of the deltaDistanceVelocitylowered by the 
 	 * 			product of the deltaPowVelocity with the difference between 
-	 * 			deltaPowVelocity and the distance between the two ships.
+	 * 			deltaPowVelocity and the distance between the two round entities.
 	 * 			| d = Math.pow(getDeltaDistanceVelocity(other),2)-
 	 *				(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
 	 *
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * 
 	 * @throws 	IllegalArgumentException
@@ -1039,18 +1094,18 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Get the point of collision if two ships will ever collide. 
+	 * Get the point of collision, if two round entities will ever collide. 
 	 * 
 	 * @param 	other
-	 * 			A second ship to calculate the collision position with.
+	 * 			A second round entity to calculate the collision position with.
 	 * 
-	 * @post 	The collisionPoint will be the point where the two ships hit.
+	 * @post 	The collisionPoint will be the point where the two round entities hit.
 	 * 			| collisionPoint = this.getPositionAfterMoving(time)+
-									this.getRadius()*getDeltaDistance(other)/getD(other)
-									
+	 *			|					this.getRadius()*getDeltaDistance(other)/getD(other)
+	 *								
 	 * @throws 	NullPointerException
 	 * 			The method will throw a NullPointerException if one of the 
-	 * 			2 ships doesn't exist.
+	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide and if they may collide, they also collide .
@@ -1084,6 +1139,7 @@ public abstract class RoundEntity {
 			return null;
 		}
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Get the time for a ship to hit the wall of its world
@@ -1150,5 +1206,8 @@ public abstract class RoundEntity {
 		return Math.min(this.getTimeToHitWall(), this.getTimeToCollision(other));
 	}
 	
+}
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
+=======
 }
 >>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git

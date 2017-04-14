@@ -1,5 +1,6 @@
 package asteroids.model;
 
+@Value
 public class Collision {
 
 	/**
