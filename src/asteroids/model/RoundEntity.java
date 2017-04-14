@@ -675,7 +675,7 @@ public abstract class RoundEntity {
 		// If statement in principle not necessary, because RemoveOutSpace() is only used when
 		// sure the round entity has a space (no boundary case).
 		if (this.hasSpace()){
-			this.getSpace().deleteEntity();
+			getSpace().deleteEntity(this);
 			this.space = null;
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
@@ -696,6 +696,37 @@ public abstract class RoundEntity {
 	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
 	// ingesteld worden.	
 	
+	
+	/**
+	 * a method to check whether two entities may collide
+	 * @param 	entity
+	 * 			The entity with which we could collide
+	 * @return	True if and only if the 2 entities exist and are in the some world
+	 * 			|!entity.isTerminated() &&
+	 * 			| !this.isTerminated() &&
+	 * 			| entity.getSpace() == this.getSpace()
+	 */
+	public boolean canAsCollision(RoundEntity entity){
+		if (!entity.isTerminated() && !this.isTerminated() && entity.getSpace() == this.getSpace())
+			return true;
+		return false;
+	}
+	
+
+	/**
+	 * a method to check whether an entity may collide with the 'wall' of the world
+	 * @param 	Space
+	 * 			The world to which 'wall' the entity may collide.
+	 * @return	True if and only if the entity and space exist and the entity is located in the world
+	 * 			|!Entity.isTerminated() &&
+	 * 			| !space.isTerminated() &&
+	 * 			| Entity.getSpace() == space
+	 */
+	public boolean canHitWall(Space space){
+		if (!this.isTerminated() && !space.isTerminated() && this.getSpace() == space)
+			return true;
+		return false;
+	}
 	
 	/**
 	 * Get the position of a ship after it's moved.
@@ -729,12 +760,18 @@ public abstract class RoundEntity {
 	 * @throws	NullPointerException()
 	 * 			The given ship must exist.
 	 * 			| ship == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	public double getDistanceBetween(RoundEntity other) throws NullPointerException{
+	public double getDistanceBetween(RoundEntity other)
+		throws NullPointerException, IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		
 		double new_x = this.getxPosition() - other.getxPosition();
 		double new_y = this.getyPosition() - other.getyPosition();
@@ -759,12 +796,18 @@ public abstract class RoundEntity {
 	 * @throws 	NullPointerException()
 	 * 			The given ship must exist.
 	 * 			| ship == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	public boolean overlap(RoundEntity ship) throws NullPointerException {
+	public boolean overlap(RoundEntity ship) 
+			throws NullPointerException,IllegalArgumentException {
 		if (ship == null)
 			throw new NullPointerException();
+		if (!canAsCollision(ship))
+			throw new IllegalArgumentException();
 		
 		return this.getDistanceBetween(ship) <= 0;
 	}
@@ -786,12 +829,18 @@ public abstract class RoundEntity {
 	 * @throws 	NullPointerException
 	 * 			Throw a NullPointerException if one of the 2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	public double getTimeToCollision(RoundEntity other) throws NullPointerException{
+	public double getTimeToCollision(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		
 		if (this.getDeltaDistanceVelocity(other) >= 0)
 			return Double.POSITIVE_INFINITY;
@@ -819,12 +868,18 @@ public abstract class RoundEntity {
 	 * 			the method will throw a NullPointerException if one of the 2 ships 
 	 * 			doesn't exist
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
-	private double [] getDeltaDistance(RoundEntity other) throws NullPointerException{
+	private double [] getDeltaDistance(RoundEntity other)
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double [] deltaDistance = {other.getxPosition()-this.getxPosition(),
 				other.getyPosition()-this.getyPosition()};
 		return deltaDistance;
@@ -846,12 +901,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double [] getDeltaVelocity(RoundEntity other) throws NullPointerException{
+	private double [] getDeltaVelocity(RoundEntity other)
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double [] deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
 				other.getyVelocity()-this.getyVelocity()};
 		return deltaVelocity;
@@ -873,12 +934,18 @@ public abstract class RoundEntity {
 	 * 			the method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double getDeltaPowDistance(RoundEntity other) throws NullPointerException{
+	private double getDeltaPowDistance(RoundEntity other) 
+			throws NullPointerException, IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double deltaPowDistance = Math.pow(this.getDeltaDistance(other)[0],2)+
 					Math.pow(this.getDeltaDistance(other)[1],2);
 		return deltaPowDistance;
@@ -900,12 +967,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double getDeltaPowVelocity(RoundEntity other) throws NullPointerException{
+	private double getDeltaPowVelocity(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double deltaPowVelocity = Math.pow(this.getDeltaVelocity(other)[0], 2)+
 					Math.pow(this.getDeltaVelocity(other)[1], 2);
 		return deltaPowVelocity;
@@ -928,12 +1001,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a nullpointerexception if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */		
 	@Raw
 	@Immutable
-	private double getDeltaDistanceVelocity(RoundEntity other) throws NullPointerException{
+	private double getDeltaDistanceVelocity(RoundEntity other)
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double deltaDistanceVelocity = (this.getDeltaVelocity(other)[0]*this.getDeltaDistance(other)[0])+
 						(this.getDeltaVelocity(other)[1]*this.getDeltaDistance(other)[1]);
 		return deltaDistanceVelocity;
@@ -955,12 +1034,19 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
-	private double getD(RoundEntity other) throws NullPointerException{
+	private double getD(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
 		double d = Math.pow(this.getDeltaDistanceVelocity(other),2)-
 					(this.getDeltaPowVelocity(other))*(this.getDeltaPowDistance(other)
 													-Math.pow((this.getRadius()+other.getRadius()),2));
@@ -981,14 +1067,18 @@ public abstract class RoundEntity {
 	 * 			The method will throw a NullPointerException if one of the 
 	 * 			2 ships doesn't exist.
 	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide and if they may collide, they also collide .
+	 * 			| !canAsCollision(other)
 	 * 
 	 */
 	@Raw
 	@Immutable
-	public double [] getCollisionPosition(RoundEntity other) throws NullPointerException{
+	public double [] getCollisionPosition(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
-		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
+		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) )
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
