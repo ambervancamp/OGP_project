@@ -14,6 +14,12 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  * @invar  	Each ship can have its density as density .
  *       	| canHaveAsDensity(this.getDensity())
+ *       
+ * @invar	Each ship must have a proper space.
+ * 			| hasProperSpace()
+ *  
+ * @invar	Each ship must have a proper bullet.
+ * 			| hasProperBullet()
  *        
  * @author Amber_000 && Jasper_000
  */
@@ -63,6 +69,7 @@ public class Ship extends RoundEntity {
 	 *       	|   else new.getMass() == 5.948*Math.pow(10,15)
 	 *       
 	 * @effect	This ship is placed in a new unbound space.
+	 * 			| UnboundSpace unboundspace = UnboundSpace()
 	 * 			| this.placeInSpace(unboundspace)
      * 
 	 */
@@ -76,17 +83,18 @@ public class Ship extends RoundEntity {
 			this.density = MIN_DENSITY;
 		else
 			this.density = density;
+			// No setter for density because it is final variable.
 		
 		if (!canHaveAsMass(mass))
 			mass = 5.948*Math.pow(10,15);
 		this.setMass(mass);
-		// No 'else' needed, setMass sets the new defined mass.
+		// No 'else' needed, setMass() sets the new defined mass.
 		
-		UnboundSpace unboundspace = UnboundSpace(width, height);
+		UnboundSpace unboundspace = UnboundSpace();
 		this.placeInSpace(unboundspace);
 		// Ships need to be associated with an unbound space until associated with a world.
-		// Wait for definition of uboundspace constructor for width and height.
 	}
+	// Wait for definition of uboundspace constructor for width and height.
 	
 	/**
 	 * Create a new ship with a default position, velocity, radius,
@@ -116,7 +124,25 @@ public class Ship extends RoundEntity {
 		this(0,0,0,0,getMinRadius(),0,5.948*Math.pow(10,15));
 	}
 	//DEFAULT LOCATIE 0,0??
-		
+	
+	/**
+	 * Terminate this round entity.
+	 *
+	 * @post   	This round entity is terminated.
+	 *       	| new.isTerminated()
+	 *       
+	 * @effect	If this round entity is in a space, it is removed.
+	 * 			| if (this.getSpace()!=null)
+	 * 			| 	then this.removeOutSpace()
+	 */
+	@Override
+	public void terminate() {
+		if (this.getSpace()!=null)
+			this.removeOutSpace();			
+		this.isTerminated = true;
+	}
+	// OVERRIDE IN BULLET & SPACE
+	
 	/**
 	 * Set the orientation of this ship.
 	 * 

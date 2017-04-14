@@ -14,6 +14,9 @@ import be.kuleuven.cs.som.annotate.*;
  *        
  * @invar  	Each ship can have its radius as radius.
  *        	| canHaveAsRadius(this.getRadius())
+ *        
+ * @invar  	Each round entity must have a proper space.
+ *       	| hasProperSpace()
  * 
  * @author amber_000
  */
@@ -83,10 +86,12 @@ public abstract class RoundEntity {
 			this.xVelocity = 0;
 			this.yVelocity = 0;
 		}
+		// Default value because of total programming style
 		this.setVelocity(xVelocity, yVelocity);
 		if (!canHaveAsRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
+		// No setter for density because radius is final variable
 	}
 	
 	/**
@@ -100,11 +105,9 @@ public abstract class RoundEntity {
 	 * 			| 	then this.removeOutSpace()
 	 */
 	public void terminate() {
-		if (this.getSpace()!=null)
-			this.removeOutSpace();
 		this.isTerminated = true;
 	}
-	// OVERRIDE IN BULLET & SPACE
+	// OVERRIDE IN BULLET & SPACE -> worlds, bullets en ships moeten losgekoppeld worden van elkaar
 
 	/**
 	 * Return a boolean indicating whether or not this round entity
@@ -357,7 +360,7 @@ public abstract class RoundEntity {
 	 *		 	| result == ABSOLUTE_MAX_SPEED
 	 */
 	@Basic
-	protected double getMaxSpeed() {
+	protected static double getMaxSpeed() {
 		return ABSOLUTE_MAX_SPEED;
 	}
 	// Depends on the round entity it is used on.
@@ -481,7 +484,7 @@ public abstract class RoundEntity {
 	 * 			The given space is not valid.
 	 * 			| !canHaveAsSpace(space)
 	 */
-	private void setSpace(Space space) throws IllegalArgumentException{
+	protected void setSpace(Space space) throws IllegalArgumentException{
 		if (!canHaveAsSpace(space))
 			throw new IllegalArgumentException();
 		this.space = space;
@@ -539,7 +542,7 @@ public abstract class RoundEntity {
 	
 	/**
 	 * Set space from this round entity to given space. If it's already in a space, it's replaced to 
-	 * the new place. Also places round entity in given space.
+	 * the new space. Also places round entity in given space.
 	 * 
 	 * @param 	space
 	 * 			The given space to put the round entity in.
@@ -584,11 +587,11 @@ public abstract class RoundEntity {
 	 *       	| if (this.hasSpace())
 	 *       	|   then ! (new (this.getSpace())).hasEntity(this)) 
 	 */
-	private void removeOutSpace(){
+	protected void removeOutSpace(){
 		// If statement in principle not necessary, because RemoveOutSpace() is only used when
 		// sure the round entity has a space (no boundary case).
 		if (this.hasSpace()){
-			getSpace().deleteEntity(this);
+			this.getSpace().deleteEntity(this);
 			this.space = null;
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
