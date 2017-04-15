@@ -472,6 +472,24 @@ public abstract class RoundEntity {
 	// a bullet can be places on a ship, and then space can be null
 	
 	/**
+	 * Return the world where this round entity is placed in, if any.
+	 * 
+	 * @return	Returns the world this round entity is placed in, if
+	 * 			it isn't placed in a world it returns null.
+	 * 			| if (this.getSpace() instanceof World)
+	 *			|	result == this.getSpace()
+	 *			| else
+	 *			|	result == null
+	 */
+	@Basic
+	@Raw
+	public World getWorld(){
+		if (this.getSpace() instanceof World)
+			return (World) this.getSpace();
+		return null;
+	}
+	
+	/**
 	 * Register the given space as the space where this round entity is placed in.
 	 * 
 	 * @param 	space

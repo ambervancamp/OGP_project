@@ -51,23 +51,23 @@ public class Bullet extends RoundEntity {
 	}
 	// Wait for definition of uboundspace constructor for width and height.
 
-	
-	/**
-	 * Create a new bullet with a default position, velocity, radius.
-	 * 
-	 * @post  	The position of this new ship is (0,0).
-	 *        
-	 * @post  	The velocity of this new ship is (0,0).
-	 *        
-	 * @post  	The radius of this new ship is getMinRadius.
-	 *        
-	 * @effect 	The result is a circle with radius getMinRadius() 
-	 * 			centered on (0, 0) with speed zero.
-	 */
-	public Bullet(){
-		this(0,0,0,0,getMinRadius());
-	}
-	//DEFAULT LOCATIE 0,0??
+//	
+//	/**
+//	 * Create a new bullet with a default position, velocity, radius.
+//	 * 
+//	 * @post  	The position of this new ship is (0,0).
+//	 *        
+//	 * @post  	The velocity of this new ship is (0,0).
+//	 *        
+//	 * @post  	The radius of this new ship is getMinRadius.
+//	 *        
+//	 * @effect 	The result is a circle with radius getMinRadius() 
+//	 * 			centered on (0, 0) with speed zero.
+//	 */
+//	public Bullet(){
+//		this(0,0,0,0,getMinRadius());
+//	}
+//	//DEFAULT LOCATIE 0,0?? ----> Wordt nergens gebruikt in facade
 	
 	/**
 	 * Terminate this bullet.
@@ -230,6 +230,7 @@ public class Bullet extends RoundEntity {
 		}
 		// Else statement can only be reached in constructor, when bullet has no ship nor space yet.
 	}
+	//BULLETS MOETEN BINNEN GRENZEN VAN SHIP BEWEGEN!!!!
 	
 	/**
 	 * Remove the ship from this bullet, if any. It is not placed into a new ship.
@@ -254,6 +255,8 @@ public class Bullet extends RoundEntity {
 	// When dealing with 'death', use terminate to destroy a bullet or ship
 	// Use placeInSpace to relocate it to an unbound space
 	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
+	
+	//BULLETS BEWEEGDEN MEE MET SHIP, GEEF TERUG EIGEN SNELHEID
 		
 	/**
 	 * Set space from this bullet to given space. If the bullet is already in a space, it's replaced to 
@@ -304,8 +307,8 @@ public class Bullet extends RoundEntity {
 	 * Return the ship that fired this bullet, if any.
 	 * @return
 	 */
-	public Ship returnSource(Ship ship){
-		return null;
+	public Ship returnSource(){
+		return this.getShip();
 		//IMPLEMENTATIE
 	}
 }
