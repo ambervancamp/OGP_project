@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.util.*;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**

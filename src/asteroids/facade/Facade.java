@@ -1,6 +1,7 @@
 package asteroids.facade;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import asteroids.model.*;
@@ -379,54 +380,118 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * Create a new world with the given <code>width</code> and
 	 * <code>height</code>.
 	 */
-	public World createWorld(double width, double height) throws ModelException;
+	public World createWorld(double width, double height) throws ModelException{
+		try {
+		return new World(width, height);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Terminate <code>world</code>.
 	 */
-	public void terminateWorld(World world) throws ModelException;
+	public void terminateWorld(World world) throws ModelException{
+		try {
+		world.terminate();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Check whether <code>world</code> is terminated.
 	 */
-	public boolean isTerminatedWorld(World world) throws ModelException;
+	public boolean isTerminatedWorld(World world) throws ModelException{
+		try {
+		return world.isTerminated();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Return the size of <code>world</code> as an array containing the width,
 	 * followed by the height.
 	 */
-	public double[] getWorldSize(World world) throws ModelException;
+	public double[] getWorldSize(World world) throws ModelException{
+		try {
+		return world.getSize();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//METHODE MOET NOG WORDEN GEMAAKT
 
 	/**
 	 * Return all ships located within <code>world</code>.
 	 */
 	public Set<? extends Ship> getWorldShips(World world) throws ModelException;
+	//METHODE MOET NOG WORDEN GEMAAKT
 
 	/**
 	 * Return all bullets located in <code>world</code>.
 	 */
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException;
+	//METHODE MOET NOG WORDEN GEMAAKT
 
 	/**
 	 * Add <code>ship</code> to <code>world</code>.
 	 */
-	public void addShipToWorld(World world, Ship ship) throws ModelException;
+	public void addShipToWorld(World world, Ship ship) throws ModelException{
+		try {
+		ship.placeInSpace(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Remove <code>ship</code> from <code>world</code>.
 	 */
-	public void removeShipFromWorld(World world, Ship ship) throws ModelException;
+	public void removeShipFromWorld(World world, Ship ship) throws ModelException{
+		try {
+		UnboundSpace unbound_space = UnboundSpace();
+		ship.placeInSpace(unbound_space);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//OP DEZE MANIER WORDT HET ARGUMENT WORLD NIET GEBRUIKT
 
 	/**
 	 * Add <code>bullet</code> to <code>world</code>.
 	 */
-	public void addBulletToWorld(World world, Bullet bullet) throws ModelException;
+	public void addBulletToWorld(World world, Bullet bullet) throws ModelException{
+		try {
+		bullet.placeInSpace(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Remove <code>ship</code> from <code>world</code>.
 	 */
-	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException;
+	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException{
+		try {
+		UnboundSpace unbound_space = UnboundSpace();
+		bullet.placeInSpace(unbound_space);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//OP DEZE MANIER WORDT HET ARGUMENT WORLD NIET GEBRUIKT
 
+	
 	/**************
 	 * SHIP: Methods related to loaded bullets
 	 *************/
@@ -436,35 +501,85 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * 
 	 * For students working alone, this method may return null.
 	 */
-	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException;
-
+	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException{
+		try {
+		return ship.getBullets();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//HOE KAN JE MET DIE SET/LIJST WERKEN?
+	
 	/**
 	 * Return the number of bullets loaded on <code>ship</code>.
 	 */
-	public int getNbBulletsOnShip(Ship ship) throws ModelException;
+	public int getNbBulletsOnShip(Ship ship) throws ModelException{
+		try {
+		return ship.getNbBullets();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Load <code>bullet</code> on <code>ship</code>.
 	 */
-	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException;
+	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException{
+		try {
+		bullet.placeInShip(ship);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Load <code>bullet</code> on <code>ship</code>.
 	 * 
 	 * For students working alone, this method must not do anything.
 	 */
-	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException;
+	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException{
+		try {
+		ship.placeBulletsInShip((List<Bullet>) bullets);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//METHODE MOET NOG WORDEN GEMAAKT
+	// AANNAME DAT COLLECTION ALTIJD LIST IS GOED?? -> zelf aanpassen naargelang lijst/set gebruikt
 
 	/**
 	 * Remove <code>ship</code> from <code>ship</code>.
 	 */
-	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException;
+	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException{
+		try {
+		UnboundSpace unbound_space = UnboundSpace();
+		bullet.placeInSpace(unbound_space);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//OP DEZE MANIER WORDT HET ARGUMENT SHIP NIET GEBRUIKT
+	//TERMINATE FUNCTIE OP BULLET JUIST?
 
 	/**
 	 * <code>ship</code> fires a bullet.
 	 */
-	public void fireBullet(Ship ship) throws ModelException;
+	public void fireBullet(Ship ship) throws ModelException{
+		try {
+		ship.fireBullet();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//METHODE MOET NOG WORDEN GEMAAKT
 
+	
 	/******************
 	 * COLLISIONS
 	 **************/

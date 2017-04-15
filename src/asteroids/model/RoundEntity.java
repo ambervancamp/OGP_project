@@ -1053,7 +1053,6 @@ public abstract class RoundEntity {
 			return null;
 		}
 	}
-<<<<<<< HEAD
 
 	/**
 	 * Get the time for a ship to hit the wall of its world
@@ -1130,6 +1129,7 @@ public abstract class RoundEntity {
 			return true;
 		return false;
 	}
+	
 	public void collision(RoundEntity other) throws IllegalArgumentException{
 		if (this.isTerminated())
 			throw new IllegalArgumentException();

@@ -155,8 +155,8 @@ public class Ship extends RoundEntity {
 				this.removeOutSpace();
 			
 			if (getNbBullets()!=0){
-				for (int i=bullets.size()-1; i>=0; i--) {
-					bullets.get(i).terminate();
+				for (Bullet bullet: bullets){
+					bullet.terminate();
 				}}
 			// Backwards for loop, because ConcurrentModificationException can occur otherwise
 			this.isTerminated = true;
@@ -541,7 +541,20 @@ public class Ship extends RoundEntity {
 	public static boolean canHaveAsAcceleration(double a){
 		return (!Double.isNaN(a) && a>=0);
 	}	
-
+	
+	
+	/**
+	 * Return the bullets of this ship as a list.
+	 * 
+	 * @return 	The current bullets of this ship.
+	 * 			| result == this.bullets
+	 */
+	@Basic 
+	@Raw
+	public List<Bullet> getBullets() {
+		return this.bullets;
+	}	
+	
 	/**
 	 * Return the bullet associated with this ship at the
 	 * given index.
@@ -735,9 +748,13 @@ public class Ship extends RoundEntity {
 		this.setMass(this.getTotalMass());
 	}
 	//Verwacht wordt dat eerst de referentie van de bullets naar hun ship aanwezig is!
-
-	
 	//BULLETS INFLUENCE MASS
+	
+	
+	public void placeBulletsInShip(List<Bullet> bullets){
+		// IMPLEMENTATIE NOG TE MAKEN
+		//GEBRUIK ADDBULLETS
+	}
 	
 	/**
 	 * Remove the given bullet from the list of bullets of this ship.
