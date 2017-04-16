@@ -679,4 +679,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	}
 	//Moet nog hernoemd worden
 
+<<<<<<< HEAD
+=======
 }
+>>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
