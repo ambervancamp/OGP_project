@@ -663,19 +663,65 @@ public abstract class RoundEntity {
 	 * 			The duration of the movement.
 	 * 			
 	 * @return 	The new position after moving as a double[].
-	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration, 
-	 * 			|				getPosition()[1]+getVelocity()[1]*duration}
+	 * 			If the thruster is on, and the entity is a ship,
+	 * 			the ship will accelerate and its position after moving will be changed:
+	 * 			| result == {getPosition()[0]+getVelocity()[0]*duration+((Ship)this).getAcceleration()*duration*duration/2,
+	 *						getPosition()[1]+getVelocity()[1]*duration+((Ship)this).getAcceleration()*duration*duration/2}
+	 *			Otherwise, if the thruste is off, or the entity is a bullet
+	 * 			|{getPosition()[0]+getVelocity()[0]*duration,
+				getPosition()[1]+getVelocity()[1]*duration}
 	 *
 	 * @throws 	IllegalArgumentException
 	 * 			The duration is not a valid duration.
 	 * 			| (!canHaveAsDuration(duration))
 	 */	
 	@Raw
-	public double [] getPositionAfterMoving(double duration){
+	public double [] getPositionAfterMoving(double duration) 
+			throws IllegalArgumentException{
 		if (!canHaveAsDuration(duration))
 			throw new IllegalArgumentException();
-		return new double[] {getPosition()[0]+getVelocity()[0]*duration,
-			getPosition()[1]+getVelocity()[1]*duration};	
+		if (this instanceof Ship && ((Ship)this).isThrusterOn())
+			return new double[] {this.getPosition()[0]+this.getVelocity()[0]*duration+((Ship)this).getAcceleration()*duration*duration/2,
+					       		this.getPosition()[1]+this.getVelocity()[1]*duration+((Ship)this).getAcceleration()*duration*duration/2};
+		else
+			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
+				getPosition()[1]+getVelocity()[1]*duration};	
+	}
+	/**
+	 * Change the position of the entity based on the current position, 
+	 * velocity, a given time duration and, if the entity is a ship, accelerator and thruster. 
+	 * 
+	 * @param 	duration
+	 * 			The duration of the movement.
+	 * 
+	 * @effect 	The position of the entity will be changed to the 
+	 * 			new position after the given time, speed and direction
+	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
+	 */
+	@Raw
+	public void move(double duration) throws IllegalArgumentException{
+		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+	}
+	
+	/**
+	 * Change the velocity of the ship based on the current velocity, a given time duration
+	 * and if the entity is a ship, accelerator and thruster. 
+	 * @param 	duration
+	 * 			The duration of the movement
+	 * @return	The new velocity of the entity after the given time
+	 * 			| @see implementation
+	 * @throws 	IllegalArgumentException
+	 * 			If the given duration is not a valid duration
+	 * 			| !canHaveAsDuratio(duration)
+	 */
+	public double [] getVelocityAfterMoving(double duration) 
+			throws IllegalArgumentException{
+		if(!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		if (this instanceof Ship && ((Ship)this).isThrusterOn())
+			return new double[] {this.getVelocity()[0]+((Ship)this).getAcceleration()*Math.cos(((Ship)this).getOrientation())*duration,
+								this.getVelocity()[1]+((Ship)this).getAcceleration()*Math.cos(((Ship)this).getOrientation())*duration};
+		return new double[] {this.getVelocity()[0],this.getVelocity()[1]};
 	}
 	
 	/**
@@ -1161,6 +1207,8 @@ public abstract class RoundEntity {
 		return false;
 	}
 	
+	
+	
 	/**
 	 * A method to see the collision behavior and changes the velocity of the ships if needed.
 	 * 
@@ -1226,6 +1274,7 @@ public abstract class RoundEntity {
 				this.setVelocity(VelocityThis[0], VelocityThis[1]);
 				other.setVelocity(VelocityOther[0], VelocityOther[1]);
 			}	
+				
 		
 		else if (this instanceof Bullet)
 			if (other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this))
@@ -1270,7 +1319,8 @@ public abstract class RoundEntity {
 				this.setNbWallHits(this.getNbWallHits()+1);
 				other.setNbWallHits(other.getNbWallHits()+1);
 				}	
-			}	
+			}
+			
 	}		
 	
 	
@@ -1279,7 +1329,7 @@ public abstract class RoundEntity {
 	 */
 	double nbWallHits = 0;
 	
-	double maxNbWallHits =2;
+	double maxNbWallHits = 2;
 	
 
 	/**

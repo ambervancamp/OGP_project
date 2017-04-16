@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.annotate.Value;
 
 /**
  * A class of possible worlds a ship can be located in
@@ -163,8 +165,7 @@ public abstract class Space {
 	}
 	
 	
-	@SuppressWarnings("rawtypes")
-	public List getEntity(){
+	public List<RoundEntity> getEntities(){
 		return entities;
 	}
 	/**
@@ -267,7 +268,7 @@ public abstract class Space {
 	 * 			The given x-position of the coordinate we want to check.
 	 * @return	The entity, if one, which is located at the given position
 	 */
-	public RoundEntity coincidePosition(Double xPosition, Double yPosition){
+	public RoundEntity getEntityAt(Double xPosition, Double yPosition){
 		if (this.isTerminated())
 			return null;
 		for (RoundEntity entity : entities)
@@ -288,21 +289,34 @@ public abstract class Space {
 	 * @effect 	the entities are located on other position conform to the rules of 
 	 * 			movement
 	 */
-	public void evolve(double duration) throws IllegalArgumentException{
+	public void evolve(World world, double duration, CollisionListener collisionListener) throws IllegalArgumentException{
+		
 		if (this.isTerminated() || duration<0 || duration == Double.NaN)
 			throw new IllegalArgumentException();
 		
 		for (RoundEntity firstEntity : entities)
 			for (RoundEntity secondEntity : entities)
-				if (firstEntity.getTimeToCollision(secondEntity) < smallestTimeToCollision)
-					smallestTimeToCollision = firstEntity.getTimeToCollision(secondEntity);
-		for (RoundEntity otherEntity : entities)
-			if (smallestTimeToCollision > duration)
-				otherEntity.getPositionAfterMoving(duration);
-			else 
-				otherEntity.getPositionAfterMoving(smallestTimeToCollision);
+				if (firstEntity.getTimeToFirstCollision(secondEntity) < smallestTimeToCollision)
+					smallestTimeToCollision = firstEntity.getTimeToFirstCollision(secondEntity);
+		
+		if (smallestTimeToCollision >= duration)
+			for (RoundEntity entity : entities){
+				entity.setPosition(entity.getPositionAfterMoving(duration)[0],
+									entity.getPositionAfterMoving(duration)[0]);
+				entity.setVelocity(entity.getVelocityAfterMoving(duration)[0],
+									entity.getVelocityAfterMoving(duration)[1]);
+			}
+				
+		else 
+			for (RoundEntity entity: entities)
+				for (RoundEntity other: entities){
+					entity.collision(other);		
+				entity.move(duration);
+				entity.setVelocity(entity.getVelocityAfterMoving(smallestTimeToCollision)[0],
+									entity.getVelocityAfterMoving(smallestTimeToCollision)[1]);
+				}
 		duration = duration-smallestTimeToCollision;
-		evolve(duration);
+		evolve(world,duration,collisionListener);
 		
 	}
 	

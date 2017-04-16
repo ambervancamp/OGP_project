@@ -1,6 +1,7 @@
 package asteroids.facade;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import asteroids.model.*;
@@ -142,7 +143,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double direction,
 			double mass) throws ModelException{
 		try {
-		return new Ship(x,y,xVelocity,yVelocity,radius,direction,mass);
+			return new Ship(x,y,xVelocity,yVelocity,radius,direction,mass);
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -154,7 +155,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public void terminateShip(Ship ship) throws ModelException{
 		try {
-		ship.terminate();
+			ship.terminate();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -166,7 +167,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public boolean isTerminatedShip(Ship ship) throws ModelException{
 		try {
-		return ship.isTerminated();
+			return ship.isTerminated();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -179,7 +180,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double getShipMass(Ship ship) throws ModelException{
 		try {
-		return ship.getMass();
+			return ship.getMass();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -191,7 +192,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public World getShipWorld(Ship ship) throws ModelException {
 		try {
-		return ship.getWorld();
+			return ship.getWorld();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -203,7 +204,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public boolean isShipThrusterActive(Ship ship) throws ModelException{
 		try {
-		return ship.isThrusterOn();
+			return ship.isThrusterOn();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -216,7 +217,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public void setThrusterActive(Ship ship, boolean active) throws ModelException{
 		try {
-		ship.thrustOn();
+			ship.thrustOn();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -228,7 +229,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double getShipAcceleration(Ship ship) throws ModelException{
 		try {
-		return ship.getAcceleration();
+			return ship.getAcceleration();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -249,7 +250,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	public Bullet createBullet(double x, double y, double xVelocity, double yVelocity, double radius)
 			throws ModelException{
 		try {
-		return new Bullet(x, y, xVelocity, yVelocity, radius);
+			return new Bullet(x, y, xVelocity, yVelocity, radius);
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -261,7 +262,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public void terminateBullet(Bullet bullet) throws ModelException{
 		try {
-		bullet.terminate();
+			bullet.terminate();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -273,7 +274,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public boolean isTerminatedBullet(Bullet bullet) throws ModelException{
 		try {
-		return bullet.isTerminated();
+			return bullet.isTerminated();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -286,7 +287,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double[] getBulletPosition(Bullet bullet) throws ModelException{
 		try {
-		return bullet.getPosition();
+			return bullet.getPosition();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -299,7 +300,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double[] getBulletVelocity(Bullet bullet) throws ModelException{
 		try {
-		return bullet.getVelocity();
+			return bullet.getVelocity();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -311,7 +312,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double getBulletRadius(Bullet bullet) throws ModelException{
 		try {
-		return bullet.getRadius();
+			return bullet.getRadius();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -323,7 +324,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double getBulletMass(Bullet bullet) throws ModelException{
 		try {
-		return bullet.getMass();
+			return bullet.getMass();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -338,7 +339,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public World getBulletWorld(Bullet bullet) throws ModelException{
 		try {
-		return bullet.getWorld();
+			return bullet.getWorld();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -352,7 +353,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public Ship getBulletShip(Bullet bullet) throws ModelException{
 		try {
-		return bullet.getShip();
+			return bullet.getShip();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -364,7 +365,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public Ship getBulletSource(Bullet bullet) throws ModelException{
 		try {
-		return bullet.returnSource();
+			return bullet.returnSource();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -379,54 +380,114 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * Create a new world with the given <code>width</code> and
 	 * <code>height</code>.
 	 */
-	public World createWorld(double width, double height) throws ModelException;
+	public World createWorld(double width, double height) throws ModelException{
+		try {
+			return new World(width, height);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Terminate <code>world</code>.
 	 */
-	public void terminateWorld(World world) throws ModelException;
+	public void terminateWorld(World world) throws ModelException{
+		try {
+			world.terminate();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Check whether <code>world</code> is terminated.
 	 */
-	public boolean isTerminatedWorld(World world) throws ModelException;
+	public boolean isTerminatedWorld(World world) throws ModelException{
+		try {
+			return world.isTerminated();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Return the size of <code>world</code> as an array containing the width,
 	 * followed by the height.
 	 */
-	public double[] getWorldSize(World world) throws ModelException;
+	public double[] getWorldSize(World world) throws ModelException{
+		try {
+			return world.getSpaceSize();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//Moet hergedefinieerd worden
 
 	/**
 	 * Return all ships located within <code>world</code>.
 	 */
 	public Set<? extends Ship> getWorldShips(World world) throws ModelException;
+	//METHODE MOET NOG WORDEN GEMAAKT
 
 	/**
 	 * Return all bullets located in <code>world</code>.
 	 */
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException;
+	//METHODE MOET NOG WORDEN GEMAAKT
 
 	/**
 	 * Add <code>ship</code> to <code>world</code>.
 	 */
-	public void addShipToWorld(World world, Ship ship) throws ModelException;
+	public void addShipToWorld(World world, Ship ship) throws ModelException{
+		try {
+			ship.placeInSpace(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Remove <code>ship</code> from <code>world</code>.
 	 */
-	public void removeShipFromWorld(World world, Ship ship) throws ModelException;
+	public void removeShipFromWorld(World world, Ship ship) throws ModelException{
+		try {
+			ship.removeEntityFromWorld(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	// Moet nog verplaatst worden
 
 	/**
 	 * Add <code>bullet</code> to <code>world</code>.
 	 */
-	public void addBulletToWorld(World world, Bullet bullet) throws ModelException;
+	public void addBulletToWorld(World world, Bullet bullet) throws ModelException{
+		try {
+			bullet.placeInSpace(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Remove <code>ship</code> from <code>world</code>.
 	 */
-	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException;
-
+	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException{
+		try {
+			bullet.removeEntityFromWorld(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	
 	/**************
 	 * SHIP: Methods related to loaded bullets
 	 *************/
@@ -436,35 +497,73 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * 
 	 * For students working alone, this method may return null.
 	 */
-	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException;
-
+	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException{
+		try {
+			return ship.getBullets();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//HOE KAN JE MET DIE SET/LIJST WERKEN?
+	
 	/**
 	 * Return the number of bullets loaded on <code>ship</code>.
 	 */
-	public int getNbBulletsOnShip(Ship ship) throws ModelException;
+	public int getNbBulletsOnShip(Ship ship) throws ModelException{
+		try {
+			return ship.getNbBullets();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Load <code>bullet</code> on <code>ship</code>.
 	 */
-	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException;
+	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException{
+		try {
+			bullet.placeInShip(ship);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Load <code>bullet</code> on <code>ship</code>.
 	 * 
 	 * For students working alone, this method must not do anything.
 	 */
-	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException;
+	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException{
+		try {
+			ship.placeBulletsInShip(bullets);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Remove <code>ship</code> from <code>ship</code>.
 	 */
-	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException;
+	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException{
+		try {
+			bullet.removeBulletFromShip(ship);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * <code>ship</code> fires a bullet.
 	 */
 	public void fireBullet(Ship ship) throws ModelException;
+	//METHODE MOET NOG WORDEN GEMAAKT
 
+	
 	/******************
 	 * COLLISIONS
 	 **************/
@@ -473,32 +572,65 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * Return the shortest time in which the given entity will collide with the
 	 * boundaries of its world.
 	 */
-	public double getTimeCollisionBoundary(Object object) throws ModelException;
+	public double getTimeCollisionBoundary(Object object) throws ModelException{
+		try{
+			return ((RoundEntity) object).getTimeToHitWall();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//OBJECT VERANDEREN NAAR ENTITY? of casten?
 
 	/**
 	 * Return the first position at which the given entity will collide with the
 	 * boundaries of its world.
 	 */
-	public double[] getPositionCollisionBoundary(Object object) throws ModelException;
+	public double[] getPositionCollisionBoundary(Object object) throws ModelException{
+		try{
+			return ((RoundEntity) object).getPositionOfHitWall();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//implementatie van deze functie, met/zonder argument
 
 	/**
 	 * Return the shortest time in which the first entity will collide with the
 	 * second entity.
 	 */
-	public double getTimeCollisionEntity(Object entity1, Object entity2) throws ModelException;
+	public double getTimeCollisionEntity(Object entity1, Object entity2) throws ModelException{
+		try{
+			return ((RoundEntity) entity1).getTimeToCollision(entity2);
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//OBJECT VERANDEREN NAAR ENTITY? of casten?
 
 	/**
 	 * Return the first position at which the first entity will collide with the
 	 * second entity.
 	 */
-	public double[] getPositionCollisionEntity(Object entity1, Object entity2) throws ModelException;
+	public double[] getPositionCollisionEntity(Object entity1, Object entity2) throws ModelException{
+		try{
+			return ((RoundEntity) entity1).getCollisionPosition((RoundEntity) entity2);
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//OBJECT VERANDEREN NAAR ENTITY? of casten?
 
 	/**
 	 * Return the time that must pass before a boundary collision or an entity
 	 * collision will take place in the given world. Positive Infinity is
 	 * returned if no collision will occur.
 	 */
-	public double getTimeNextCollision(World world) throws ModelException;
+	public double getTimeNextCollision(World world) throws ModelException
+	//Moet hergedefinieerd worden
 
 	/**
 	 * Return the position of the first boundary collision or entity collision
@@ -506,6 +638,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * will occur.
 	 */
 	public double[] getPositionNextCollision(World world) throws ModelException;
+	//Moet nog gedefinieerd worden
 
 	/**
 	 * Advance <code>world</code> by <code>dt<code> seconds. 
@@ -517,15 +650,32 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * notify methods.
 	 */
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException;
+	//Moet hergedefinieerd worden
 
 	/**
 	 * Return the entity at the given <code>position</code> in the given
 	 * <code>world</code>.
 	 */
-	public Object getEntityAt(World world, double x, double y) throws ModelException;
-
+	public Object getEntityAt(World world, double x, double y) throws ModelException{
+		try{
+			world.getEntityAt(x,y);
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//Moet nog hernoemd worden
+	
 	/**
 	 * Return a set of all the entities in the given world.
 	 */
-	public Set<? extends Object> getEntities(World world) throws ModelException;
-}
+	public Set<? extends Object> getEntities(World world) throws ModelException{
+		try{
+			world.getEntities();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
+	//Moet nog hernoemd worden
+

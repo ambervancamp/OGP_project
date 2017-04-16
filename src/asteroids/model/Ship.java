@@ -155,14 +155,15 @@ public class Ship extends RoundEntity {
 				this.removeOutSpace();
 			
 			if (getNbBullets()!=0){
-				for (int i=bullets.size()-1; i>=0; i--) {
-					bullets.get(i).terminate();
+				for (Bullet bullet: bullets){
+					bullet.terminate();
 				}}
-			// Backwards for loop, because ConcurrentModificationException can occur otherwise
 			this.isTerminated = true;
 		}
 	}
 	//WAT MOET ER GEBEUREN MET DE BULLETS ALS EEN SHIP GETERMINEERD WORDT?
+	// Backwards for loop??? because ConcurrentModificationException can occur otherwise
+
 	
 	/**
 	 * Set the orientation of this ship.
@@ -381,23 +382,6 @@ public class Ship extends RoundEntity {
 	 * Variable registering the minimum density of all ships.
 	 */
 	private final double MIN_DENSITY = 1.42*Math.pow(10,12);
-
-	
-	/**
-	 * Change the position of the ship based on the current position, 
-	 * velocity and a given time duration. 
-	 * 
-	 * @param 	duration
-	 * 			The duration of the movement.
-	 * 
-	 * @effect 	The position of the ship will be changed to the 
-	 * 			new position after the given time, speed and direction
-	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
-	 */
-	@Raw
-	public void move(double duration) throws IllegalArgumentException{
-		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
-	}
 	
 	/**
 	 * A method that turns the ship according to the given angle.
@@ -455,13 +439,14 @@ public class Ship extends RoundEntity {
 		if (!canHaveAsAcceleration(a))
 			return;
 				
-		double xVelocity = this.getxVelocity() + a*Math.cos(this.getOrientation());
-		double yVelocity = this.getyVelocity() + a*Math.sin(this.getOrientation());
+		double xVelocity = this.getxVelocity() + a*duration*Math.cos(this.getOrientation());
+		double yVelocity = this.getyVelocity() + a*duration*Math.sin(this.getOrientation());
 				
 		this.setVelocity(xVelocity, yVelocity);
 		// setVelocity() makes sure that the speed will never exceed max_speed.
 	}	
-	//Duration juist aangeaptk?
+	//Duration juist aangepakt?
+	//Wordt deze ergens gebruikt?
 	
 	/**
 	 * Return a boolean indicating whether or not this round entity's thruster is enabled.
@@ -520,13 +505,6 @@ public class Ship extends RoundEntity {
 	}
 	// Can vary for ships in future.
 	
-	
-	/**
-	 * Variable registering whether the thruster of this round entity is enabled or disabled.
-	 */
-	private boolean thruster = false;
-	
-	
 	/**
 	 * Check whether the given factor a is a valid acceleration factor a for any ship.
 	 * 
@@ -541,7 +519,25 @@ public class Ship extends RoundEntity {
 	public static boolean canHaveAsAcceleration(double a){
 		return (!Double.isNaN(a) && a>=0);
 	}	
-
+	
+	/**
+	 * Variable registering whether the thruster of this round entity is enabled or disabled.
+	 */
+	private boolean thruster = false;
+		
+	
+	/**
+	 * Return the bullets of this ship as a list.
+	 * 
+	 * @return 	The current bullets of this ship.
+	 * 			| result == this.bullets
+	 */
+	@Basic 
+	@Raw
+	public List<Bullet> getBullets() {
+		return this.bullets;
+	}	
+	
 	/**
 	 * Return the bullet associated with this ship at the
 	 * given index.
@@ -641,24 +637,26 @@ public class Ship extends RoundEntity {
 		}
 		return true;
 	}
+	//FUNCTIE WORDT NERGENS GEBRUIKT?
 
 	/**
 	 * Check whether this ship has the given bullet as one of its
 	 * bullets.
 	 * 
-	 * @param  bullet
-	 *         The bullet to check.
-	 * @return The given bullet is registered at some position as
-	 *         a bullet of this ship.
-	 *       | for some I in 1..getNbBullets():
-	 *       |   getBulletAt(I) == bullet
+	 * @param  	bullet
+	 *         	The bullet to check.
+	 * @return 	The given bullet is registered at some position as
+	 *         	a bullet of this ship.
+	 *       	| for some I in 1..getNbBullets():
+	 *       	|   getBulletAt(I) == bullet
 	 */
 	public boolean hasAsBullet(@Raw Bullet bullet) {
-		return bullets.contains(bullet);
+		return this.bullets.contains(bullet);
 	}
 
 	/**
-	 * Add the given bullet to the list of bullets of this ship.
+	 * Add the given bullet to the list of bullets of this ship. It is expected
+	 * that this bullet already points to this ship.
 	 * 
 	 * @param  	bullet
 	 *         	The bullet to be added.
@@ -680,64 +678,118 @@ public class Ship extends RoundEntity {
 	 *       	| new.getBulletAt(getNbBullets()+1) == bullet
 	 */
 	public void addBullet(@Raw Bullet bullet) throws NullPointerException, IllegalArgumentException{
+		// This function expects that bullet is already pointing to this ship.
 		if (bullet == null) 
 			throw new NullPointerException();
 		
 		if ((bullet.getShip() != this) || (this.hasAsBullet(bullet)))
 			throw new IllegalArgumentException();
 		
-		bullets.add(bullet);
+		this.bullets.add(bullet);
 		
 		this.setMass(this.getTotalMass());
+		// Bullet influences mass.
+
 	}
-	//Verwacht wordt dat eerst de referentie van de bullet naar zijn ship aanwezig is!
 
 	
 	/**
-	 * Add the given list of bullets to the list of bullets of this ship.
+	 * Add the given collection of bullets to the list of bullets of this ship. It is expected
+	 * that all bullets already point to this ship.
 	 * 
 	 * @param  	bullets
-	 *         	The bullets to be added.
+	 *         	The collection of bullets to be added.
 	 *         
 	 * @throws	NullPointerException
-	 * 			The given list of bullets is not effective.
+	 * 			The given collection of bullets is not effective.
 	 * 			| bullets == null
 	 * 
 	 * @throws	IllegalArgumentException
 	 * 			All bullets don't already reference this ship,
 	 * 			or this ship has on of the given bullets as one of its bullets.
-	 *       	| for (int i=1; i <= this.getNbBullets(); i++)
-	 *			| 	(this.getBulletAt(i).getShip() != this)
-	 *       	| for (int i=1; i <= this.getNbBullets(); i++)
-	 *			|	(!this.hasAsBullet(getBulletAt(i)))
+	 *       	| for (Bullet bullet: bullets){
+	 *			|	if (bullet.getShip() != this)
+	 *       	| for (Bullet bullet: bullets){
+	 *			|	if (this.hasAsBullet(bullet))
 	 *       
 	 * @post   	The number of bullets of this ship is
 	 *         	incremented by bullets.size().
 	 *       	| new.getNbBullets() == getNbBullets() + bullets.size()
 	 *       
-	 * @post   	This ship has the given list of bullets as its very last bullets.
+	 * @post   	This ship has the given collection of bullets as its very last bullets.
 	 *       	| new.getBulletAt(getNbBullets()+bullets.size()) == bullets.get(bullets.size())
 	 */
-	public void addBullets(@Raw List<Bullet> bullets) throws NullPointerException, IllegalArgumentException{
+	public void addBullets(@Raw Collection<Bullet> bullets) throws NullPointerException, IllegalArgumentException{
+		// This function expects that all bullets are already pointing to this ship.
 		if (bullets == null)
 			throw new NullPointerException();
 		
-		for (int i=1; i <= this.getNbBullets(); i++)
-			if (this.getBulletAt(i).getShip() != this)
+		for (Bullet bullet: bullets){
+			if (bullet.getShip() != this)
 				throw new IllegalArgumentException();
-				
-		for (int i=1; i <= this.getNbBullets(); i++)
-			if (!this.hasAsBullet(getBulletAt(i)))
-				throw new IllegalArgumentException();
+		}
 		
-		bullets.addAll(bullets);
+		for (Bullet bullet: bullets){
+			if (this.hasAsBullet(bullet))
+				throw new IllegalArgumentException();
+		}
+		
+		this.bullets.addAll(bullets);
+		// addAll is defined for collections.
 		
 		this.setMass(this.getTotalMass());
-	}
-	//Verwacht wordt dat eerst de referentie van de bullets naar hun ship aanwezig is!
-
+		// Bullets influence mass.
+	}	
 	
-	//BULLETS INFLUENCE MASS
+	/**
+	 * Add this collection of bullets to the given ship. If some of its bullets are already in a ship,
+	 * replace them to this ship. If some of its bullets are already in a space, replace
+	 * them to this ship. Also places all bullets to this ship.
+	 * 
+	 * @param 	bullets
+	 * 			The given collection of bullet to put in this ship.
+	 * 
+	 * @effect	The bullets will be in this ship.
+	 * 			| this.getBullets() = bullets
+	 * 
+	 * @post 	If one of the bullets is already placed in a space, first it will be removed from
+	 * 			that space. Then it will set ship as its ship.
+	 * 			| if (bullet.hasSpace())
+	 *			| 	then bullet.removeOutSpace()
+	 *			|		 bullet.setShip(this)
+	 * 
+	 * @post	If one of the bullets is already placed in a ship, first it will be removed from
+	 * 			that ship. Then it will set ship as its ship.
+	 * 			| if (bullet.hasShip())
+	 *			|	then bullet.removeOutShip()
+	 *			|		 bullet.setShip(this)
+	 * 
+	 * @throws 	IllegalArgumentException
+	 * 			If one of the bullets is not valid.
+	 * 			| !canHaveAsBullet(bullet)
+	 */
+	public void placeBulletsInShip(Collection<Bullet> bullets){
+		for (Bullet bullet: bullets){	
+			if (!canHaveAsBullet(bullet)){
+				throw new IllegalArgumentException();
+			}
+			if (bullet.hasSpace()){
+				bullet.removeOutSpace();
+				bullet.setShip(this);
+			}
+			if (bullet.hasShip()){
+				bullet.removeOutShip();
+				bullet.setShip(this);
+			}
+			else {
+				bullet.setShip(this);
+			}
+		this.addBullets(bullets);
+		}
+	}
+	//BULLETS MOETEN BINNEN GRENZEN VAN SHIP BEWEGEN!!!!
+	//is else statement necessary? will it ever be reached?
+
 	
 	/**
 	 * Remove the given bullet from the list of bullets of this ship.
