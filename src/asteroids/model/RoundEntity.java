@@ -1279,7 +1279,7 @@ public abstract class RoundEntity {
 	 */
 	double nbWallHits = 0;
 	
-	double maxNbWallHits = 2;
+	double maxNbWallHits =2;
 	
 
 	/**
