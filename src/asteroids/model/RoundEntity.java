@@ -594,13 +594,13 @@ public abstract class RoundEntity {
 	 * Remove the space from this round entity, if any. It is not placed into a new space.
 	 * The round entity is also removed from the space.
 	 * 
-	 * @return 	The round entity will not be placed in any space.
+	 * @post 	The round entity will not be placed in any space.
 	 * 			| !new.hasSpace()
 	 * 
 	 * @post	The former space of this round entity, if any, is no longer
 	 *		   	its space.
 	 *       	| if (this.hasSpace())
-	 *       	|   then ! (new (this.getSpace())).hasEntity(this)) 
+	 *       	|   then ! (new (this.getSpace())).hasEntity(this) 
 	 */
 	protected void removeOutSpace(){
 		// If statement in principle not necessary, because RemoveOutSpace() is only used when

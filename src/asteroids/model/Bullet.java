@@ -146,7 +146,7 @@ public class Bullet extends RoundEntity {
 	 * @throws 	IllegalArgumentException
 	 * 			The given ship is not valid.
 	 */
-	private void setShip(Ship ship) throws IllegalArgumentException{
+	void setShip(Ship ship) throws IllegalArgumentException{
 		if (!canHaveAsShip(ship))
 			throw new IllegalArgumentException();
 		this.ship = ship;
@@ -243,7 +243,7 @@ public class Bullet extends RoundEntity {
 	 * @post	The former ship of this bullet, if any, is no longer
 	 *		   	its ship.
 	 */
-	private void removeOutShip(){
+	void removeOutShip(){
 		if (this.hasShip()){
 			this.getShip().removeBullet(this);
 			this.ship = null;
@@ -259,6 +259,28 @@ public class Bullet extends RoundEntity {
 	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
 	
 	//BULLETS BEWEEGDEN MEE MET SHIP, GEEF TERUG EIGEN SNELHEID
+	
+	/**
+	 * Remove this bullet from given ship, if it's placed in that ship. 
+	 * The bullet is then replaced to a new unbound space.
+	 * 
+	 * @param	ship
+	 * 			The given ship, to remove this bullet from.
+	 * 
+	 * @post 	The bullet will be placed in a new unbound space.
+	 * 			| this.getSpace() == new.UnboundSpace()
+	 * 
+	 * @post	The former ship of this bullet, if it was the given ship, is no
+	 * 			longer its ship.
+	 *       	| if (this.getShip() == ship)
+	 *       	|   then ! (new (this.getShip())).hasAsBullet(this) 
+	 */
+	public void removeBulletFromShip(Ship ship){
+		if (this.getShip() == ship){
+			UnboundSpace unboundspace = UnboundSpace();
+			this.placeInSpace(unboundspace);
+		}
+	}
 		
 	/**
 	 * Set space from this bullet to given space. If the bullet is already in a space, it's replaced to 
@@ -300,6 +322,7 @@ public class Bullet extends RoundEntity {
 		// Else statement can only be reached in constructor, when bullet has no ship nor space yet.
 	}
 	
+	
 	/**
 	 * Variable registering the ship this round entity is placed in.
 	 */
@@ -313,4 +336,37 @@ public class Bullet extends RoundEntity {
 		return this.getShip();
 		//IMPLEMENTATIE
 	}
+	
+	
+	
+	
+	/**
+	 * FUNCTIE MOET IN ROUND ENITTY STAAN!!!!!!
+	 */
+	
+	
+	/**
+	 * Remove this round entity from given world, if it's placed in this world. 
+	 * It is then replaced to a new unbound space.
+	 * 
+	 * @param	world
+	 * 			The given world, to remove this entity from.
+	 * 
+	 * @post 	The round entity will be placed in a new unbound space.
+	 * 			| this.getSpace() == new.UnboundSpace()
+	 * 
+	 * @post	The former world of this round entity, if it was the given world, is no
+	 * 			longer its space.
+	 *       	| if (this.getWorld() == world)
+	 *       	|   then ! (new (this.getSpace())).hasEntity(this) 
+	 */
+	public void removeEntityFromWorld(World world){
+		if (this.getWorld() == world){
+			UnboundSpace unboundspace = UnboundSpace();
+			this.placeInSpace(unboundspace);
+		}
+		// Wait for definition of uboundspace constructor for width and height.
+	}
 }
+
+
