@@ -1,6 +1,7 @@
 package asteroids.facade;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -499,13 +500,13 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException{
 		try {
-			return ship.getBullets();
+			Set<Bullet> bullets = new HashSet<Bullet>(ship.getBullets());
+			return bullets;
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//HOE KAN JE MET DIE SET/LIJST WERKEN?
 	
 	/**
 	 * Return the number of bullets loaded on <code>ship</code>.
@@ -602,14 +603,13 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double getTimeCollisionEntity(Object entity1, Object entity2) throws ModelException{
 		try{
-			return ((RoundEntity) entity1).getTimeToCollision(entity2);
+			return ((RoundEntity) entity1).getTimeToCollision((RoundEntity) entity2);
 		}
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//OBJECT VERANDEREN NAAR ENTITY? of casten?
-
+	
 	/**
 	 * Return the first position at which the first entity will collide with the
 	 * second entity.
@@ -622,8 +622,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//OBJECT VERANDEREN NAAR ENTITY? of casten?
-
+	
 	/**
 	 * Return the time that must pass before a boundary collision or an entity
 	 * collision will take place in the given world. Positive Infinity is
@@ -664,22 +663,19 @@ public class Facade implements asteroids.part2.facade.IFacade {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//Moet nog hernoemd worden
 	
 	/**
 	 * Return a set of all the entities in the given world.
 	 */
 	public Set<? extends Object> getEntities(World world) throws ModelException{
 		try{
-			world.getEntities();
+			Set<RoundEntity> entities = new HashSet<RoundEntity>(world.getEntities());
+			return entities;
 		}
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//Moet nog hernoemd worden
+	// Eventueel hergedefinieerd naar return set, wegens constante functie
 
-<<<<<<< HEAD
-=======
 }
->>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git

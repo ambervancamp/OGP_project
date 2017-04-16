@@ -47,7 +47,7 @@ public class Bullet extends RoundEntity {
 			throws IllegalArgumentException {
 		super(x, y, xVelocity, yVelocity, radius);
 		
-		UnboundSpace unboundspace = UnboundSpace();
+		UnboundSpace unboundspace = new UnboundSpace();
 		this.placeInSpace(unboundspace);
 		// Bullets need to be associated with an unbound space until associated with a world or ship.
 	}
@@ -326,6 +326,39 @@ public class Bullet extends RoundEntity {
 	 * Variable registering the ship this round entity is placed in.
 	 */
 	private Ship ship = null;
+
+	/**
+	 * Return the number of times a bullet has hit the wall.
+	 * 
+	 * @return	The number of times a bullet has hit the wall.
+	 */
+	public double getNbWallHits(){
+		return this.nbWallHits;
+	}
+	
+	/**
+	 * Sets the number of wall hits at the given value.
+	 * 
+	 * @param 	value
+	 * 			The given number of times a bullet has hit the wall.
+	 */
+	public void setNbWallHits(double value){
+		 this.nbWallHits = value;
+	}
+	
+	/**
+	 * Return the maximum number of times a bullet can  hit the wall.
+	 * 
+	 * @return	The maximum number of times a bullet may hit the wall.
+	 */
+	public double getMaxNbWallHits(){
+		return 2;
+	}
+	
+	/**
+	 * A variable registering the number off times a bullet has hit the wall.
+	 */
+	double nbWallHits = 0;	
 	
 	/**
 	 * Return the ship that fired this bullet, if any.
@@ -334,7 +367,7 @@ public class Bullet extends RoundEntity {
 	public Ship returnSource(){
 		return this.getShip();
 		//IMPLEMENTATIE
-	}
+	}	
 	
 	
 	
@@ -361,16 +394,12 @@ public class Bullet extends RoundEntity {
 	 */
 	public void removeEntityFromWorld(World world){
 		if (this.getWorld() == world){
-			UnboundSpace unboundspace = UnboundSpace();
+			UnboundSpace unboundspace = new UnboundSpace();
 			this.placeInSpace(unboundspace);
 		}
 		// Wait for definition of uboundspace constructor for width and height.
 	}
-	
-	public double[] returndouble(){
-		double[] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
-		return coordinates;
-	}
+
 }
 
 
