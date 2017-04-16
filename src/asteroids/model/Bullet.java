@@ -366,6 +366,11 @@ public class Bullet extends RoundEntity {
 		}
 		// Wait for definition of uboundspace constructor for width and height.
 	}
+	
+	public double[] returndouble(){
+		double[] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+		return coordinates;
+	}
 }
 
 
