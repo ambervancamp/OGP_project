@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -812,44 +813,6 @@ public abstract class RoundEntity {
 	}
 	
 	
-	/**
-	 * A method that gives the time between a collision of 2 round entities. 
-	 * This method does not apply on two round entities that overlap.
-	 * 
-	 * @param 	other
-	 * 			A second round entity to check if this round entity collides with.
-	 * 
-	 * @return	Returns the time until collision with the other round entity.
-	 * 			| result == -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
-	 * 
-	 * @return 	The time will be positive infinity if the round entities will never collide.
-	 * 			| result == Double.POSITIVE_INFINITY
-	 * 
-	 * @throws 	NullPointerException
-	 * 			Throw a NullPointerException if one of the 2 round entities doesn't exist.
-	 * 			| other == null || this == null
-	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
-	 * 			| !canAsCollision(other)
-	 */
-	@Raw
-	@Immutable
-	public double getTimeToCollision(RoundEntity other) 
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
-		
-		if (this.getDeltaDistanceVelocity(other) >= 0)
-			return Double.POSITIVE_INFINITY;
-		
-		if (getD(other) <= 0)
-			return Double.POSITIVE_INFINITY;
-		
-		return -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other);
-		// d will be negative if the ships overlap
-	}
 	
 	/**
 	 * A method that calculates the distance in x- and y-direction between the 
@@ -1054,6 +1017,45 @@ public abstract class RoundEntity {
 	}
 	
 	/**
+	 * A method that gives the time between a collision of 2 round entities. 
+	 * This method does not apply on two round entities that overlap.
+	 * 
+	 * @param 	other
+	 * 			A second round entity to check if this round entity collides with.
+	 * 
+	 * @return	Returns the time until collision with the other round entity.
+	 * 			| result == -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other)
+	 * 
+	 * @return 	The time will be positive infinity if the round entities will never collide.
+	 * 			| result == Double.POSITIVE_INFINITY
+	 * 
+	 * @throws 	NullPointerException
+	 * 			Throw a NullPointerException if one of the 2 round entities doesn't exist.
+	 * 			| other == null || this == null
+	 * @throws 	IllegalArgumentException
+	 * 			The ships may collide.
+	 * 			| !canAsCollision(other)
+	 */
+	@Raw
+	@Immutable
+	public double getTimeToCollision(RoundEntity other) 
+			throws NullPointerException,IllegalArgumentException{
+		if (other == null)
+			throw new NullPointerException();
+		if (!canAsCollision(other))
+			throw new IllegalArgumentException();
+		
+		if (this.getDeltaDistanceVelocity(other) >= 0)
+			return Double.POSITIVE_INFINITY;
+		
+		if (getD(other) <= 0)
+			return Double.POSITIVE_INFINITY;
+		
+		return -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other);
+		// d will be negative if the ships overlap
+	}
+	
+	/**
 	 * Get the point of collision, if two round entities will ever collide. 
 	 * 
 	 * @param 	other
@@ -1072,6 +1074,8 @@ public abstract class RoundEntity {
 	 * 			| !canAsCollision(other)
 	 * 
 	 */
+	
+	
 	@Raw
 	@Immutable
 	public double [] getCollisionPosition(RoundEntity other) 
@@ -1079,7 +1083,7 @@ public abstract class RoundEntity {
 		if (other == null)
 			throw new NullPointerException();
 		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) ||
-				this.getTimeToFirstCollision(other) != this.getTimeToCollision(other))
+				this.getTimeToFirstCollision() != this.getTimeToCollision(other))
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
@@ -1118,7 +1122,7 @@ public abstract class RoundEntity {
 			this.getyPosition() + this.getRadius() == this.getSpace().getWidth() ||
 			this.getyPosition() - this.getRadius() == 0)
 			return 0;
-		// the ship may hit the wall above
+		
 		double timeToHitUpperYWall=Double.POSITIVE_INFINITY;
 		double timeToHitLowerYWall=Double.POSITIVE_INFINITY;
 		double timeToHitUpperXWall=Double.POSITIVE_INFINITY;
@@ -1149,75 +1153,75 @@ public abstract class RoundEntity {
 	 * 			| @see implementation
 	 * The nb of hits with the wall will be countered 
 	 */
-	public double [] getPositionOfHitWall(RoundEntity other){
-		if (this.isTerminated() )
-			return {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
-		if (this.getTimeToHitWall() != this.getTimeToFirstCollision(other))
-				return null;
-			
-		double [] collisionPoint;
-		if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius() == space.getWidth())
-			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius(),
-										this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
+	public double [] getPositionOfHitWall(){
+		if (this.isTerminated()){
+			double [] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+			return coordinates;
+			}
+		for (RoundEntity other : space.getEntities())
+			if (this.getTimeToHitWall() != this.getTimeToFirstCollision())
+					return null;			
+		
+		double[] collisionPoint;
+		if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius() == space.getWidth()){
+			collisionPoint = {this.getPositionAfterMoving(this.getTimefirstCollision())[0]+this.getRadius(),
+								this.getPositionAfterMoving(this.getTimeToHitWall())[1]};		
+		}
 		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius() == 0)	
 			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius(),
-					this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
+							  this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
 		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[1] + this.getRadius() == space.getHeight())
 			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
-										this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius()};
-		else  // (this.getPositionAfterMoving(this.getTimeToHitWall())[1] - this.getRadius() == 0)
+							  this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius()};
+		else
 			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
 					this.getPositionAfterMoving(this.getTimeToHitWall())[1]-this.getRadius()};
 		nbWallHits = this.getNbWallHits() + 1;
 		return collisionPoint;
-	}
+		}
 	
 	/**
 	 * 
-	 * @param 	other
-	 * 			The other entity with which we could collide
 	 * @return 	Double.POSITIVE_INFINITY if this entity is terminated.
 	 * 			| this.isTerminated()
-	 * @return	The time of the first collision. This will be with a wall or with an other entity
-	 * 			|Math.min(this.getTimeToHitWall(), this.getTimeToCollision(other))
+	 * @return	The time of the first collision. This will be with a wall or with an other entity.
+	 * 			|
 	 */
-	public double getTimeToFirstCollision(RoundEntity other){
+	public double getTimeToFirstCollision(){
+		double smallestTime = Double.POSITIVE_INFINITY;
 		if (this.isTerminated())
-			return Double.POSITIVE_INFINITY;
-		if (other.isTerminated())
-			return this.getTimeToHitWall();
-		return Math.min(this.getTimeToHitWall(), this.getTimeToCollision(other));
+			return smallestTime;
+		
+		smallestTime = Math.min(smallestTime,getTimeToHitWall());
+		for (RoundEntity other : space.getEntities())
+			smallestTime =  Math.min(smallestTime, this.getTimeToCollision(other));
+		return smallestTime;
 	}
 	
 	/**
 	 * Checks if the entity has hit a wall.
-	 * @param 	other
-	 * 			An other entity which we could have hit earlier
+	 *
 	 * @return	True if and only if the other entity doesn't exist and this entity hits a wall in normal time
 	 * 			or the time to hit a wall is smaller than the tim eto hit an other entity.
 	 * 			| other.isTerminated() && this.getTimeToHitWall()!=Double.POSITIVE_INFINITY
 	 * 			| this.getTimeToHitWall() <= this.getTimeToCollision(other)
 	 * 			
 	 */
-	public boolean hitWall(RoundEntity other){
-		if (other.isTerminated() && this.getTimeToHitWall()!=Double.POSITIVE_INFINITY)
+	public boolean hitWall(){
+		if (this.getTimeToHitWall()!=Double.POSITIVE_INFINITY)
 			return true;
-		else if (this.getTimeToHitWall() <= this.getTimeToCollision(other))
-			return true;
+		for (RoundEntity other : space.getEntities())
+			if (this.getTimeToHitWall() <= this.getTimeToCollision(other))
+				return true;
 		return false;
 	}
 	
-<<<<<<< HEAD
+	
 	
 	
 	/**
 	 * A method to see the collision behavior and changes the velocity of the ships if needed.
 	 * 
-	 * @param 	other
-	 * 			an other entity with which the given entity may collide
-	 * @throws 	IllegalArgumentException
-	 * 			the given entity is temrinated
-	 * 			| this.isTerminated()
 	 * 
 	 * @effect 	If the other entity is a bullet of this entity, the bullet will be placed in the given ship.
 	 * 			| other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other)
@@ -1247,85 +1251,137 @@ public abstract class RoundEntity {
 	 * 			His nubmber of willHits will be updated too
 	 * 			| @see implementation
 	 */
-=======
->>>>>>> branch 'master' of https://github.com/ambervancamp/OGP_project.git
-	public void collision(RoundEntity other) throws IllegalArgumentException{
+
+	/**
+	 * A method that changes an entity its velocity after he hit a wall.
+	 * If the entity is a bullet, the nb of times the entity has hit a wall will be changed to his previous, updated with 1
+	 * @throws 	IllegalArgumentException
+	 * 			If the given entity is terminated.
+	 * @effect	If the entity is a bullet that has hit the wall as many times as the maximum number of hits, 
+	 * 			the bullet will be terminated.
+	 * 			| this.terminate()
+	 * @effect	If the entity hits a vertical boundary, its x-velocity will be negated.
+	 * 			| this.setVelocity(-this.getxVelocity(), this.getyVelocity());
+	 * @effect 	If the entity hits a horizontal boundary, its y-velocity will be negated.
+	 * 			|this.setVelocity(this.getxVelocity(), -this.getyVelocity());
+	 */
+	
+	public void getVelocityAfterEntityHitWall() throws IllegalArgumentException{
 		if (this.isTerminated())
 			throw new IllegalArgumentException();
-		
-		else if (this instanceof Ship)
-			
-			if (other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other))
-				((Bullet)other).placeInShip((Ship) this);
-		
-			else if (other instanceof Ship && !((Ship)other).hasAsBullet((Bullet)this)){
-				this.terminate();
-				other.terminate();
-			}
-				
-			else if (other instanceof Ship && this.getTimeToCollision(other) < Double.POSITIVE_INFINITY ){
-				double J;
-				J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
-						( (this.getDistanceBetween(other))*(this.getMass()+other.getMass()));
-				double JX = J*this.getDeltaDistance(other)[0]/(this.getDistanceBetween(other));
-				double JY = J*this.getDeltaDistance(other)[1]/(this.getDistanceBetween(other));
-				
-				double [] VelocityThis = {this.getVelocity()[0]+JX/this.getMass(),
-								this.getVelocity()[1]+JY/this.getMass()};
-				double [] VelocityOther = {other.getVelocity()[0]-JX/other.getMass(),
-						other.getVelocity()[1]-JY/other.getMass()};
-				this.setVelocity(VelocityThis[0], VelocityThis[1]);
-				other.setVelocity(VelocityOther[0], VelocityOther[1]);
-			}	
-				
-		
-		else if (this instanceof Bullet)
-			if (other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this))
-				((Bullet)this).placeInShip((Ship)other);
-		
-			else if (other instanceof Ship && !((Ship)other).hasAsBullet((Bullet)this)){
-				this.terminate();
-				other.terminate();
-			}
-			else if (other instanceof Bullet && ((Bullet)other).returnSource() != ((Bullet)this).returnSource()){
-				this.terminate();
-				other.terminate();
-			}
-			else if (this.hitWall(other) && this.getNbWallHits() > this.getMaxNbWallHits())
-				this.terminate();
-		
-			else if (this.hitWall(other)){
-				if (this.getPositionOfHitWall(other)[0] == 0 || 
-						this.getPositionOfHitWall(other)[0] == this.getSpace().getWidth())
-					this.setVelocity(-this.getxVelocity(), this.getyVelocity());
-				if (this.getPositionOfHitWall(other)[0] == 0 || 
-						this.getPositionOfHitWall(other)[0] == this.getSpace().getHeight()){
-					this.setVelocity(this.getxVelocity(), -this.getyVelocity());
-					this.setNbWallHits(this.getNbWallHits()+1);
-					}
-				
-			else if (other instanceof Bullet && ((Bullet)other).returnSource() == ((Bullet)this).returnSource()
-					&& this.getTimeToCollision(other) < Double.POSITIVE_INFINITY) {
-				
-				double J;
-				J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
-						( (this.getDistanceBetween(other))*(this.getMass()+other.getMass()));
-				double JX = J*this.getDeltaDistance(other)[0]/(this.getDistanceBetween(other));
-				double JY = J*this.getDeltaDistance(other)[1]/(this.getDistanceBetween(other));
-				
-				double [] VelocityThis = {this.getVelocity()[0]+JX/this.getMass(),
-										  this.getVelocity()[1]+JY/this.getMass()};	
-				double [] VelocityOther = {other.getVelocity()[0]-JX/other.getMass(),
-					                       other.getVelocity()[1]-JY/other.getMass()};
-				this.setVelocity(VelocityThis[0], VelocityThis[1]);
-				other.setVelocity(VelocityOther[0], VelocityOther[1]);
+		else if (this.hitWall() && this instanceof Bullet && this.getNbWallHits() > this.getMaxNbWallHits())
+			this.terminate();
+		else
+			if (this.getPositionOfHitWall()[0] == 0 || 
+				this.getPositionOfHitWall()[0] == this.getSpace().getWidth())
+				this.setVelocity(-this.getxVelocity(), this.getyVelocity());
+			if (this.getPositionOfHitWall()[0] == 0 || 
+					this.getPositionOfHitWall()[0] == this.getSpace().getHeight()){
+				this.setVelocity(this.getxVelocity(), -this.getyVelocity());
 				this.setNbWallHits(this.getNbWallHits()+1);
-				other.setNbWallHits(other.getNbWallHits()+1);
-				}	
-			}
-			
-	}		
+			if (this instanceof Bullet)
+				this.setNbWallHits(this.getNbWallHits()+1);
+		}
+				
+	}
 	
+	
+	/**
+	 * A method that changes the ships velocity, if they hit and are both in the same world.
+	 * @param 	other
+	 * 			The other ship with which we want to check the given ship collides with.
+	 * @throws 	IllegalArgumentException
+	 * 			If the given or the other entity is or terminated or not a ship or
+	 * 			the 2 ships are not in the same world.
+	 * 			| this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace() ||
+	 *			| !(this instanceof Ship) || !(other instanceof Ship)
+	 * @effect 	both the velocities will be changed
+	 * 			| @see implementation
+	 */
+	public void getVelocityAfterShipHitShip(RoundEntity other) throws IllegalArgumentException{
+		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace()
+			|| !(this instanceof Ship) || !(other instanceof Ship))
+			throw new IllegalArgumentException();
+		else{
+			double J;
+			J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
+					( (this.getDistanceBetween(other))*(this.getMass()+other.getMass()));
+			
+			double JX = J*this.getDeltaDistance(other)[0]/(this.getDistanceBetween(other));
+			double JY = J*this.getDeltaDistance(other)[1]/(this.getDistanceBetween(other));
+			
+			double [] VelocityThis = {this.getVelocity()[0]+JX/this.getMass(),
+							this.getVelocity()[1]+JY/this.getMass()};
+			double [] VelocityOther = {other.getVelocity()[0]-JX/other.getMass(),
+					other.getVelocity()[1]-JY/other.getMass()};
+			this.setVelocity(VelocityThis[0], VelocityThis[1]);
+			other.setVelocity(VelocityOther[0], VelocityOther[1]);
+		}
+	}
+	
+	/**
+	 * A method that changes the entities velocity, if they hit and are both in the same world.
+	 * 
+	 * @param 	other
+	 * 			The other entity with which we want to check the given entity collides with.
+	 * @throws 	IllegalArgumentException
+	 * 			If the given or the other entity is terminated or
+	 * 			the two entities are not located in the same world
+	 * 			| this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace()
+	 * @throws 	IllegalArgumentException
+	 *			If the given entity is not a bullet nor a Ship (this wouldn't happen, but you never know)
+	 * @effect	If the other entity is a bullet of the given entity, that is a ship,
+	 * 			the bullet will be loaded on the ship and his number of hits will be set to zero.
+	 * 			| (Bullet)other).placeInShip((Ship) this)
+	 * 			| other.setNbWallHits(0);
+	 * @effect 	If the other entity is a bullet, the given entity is a ship
+	 * 			and the bullet is not a bullet of the ship, the given and other entity will be terminated.
+	 * 			| this.terminate()
+	 *			| other.terminate()
+	 * @effect 	If both the entities are ships, their velocity will be changed according to the function:
+	 * 			getVelocityAfterShipHitShip
+	 * 			|this.getVelocityAfterShipHitShip(other)
+	 * @effect	If the given entity is a bullet of the other entity, that is a ship,
+	 *			the given entity will be loaded on the ship and his number of hits will be set to zero.
+	 *			|((Bullet)this).placeInShip((Ship)other)
+	 *			|this.setNbWallHits(0)
+	 * @effect	If both the entities are bullets, both will be terminated. No matter they are from the same ship.
+	 * 			| this.terminate()
+	 * 			| other.terminate()
+	 */
+	public void getVelocityAfterEntityHitEntity(RoundEntity other) throws IllegalArgumentException{
+		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace())
+			throw new IllegalArgumentException();
+		if (this instanceof Ship){
+			if (other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other)){
+				((Bullet)other).placeInShip((Ship) this);
+				other.setNbWallHits(0);
+			}	
+			else if (other instanceof Bullet && !((Ship)this).hasAsBullet((Bullet)other)){
+				this.terminate();
+				other.terminate();
+			}
+			else if (other instanceof Ship)
+				this.getVelocityAfterShipHitShip(other);	
+		}
+		else if (this instanceof Bullet){
+			if (other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this)){
+				((Bullet)this).placeInShip((Ship)other);
+				this.setNbWallHits(0);
+			}	
+			else if(other instanceof Ship && !((Ship)other).hasAsBullet((Bullet)this) ){
+				this.terminate();
+				other.terminate();
+			}	
+			else {// other instanceof Bullet
+				this.terminate();
+				other.terminate();
+			}
+		}
+		else
+			throw new IllegalArgumentException();
+	}
+
 	
 	/**
 	 * a variabele registering the number off time a bullet has hit the wall.
@@ -1371,5 +1427,44 @@ public abstract class RoundEntity {
 	 */
 	public void setMaxNbWallHits(double value){
 		maxNbWallHits = value;
+	}
+	
+	/**
+	 * A method that let a world change and move with a given duration.
+	 * 
+	 * @param 	world
+	 * 			The world we want to evolve.
+	 * @param 	duration
+	 * 			The duration of the evolving if the world.
+	 * @param 	collisionListener
+	 * 			A list of all collisions that happen during the evolving of the world.
+	 * @throws 	IllegalArgumentException
+	 * 			If the given entity is terminated, the world is terminated or the duration is not a possible puration.
+	 * 			| this.isTerminated() || world.isTerminated() || !this.canHaveAsDuration(duration
+	 */
+	public void evolve(World world,double duration, CollisionListener collisionListener) 
+			throws IllegalArgumentException{
+		if (this.isTerminated() || world.isTerminated() || !this.canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		double timeToNextHit = this.getTimeToFirstCollision();
+		while (timeToNextHit <= duration){
+			for (RoundEntity entity : space.getEntities()){
+				if (entity instanceof Ship){
+					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
+					entity.move(timeToNextHit);
+				}
+			space.resolveCollision(collisionListener);
+			duration = duration-timeToNextHit;
+			timeToNextHit = this.getTimeToFirstCollision();
+			}
+		}
+		if (duration > 0){
+			for (RoundEntity entity : space.getEntities()){
+				if (entity instanceof Ship){
+					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
+					entity.move(duration);
+				}
+			}
+		}
 	}
 }
