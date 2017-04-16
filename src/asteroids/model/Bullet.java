@@ -322,7 +322,6 @@ public class Bullet extends RoundEntity {
 		// Else statement can only be reached in constructor, when bullet has no ship nor space yet.
 	}
 	
-	
 	/**
 	 * Variable registering the ship this round entity is placed in.
 	 */
