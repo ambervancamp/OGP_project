@@ -1,6 +1,7 @@
 package asteroids.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,30 +50,30 @@ public abstract class Space {
 		
 	}
 	/**
+	 * Variable registering whether this world is terminated
+	 */
+	protected boolean isTerminated = false;
+	
+	/**
 	 * Check whether this world still exists.
+	 * @return 	True if and only if this world is terminated
+	 * 			|this.isTerminated
 	 */
 	@Basic
 	public boolean isTerminated(){
-		if (this.getHeight() == Double.NaN && this.getWidth()== Double.NaN)
-			return false;
-		return true;
+		return this.isTerminated;
 	}
 	
 	/**
 	 * Terminate this world
 	 * 
-	 * @effect 	The ships and bullets, if any, are unset from this world
-	 * 			| unsetShip() && unsetBullet()
-	 * @post	The height and width may have changed
-	 * 			|new.canHaveAsWidth(new.getWidth())
-	 *			|new.can>HaveAsheigth(new,getHeight())
-	 * 			
+	 * @effect 	The entities, if any, are unset from this world
+	 * 			| deleteEntity(entity)
 	 */
 	public void terminate(){
-		for (RoundEntity allEntities : entities)
-			deleteEntity(allEntities);
-		this.width = Double.NaN;
-		this.height = Double.NaN;
+		this.isTerminated = true;
+		for (RoundEntity entity : entities)
+			this.deleteEntity(entity);
 	}
 	
 	private double width = Double.POSITIVE_INFINITY;
@@ -277,6 +278,50 @@ public abstract class Space {
 		return null;
 		}
 	
+	public Set<Set<RoundEntity>> getCollisions(){
+		Set<Set<RoundEntity>> collisionPoints = new HashSet<>();
+		for (RoundEntity entity : entities){
+			if (entity.hitWall()){
+				Set<RoundEntity> coll = new HashSet<>();
+				coll.add(entity);
+				collisionPoints.add(coll);
+			}
+			for (RoundEntity other : entities){
+				if (other != entity && entity.canAsCollision(other)){
+					Set<RoundEntity> coll = new HashSet<>();
+					coll.add(other); coll.add(entity);
+					collisionPoints.add(coll);
+				}
+			}
+			
+		}
+		return collisionPoints;
+	}
+	
+	public void resolveCollision(CollisionListener collisionListener) throws IllegalArgumentException{
+		if (this.isTerminated())
+			throw new IllegalArgumentException();
+		if (this.getCollisions().isEmpty())
+			return;
+		for (Set<RoundEntity> collision : this.getCollisions()){
+			if (collision.size() == 1){
+				RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
+				collisionListener.boundaryCollision(entityThatHitWall, 
+													entityThatHitWall.getxPosition(),
+													entityThatHitWall.getyPosition());
+				entityThatHitWall.getVelocityAfterEntityHitWall();
+				}
+			else if (collision.size() == 2){
+				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
+				RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
+				collisionListener.objectCollision(firstEntity,secondEntity,
+												  firstEntity.getCollisionPosition(secondEntity)[0],
+												  firstEntity.getCollisionPosition(secondEntity)[1]);
+				firstEntity.getVelocityAfterEntityHitEntity(secondEntity);
+			}
+		}
+	}
+	
 	/**
 	 * This method evolves the world with a given duration time
 	 * @param 	duration
@@ -289,11 +334,13 @@ public abstract class Space {
 	 * @effect 	the entities are located on other position conform to the rules of 
 	 * 			movement
 	 */
-	public void evolve(World world, double duration, CollisionListener collisionListener) throws IllegalArgumentException{
+	public void evolves(World world, double duration, CollisionListener collisionListener) throws IllegalArgumentException{
 		
 		if (this.isTerminated() || duration<0 || duration == Double.NaN)
 			throw new IllegalArgumentException();
-		
+		if (this.getEntities().size() == 0)
+			return;
+		while 
 		for (RoundEntity firstEntity : entities)
 			for (RoundEntity secondEntity : entities)
 				if (firstEntity.getTimeToFirstCollision(secondEntity) < smallestTimeToCollision)
@@ -316,7 +363,7 @@ public abstract class Space {
 									entity.getVelocityAfterMoving(smallestTimeToCollision)[1]);
 				}
 		duration = duration-smallestTimeToCollision;
-		evolve(world,duration,collisionListener);
+		evolves(world,duration,collisionListener);
 		
 	}
 	
