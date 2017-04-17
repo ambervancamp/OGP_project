@@ -1181,13 +1181,13 @@ public abstract class RoundEntity {
 		double timeToHitUpperXWall=Double.POSITIVE_INFINITY;
 		double timeToHitLowerXWall=Double.POSITIVE_INFINITY;
 		if (this.getyVelocity() > 0)
-			timeToHitUpperYWall = (space.getHeight()-this.getyPosition())/this.getyVelocity();
+			timeToHitUpperYWall = (space.getHeight()-this.getyPosition()+this.getRadius())/this.getyVelocity();
 		else if (this.getyVelocity() < 0)
-			timeToHitLowerYWall = (-this.getyPosition()/this.getyVelocity());
+			timeToHitLowerYWall = (-this.getyPosition()+this.getRadius()/this.getyVelocity());
 		if (this.getxVelocity() > 0)
-			timeToHitUpperXWall = (space.getWidth()-this.getxPosition())/this.getxVelocity();
+			timeToHitUpperXWall = (space.getWidth()-this.getxPosition()+this.getRadius())/this.getxVelocity();
 		else if (this.getxVelocity() < 0)
-			timeToHitLowerXWall = (-this.getxPosition()/this.getxVelocity());
+			timeToHitLowerXWall = (-this.getxPosition()+this.getRadius()/this.getxVelocity());
 		// returns the minimal time to hit a wall
 		return Math.min(Math.min(timeToHitUpperXWall, timeToHitLowerXWall),
 						Math.min(timeToHitUpperYWall, timeToHitLowerYWall));
