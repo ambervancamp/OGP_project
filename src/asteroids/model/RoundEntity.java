@@ -613,6 +613,7 @@ public abstract class RoundEntity {
 	 *       	| if (this.hasSpace())
 	 *       	|   then ! (new (this.getSpace())).hasEntity(this) 
 	 */
+	@Raw
 	protected void removeOutSpace(){
 		// If statement in principle not necessary, because RemoveOutSpace() is only used when
 		// sure the round entity has a space (no boundary case).
@@ -667,8 +668,6 @@ public abstract class RoundEntity {
 	
 	
 	
-	
-	
 	/**
 	 * COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS 
 	 */
@@ -680,14 +679,14 @@ public abstract class RoundEntity {
 	 * 			The entity with which we could collide
 	 * @return	True if and only if the 2 entities exist and are in the some world
 	 * 			|!entity.isTerminated() &&
-	 * 			| !this.isTerminated() &&
-	 * 			| entity.getSpace() == this.getSpace()
+	 * 			| !this.isTerminated()
 	 */
 	public boolean canAsCollision(RoundEntity entity){
-		if (!entity.isTerminated() && !this.isTerminated() && entity.getSpace() == this.getSpace())
+		if (!entity.isTerminated() && !this.isTerminated())
 			return true;
 		return false;
 	}
+	// && entity.getSpace() == this.getSpace() uit if statement!!
 	
 
 	/**
@@ -846,7 +845,7 @@ public abstract class RoundEntity {
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
-		return this.getDeltaPowDistance(other)  <= 0.99*(this.getRadius()+other.getRadius());
+		return (Math.sqrt(this.getDeltaPowDistance(other)) <= 0.99*(this.getRadius()+other.getRadius()));
 	}
 	
 	

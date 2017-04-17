@@ -235,9 +235,7 @@ public abstract class Space {
 	public void deleteEntity(RoundEntity entity) throws IllegalArgumentException{
 		if (entity == null || entity.getSpace() != this)
 			throw new IllegalArgumentException();
-		for (RoundEntity otherEntity : entities)
-			if (otherEntity == entity)
-				entities.remove(entity);		
+		entities.remove(entity);
 	}
 	
 	/**
@@ -251,11 +249,12 @@ public abstract class Space {
 	public RoundEntity getEntityAt(Double xPosition, Double yPosition){
 		if (this.isTerminated())
 			return null;
-		for (RoundEntity entity : entities)
+		for (RoundEntity entity : entities){
 			if (entity.xPosition == xPosition && entity.yPosition == yPosition)
 				return entity;
-		return null;
 		}
+		return null;
+	}
 	
 	/**
 	 * 
