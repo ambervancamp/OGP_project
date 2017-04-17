@@ -290,7 +290,7 @@ public abstract class Space {
 	 * @return	The time of the first collision. This will be with a wall or with an other entity.
 	 * 			|
 	 */
-	public double getTimeToFirstCollision(){
+	public double getTimeNextCollision(){
 		double smallestTime = Double.POSITIVE_INFINITY;
 		if (this.isTerminated())
 			return smallestTime;
@@ -376,7 +376,7 @@ public abstract class Space {
 			throws IllegalArgumentException{
 		if (this.isTerminated() || world.isTerminated())
 			throw new IllegalArgumentException();
-		double timeToNextHit = getTimeToFirstCollision();
+		double timeToNextHit = getTimeNextCollision();
 		while (timeToNextHit <= duration){
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
@@ -385,7 +385,7 @@ public abstract class Space {
 				}
 			this.resolveCollision(collisionListener);
 			duration = duration-timeToNextHit;
-			timeToNextHit = this.getTimeToFirstCollision();
+			timeToNextHit = this.getTimeNextCollision();
 			}
 		}
 		if (duration > 0){
