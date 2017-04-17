@@ -175,16 +175,12 @@ public abstract class Space {
 	 */
 	@Raw 
 	public boolean canHaveAsEntity(RoundEntity entity){
-		if (this.isTerminated())
-			return(entity == null);
+		if (this.isTerminated() || entity == null || entity.isTerminated())
+			return false;
 		for (RoundEntity otherEntity : entities)
-			if (otherEntity != entity)
-				return true;
-		else if (entity!=null && entity.isTerminated())
-			return  true;
-		else if (fitBoundary(entity) == true)
-			return true;
-		return false;
+			if (otherEntity == entity)
+				return false;
+		return true;
 	}
 	
 	/**
@@ -197,7 +193,7 @@ public abstract class Space {
 	 * 					the y position lies between 0 and the height of this space.  
 	 */
 	public boolean fitBoundary(RoundEntity entity){
-		if (entity.isTerminated() || this.isTerminated() || this !=entity.getSpace() )
+		if (!this.canHaveAsEntity(entity))
 			return false;
 		
 		else if (entity.getxPosition()+entity.getRadius() <= 1.01*this.getWidth() &&

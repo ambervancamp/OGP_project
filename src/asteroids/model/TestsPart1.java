@@ -15,25 +15,25 @@ public class TestsPart1 {
 	
 	@Test
 	public void testCreateShip(){
-		Ship ship = new Ship(1,2,3,4,12,Math.PI,50);
+		Ship ship = new Ship(40,50,3,4,12,Math.PI,50);
 		assertFalse(ship.hasWorld());
 	}
 	
 	@Test
 	public void testTerminateShip(){
-		Ship ship = new Ship(1,2,3,4,12,Math.PI,50);
+		Ship ship = new Ship(40,50,3,4,12,Math.PI,50);
 		ship.terminate();
 		assertFalse(ship.hasSpace());
 	}
 	
 	@Test
 	public void testCanHaveAsPosition(){
-		assertTrue(Ship.canHaveAsPosition(-1,-1));
+		assertFalse(Ship.canHaveAsPosition(-1,-1));
 		assertFalse(Ship.canHaveAsPosition(Double.NaN,Double.NaN));
 		assertTrue(Ship.canHaveAsPosition(0,0));
 		assertTrue(Ship.canHaveAsPosition(5.21, 5.21));
 		assertTrue(Ship.canHaveAsPosition(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
-		assertTrue(Ship.canHaveAsPosition(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
+		assertFalse(Ship.canHaveAsPosition(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
 	}
 }
 	

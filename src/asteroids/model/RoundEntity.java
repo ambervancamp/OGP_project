@@ -202,7 +202,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public static boolean canHaveAsPosition(double x, double y){
-		return (!Double.isNaN(x) && !Double.isNaN(y) && x > 0 && y > 0);
+		return (!Double.isNaN(x) && !Double.isNaN(y) && x >= 0 && y >= 0);
 	}
 	
 	/**
