@@ -29,13 +29,14 @@ public class TestsPart1 {
 //		firstShip.placeInSpace(world); 
 //		secondShip.placeInSpace(world);
 //		thirdShip.placeInSpace(world);
-////		assertEquals(3, facade.getWorldShips(world).size());
-////		assertEquals(0,facade.getWorldBullets(world));
-////		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
-////		firstBullet.placeInSpace(world);
-////		assertEquals(1,facade.getWorldBullets(world));
-////		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
+//		assertEquals(3, facade.getWorldShips(world).size());
+//		assertEquals(0,facade.getWorldBullets(world));
+//		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
+//		firstBullet.placeInSpace(world);
+//		assertEquals(1,facade.getWorldBullets(world));
+//		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
 //	}
+
 	
 	@Test
 	public void testTerminateShip(){
