@@ -162,6 +162,21 @@ public abstract class Space {
 	public List<RoundEntity> getEntities(){
 		return entities;
 	}
+	
+	/**
+	 * Check whether this space has the given entity as one of its
+	 * entities.
+	 * 
+	 * @param  	entity
+	 *         	The entity to check.
+	 *         
+	 * @return 	The given entity is registered at some position as
+	 *         	an entity of this space.
+	 */
+	public boolean hasAsEntity(@Raw RoundEntity entity) {
+		return this.entities.contains(entity);
+	}
+	
 	/**
 	 * 
 	 * @param 	entity
@@ -175,12 +190,7 @@ public abstract class Space {
 	 */
 	@Raw 
 	public boolean canHaveAsEntity(RoundEntity entity){
-		if (this.isTerminated() || entity == null || entity.isTerminated())
-			return false;
-		for (RoundEntity otherEntity : entities)
-			if (otherEntity == entity)
-				return false;
-		return true;
+		return (!this.isTerminated() && entity != null && !entity.isTerminated());
 	}
 	
 	/**
@@ -216,15 +226,10 @@ public abstract class Space {
 	 *@post		The entity will be in the list of entities of this world.
 	 */
 	public void addEntity(RoundEntity entity) throws IllegalArgumentException{
-		if (entity == null || !canHaveAsEntity(entity))
-			throw new IllegalArgumentException();
-		if (entity.getSpace() != this)
-			throw new IllegalArgumentException();
-		for (RoundEntity otherEntity : entities){
-			if (entity.overlap(otherEntity))
-				throw new IllegalArgumentException();
-		}					
-		entities.add(entity);
+		// This function expects that the entity is already pointing to this world.		
+		if (!canHaveAsEntity(entity) || (entity.getSpace() != this) || this.hasAsEntity(entity))
+			throw new IllegalArgumentException();					
+		this.entities.add(entity);
 	}
 	
 	/**
@@ -236,7 +241,8 @@ public abstract class Space {
 	 * @post	The entity will not be in the lists of entities in this world
 	 */
 	public void deleteEntity(RoundEntity entity) throws IllegalArgumentException{
-		if (entity == null || entity.getSpace() != this)
+		// This function expects that the given entity does not reference this world.
+		if (!canHaveAsEntity(entity) || entity.getSpace() != null || !this.hasAsEntity(entity))
 			throw new IllegalArgumentException();
 		entities.remove(entity);
 	}
@@ -423,18 +429,5 @@ public abstract class Space {
 		return bullets;
 	}
 	
-	/**
-	 * A method that checks whether an entity is part of this world.
-	 * @param 	entity
-	 * 			The entity we want to check is located in this world.
-	 * @return	True if and only if the given world and entity aren't terminated and
-	 * 			the space of the entity equals the given space.
-	 */
-	public boolean hasEntity(RoundEntity entity){
-		if (!this.isTerminated() && !entity.isTerminated() && entity.getSpace() == this)
-			return true;
-		return false;
-		
-	}
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

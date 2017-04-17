@@ -503,20 +503,11 @@ public abstract class RoundEntity {
 	 * 			The given space to check if this round entity can be placed in.
 	 * 
 	 * @return 	False if the given space is not effective or null, or this round entity is terminated.
-	 *       	| if (space == null || (space.isTerminated()) || (this.isTerminated()))
-	 *       	|   then result == false
-	 *       
-	 * @return	True if all the above isn't true.
-	 * 			| else
-	 * 			|	result == true
+	 *       	| result == (space != null && (!space.isTerminated()) && (!this.isTerminated()))
 	 */
 	public boolean canHaveAsSpace(Space space){
-		if (space == null || (space.isTerminated()) || (this.isTerminated()))
-			return false;
-		else
-			return true;
+		return (space != null && (!space.isTerminated()) && (!this.isTerminated()));
 	}
-	// OPM: import statement nodig om functies van Space te gebruiken?
 	
 	/**
 	 * Check whether this round entity has a proper space.
@@ -528,11 +519,8 @@ public abstract class RoundEntity {
 	 *       	|   canHaveAsSpace(this.getSpace()) && (this.getSpace().hasEntity(this))
 	 */
 	public boolean hasProperSpace() {
-		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasEntity(this));
+		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasAsEntity(this));
 	}
-	// equivalent in Space: checkers en setters voor meervoudigheid
-	// bv ship of bullet mag niet al ergens anders in zitten
-	// SPACE MOET METHODE 'HASENTITY' BEVATTEN
 	
 	/**
 	 * Check whether this round entity has a space.
@@ -615,14 +603,15 @@ public abstract class RoundEntity {
 	 */
 	@Raw
 	protected void removeOutSpace(){
-		// If statement in principle not necessary, because RemoveOutSpace() is only used when
-		// sure the round entity has a space (no boundary case).
 		if (this.hasSpace()){
-			this.getSpace().deleteEntity(this);
+			Space space = this.getSpace();
 			this.space = null;
+			space.deleteEntity(this);
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
 	}
+	// If statement in principle not necessary, because RemoveOutSpace() is only used when
+	// sure the round entity has a space (no boundary case).
 	
 	/**
 	 * Remove this round entity from given world, if it's placed in this world. 

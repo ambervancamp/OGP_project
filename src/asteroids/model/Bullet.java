@@ -143,14 +143,9 @@ public class Bullet extends RoundEntity {
 	 * 			The given ship to check if this bullet can be placed in.
 	 * 
 	 * @return 	False if the given ship is not effective or null, or this bullet is terminated.
-	 *       
-	 * @return	True if all the above isn't true.
 	 */
 	public boolean canHaveAsShip(Ship ship){
-		if (ship == null || (ship.isTerminated()) || (this.isTerminated()))
-			return false;
-		else
-			return true;
+		return (ship != null || (!ship.isTerminated()) || (!this.isTerminated()));
 	}
 	
 	/**
@@ -229,11 +224,15 @@ public class Bullet extends RoundEntity {
 	 */
 	void removeOutShip(){
 		if (this.hasShip()){
-			this.getShip().removeBullet(this);
+			Ship ship = this.getShip();
 			this.ship = null;
+			ship.removeBullet(this);
 			// Can not use setShip() because it does not allow to set a ship to null.	
 		}		
 	}
+	// If statement in principle not necessary, because RemoveOutSpace() is only used when
+	// sure the round entity has a space (no boundary case).	
+	
 	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
 	//OF NET WORDT AANGEMAAKT.
@@ -306,7 +305,7 @@ public class Bullet extends RoundEntity {
 			this.setSpace(space);
 			space.addEntity(this);
 		}
-		if (this.hasShip()){
+		else if (this.hasShip()){
 			this.removeOutShip();
 			this.setSpace(space);
 			space.addEntity(this);

@@ -542,15 +542,15 @@ public class Ship extends RoundEntity {
 	 * @param  	bullet
 	 *         	The bullet to check.
 	 *         
-	 * @return 	True if and only if the given bullet is effective
-	 *         	and that bullet can have this ship as its ship.
+	 * @return 	True if and only if the given bullet and this ship are effective.
 	 *       	| result ==
 	 *       	|   (bullet != null) &&
-	 *       	|   bullet.canHaveAsShip(this) && !bullet.isTerminated())
+	 *       	|   !bullet.isTerminated() && 
+	 *       	|	!this.isTerminated())
 	 */
 	@Raw
 	public boolean canHaveAsBullet(Bullet bullet) {
-		return (bullet != null) && (bullet.canHaveAsShip(this) && !bullet.isTerminated());
+		return (bullet != null) && !bullet.isTerminated() && !this.isTerminated();
 	}
 
 	/**
@@ -630,15 +630,12 @@ public class Ship extends RoundEntity {
 	 * 
 	 * @param  	bullet
 	 *         	The bullet to be added.
-	 *         
-	 * @throws 	NullPointerException
-	 * 			The given bullet is not effective.
-	 * 			| bullet == null
 	 * 
-	 * @throws	The given bullet doesn't already reference
+	 * @throws	The given bullet is not valid or
+	 * 			the given bullet doesn't already reference
 	 *         	this ship, or this ship already has the given
 	 *         	bullet as one of its bullets.
-	 *       	| (bullet.getShip() != this) || (this.hasAsBullet(bullet))
+	 *       	| !canHaveAsBullet(bullet) || (bullet.getShip() != this) || (this.hasAsBullet(bullet))
 	 *       
 	 * @post   	The number of bullets of this ship is
 	 *         	incremented by 1.
@@ -647,12 +644,9 @@ public class Ship extends RoundEntity {
 	 * @post   	This ship has the given bullet as its very last bullet.
 	 *       	| new.getBulletAt(getNbBullets()+1) == bullet
 	 */
-	public void addBullet(@Raw Bullet bullet) throws NullPointerException, IllegalArgumentException{
-		// This function expects that bullet is already pointing to this ship.
-		if (bullet == null) 
-			throw new NullPointerException();
-		
-		if ((bullet.getShip() != this) || (this.hasAsBullet(bullet)))
+	public void addBullet(@Raw Bullet bullet) throws IllegalArgumentException{
+		// This function expects that bullet is already pointing to this ship.		
+		if (!canHaveAsBullet(bullet) || (bullet.getShip() != this) || (this.hasAsBullet(bullet)))
 			throw new IllegalArgumentException();
 		
 		this.bullets.add(bullet);
@@ -669,18 +663,13 @@ public class Ship extends RoundEntity {
 	 * 
 	 * @param  	bullets
 	 *         	The collection of bullets to be added.
-	 *         
-	 * @throws	NullPointerException
-	 * 			The given collection of bullets is not effective.
-	 * 			| bullets == null
-	 * 
+	 *
 	 * @throws	IllegalArgumentException
-	 * 			All bullets don't already reference this ship,
+	 * 			All bullets aren't effective,
+	 * 			all bullets don't already reference this ship,
 	 * 			or this ship has on of the given bullets as one of its bullets.
 	 *       	| for (Bullet bullet: bullets){
-	 *			|	if (bullet.getShip() != this)
-	 *       	| for (Bullet bullet: bullets){
-	 *			|	if (this.hasAsBullet(bullet))
+	 *			|	!canHaveAsBullet(bullet) || bullet.getShip() != this || this.hasAsBullet(bullet)
 	 *       
 	 * @post   	The number of bullets of this ship is
 	 *         	incremented by bullets.size().
@@ -689,18 +678,10 @@ public class Ship extends RoundEntity {
 	 * @post   	This ship has the given collection of bullets as its very last bullets.
 	 *       	| new.getBulletAt(getNbBullets()+bullets.size()) == bullets.get(bullets.size())
 	 */
-	public void addBullets(@Raw Collection<Bullet> bullets) throws NullPointerException, IllegalArgumentException{
-		// This function expects that all bullets are already pointing to this ship.
-		if (bullets == null)
-			throw new NullPointerException();
-		
+	public void addBullets(@Raw Collection<Bullet> bullets) throws IllegalArgumentException{
+		// This function expects that all bullets are already pointing to this ship.	
 		for (Bullet bullet: bullets){
-			if (bullet.getShip() != this)
-				throw new IllegalArgumentException();
-		}
-		
-		for (Bullet bullet: bullets){
-			if (this.hasAsBullet(bullet))
+			if (!canHaveAsBullet(bullet) || bullet.getShip() != this || this.hasAsBullet(bullet))
 				throw new IllegalArgumentException();
 		}
 		
@@ -766,15 +747,12 @@ public class Ship extends RoundEntity {
 	 * 
 	 * @param  	bullet
 	 *         	The bullet to be removed.
-	 *         
-	 * @throws  NullPointerException
-	 * 			The given bullet is not effective.
-	 * 			| bullet == null
 	 *  
 	 * @throws	IllegalArgumentException
-	 * 			This ship does not have the given bullet as one of its bullets, or the given
-	 *         	bullet does reference any ship.
-	 *       	| !this.hasAsBullet(bullet) || (!(bullet.getShip() == null))
+	 * 			The given bullet is not effective or
+	 * 			this ship does not have the given bullet as one of its bullets, 
+	 * 			or the given bullet does reference any ship.
+	 *       	| !canHaveAsBullet(bullet) || !this.hasAsBullet(bullet) || (!(bullet.getShip() == null))
 	 *       
 	 * @post   	The number of bullets of this ship is
 	 *         	decremented by 1.
@@ -792,15 +770,13 @@ public class Ship extends RoundEntity {
 	 *      	|     then new.getBulletAt(J-1) == getBulletAt(J)
 	 */
 	@Raw
-	public void removeBullet(Bullet bullet) throws NullPointerException, IllegalArgumentException {
-		if (bullet == null) 
-			throw new NullPointerException();
-		if (!this.hasAsBullet(bullet) || (bullet.getShip() != null))
+	public void removeBullet(Bullet bullet) throws IllegalArgumentException {
+		// This function expects that the given bullet does not reference this ship.
+		if (!canHaveAsBullet(bullet) || !this.hasAsBullet(bullet) || (bullet.getShip() != null))
 			throw new IllegalArgumentException();
 		bullets.remove(bullet);
 		this.setMass(this.getTotalMass());
 	}
-	//Verwacht wordt dat eerst de referentie van de bullet naar zijn ship weg is!
 	
 	//ZOMAAR REMOVEN MAG NIET, ELKE BULLET MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN SHIP VOLLEDIG VERWIJDERD WORDT, WANNEER BULLET WORDT AFGEVUURD
