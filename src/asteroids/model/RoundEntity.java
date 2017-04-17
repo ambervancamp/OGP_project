@@ -1211,9 +1211,9 @@ public abstract class RoundEntity {
 			double [] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 			return coordinates;
 			}
-		for (RoundEntity other : space.getEntities())
-			if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
-					return null;			
+		
+		if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
+			return null;			
 		if (this instanceof Bullet)
 			((Bullet)this).setNbWallHits( ((Bullet)this).getNbWallHits() + 1);
 		
@@ -1305,10 +1305,10 @@ public abstract class RoundEntity {
 		else{
 			double J;
 			J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
-					( (this.getDistanceBetween(other))*(this.getMass()+other.getMass()));
+					( (this.getRadius()+other.getRadius())*(this.getMass()+other.getMass()));
 			
-			double JX = J*this.getDeltaDistance(other)[0]/(this.getDistanceBetween(other));
-			double JY = J*this.getDeltaDistance(other)[1]/(this.getDistanceBetween(other));
+			double JX = J*this.getDeltaDistance(other)[0]/(this.getRadius()+other.getRadius());
+			double JY = J*this.getDeltaDistance(other)[1]/(this.getRadius()+other.getRadius());
 			
 			double [] VelocityThis = {this.getVelocity()[0]+JX/this.getMass(),
 							this.getVelocity()[1]+JY/this.getMass()};
