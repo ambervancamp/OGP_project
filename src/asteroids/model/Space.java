@@ -300,6 +300,15 @@ public abstract class Space {
 		return smallestTime;
 	}
 	
+	/**
+	 * A method that gives the position of the first next collision
+	 * @return	The position of collision
+	 * 
+	 * @throws 	IllegalArgumentException	
+	 * 			If the world is terminated
+	 * 			|this.isTerminated()
+	 * 
+	 */
 	public double [] getPositionNextCollision() throws IllegalArgumentException{
 		if(this.isTerminated())
 			throw new IllegalArgumentException();
