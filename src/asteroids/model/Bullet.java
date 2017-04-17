@@ -53,7 +53,7 @@ public class Bullet extends RoundEntity {
 		
 		UnboundSpace unboundspace = new UnboundSpace();
 		this.placeInSpace(unboundspace);
-		// Bullets need to be associated with an unbound space until associated with a world or ship.
+		// Bullets need to be associated with an unbound space until associated with a world or ship
 	}
 	
 	/**
@@ -94,9 +94,7 @@ public class Bullet extends RoundEntity {
 	@Override
 	public double getDensity() {
 		return 7.8*Math.pow(10,12);
-	}
-	//eigenlijk static methode, maar zelfde probleem als bij getminradius()
-	
+	}	
 	
 	/**
 	 * Return the mass of this bullet computed by its radius and density.
@@ -200,7 +198,7 @@ public class Bullet extends RoundEntity {
 			this.setShip(ship);
 			ship.addBullet(this);
 		}
-		if (this.hasShip()){
+		else if (this.hasShip()){
 			this.removeOutShip();
 			this.setShip(ship);
 			ship.addBullet(this);
@@ -208,8 +206,8 @@ public class Bullet extends RoundEntity {
 		else {
 			this.setShip(ship);
 			ship.addBullet(this);	
+			// Else statement used in constructor
 		}
-		// Else statement can only be reached in constructor, when bullet has no ship nor space yet.
 	}
 	//BULLETS MOETEN BINNEN GRENZEN VAN SHIP BEWEGEN!!!!
 	
@@ -230,18 +228,10 @@ public class Bullet extends RoundEntity {
 			// Can not use setShip() because it does not allow to set a ship to null.	
 		}		
 	}
-	// If statement in principle not necessary, because RemoveOutSpace() is only used when
+	// If statement not necessary, because RemoveOutSpace() is only used when
 	// sure the round entity has a space (no boundary case).	
 	
-	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
-	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
-	//OF NET WORDT AANGEMAAKT.
-	
-	// When dealing with 'death', use terminate to destroy a bullet or ship
-	// Use placeInSpace to relocate it to an unbound space
-	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
-	
-	//BULLETS BEWEEGDEN MEE MET SHIP, GEEF TERUG EIGEN SNELHEID
+	//BULLETS BEWOGEN MEE MET SHIP, GEEF TERUG EIGEN SNELHEID
 	
 	/**
 	 * Remove this bullet from given ship, if it's placed in that ship. 
@@ -313,8 +303,8 @@ public class Bullet extends RoundEntity {
 		else {
 			this.setSpace(space);
 			space.addEntity(this);	
+			// Else statement used in constructor
 		}
-		// Else statement can only be reached in constructor, when bullet has no ship nor space yet.
 	}
 	
 	/**

@@ -134,7 +134,6 @@ public class Ship extends RoundEntity {
 	}
 	//WAT MOET ER GEBEUREN MET DE BULLETS ALS EEN SHIP GETERMINEERD WORDT?
 	// Backwards for loop??? because ConcurrentModificationException can occur otherwise
-
 	
 	/**
 	 * Set the orientation of this ship.
@@ -190,33 +189,6 @@ public class Ship extends RoundEntity {
 	 * Variable registering the orientation of this ship.
 	 */
 	private double orientation;
-
-//	/**
-//	 * Return the radius of this ship.
-//	 */
-//	@Override
-//	@Basic
-//	@Raw
-//	@Immutable
-//	public double getRadius() {
-//		return this.radius;
-//	}
-//
-//	/**
-//	 * Check whether the given radius is a valid radius for any ship.
-//	 * 
-//	 * @param 	radius
-//	 *          The radius to check.
-//	 *          
-//	 * @return 	Returns true if and only if the radius is a number bigger 
-//	 * 			than or equal to the minimum radius.
-//	 * 			| result == (radius >= getMinRadius() && !Double.isNaN(radius))
-//	 */
-//	@Raw
-//	public static boolean canHaveAsRadius(double radius) {
-//		return (!Double.isNaN(radius) && radius >= getMinRadius());
-//	}
-
 
 	/**
 	 * Return the lowest possible value for the radius of all ships.
@@ -290,8 +262,6 @@ public class Ship extends RoundEntity {
 		return !Double.isNaN(mass) && mass >= 4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity()
 				&& mass < Double.MAX_VALUE;
 	}
-	//Canhaveasmass hangt af van radius, dit verschilt van schip to schip dus is bijgevolg
-	//geen static functie.
 	//mass < Double.MAX_VALUE -> eigenlijk niet nodig, want aanname dat het altijd kleiner gaat zijn
 	
 	
@@ -415,7 +385,6 @@ public class Ship extends RoundEntity {
 		this.setVelocity(xVelocity, yVelocity);
 		// setVelocity() makes sure that the speed will never exceed max_speed.
 	}	
-	//Duration juist aangepakt?
 	//Wordt deze ergens gebruikt?
 	
 	/**
@@ -473,7 +442,6 @@ public class Ship extends RoundEntity {
 	public double getForce(){
 		return 1.1*Math.pow(10, 21);
 	}
-	// Can vary for ships in future.
 	
 	/**
 	 * Check whether the given factor a is a valid acceleration factor a for any ship.
@@ -653,7 +621,6 @@ public class Ship extends RoundEntity {
 		
 		this.setMass(this.getTotalMass());
 		// Bullet influences mass.
-
 	}
 
 	
@@ -728,7 +695,7 @@ public class Ship extends RoundEntity {
 				bullet.removeOutSpace();
 				bullet.setShip(this);
 			}
-			if (bullet.hasShip()){
+			else if (bullet.hasShip()){
 				bullet.removeOutShip();
 				bullet.setShip(this);
 			}
@@ -777,14 +744,7 @@ public class Ship extends RoundEntity {
 		bullets.remove(bullet);
 		this.setMass(this.getTotalMass());
 	}
-	
-	//ZOMAAR REMOVEN MAG NIET, ELKE BULLET MOET ZICH ERGENS BEVINDEN.
-	//ENKEL NODIG WANNEER EEN SHIP VOLLEDIG VERWIJDERD WORDT, WANNEER BULLET WORDT AFGEVUURD
-	// OF IN FACADE, OM FUNCTIES OP TE BOUWEN
-	
-	// When dealing with 'death', use terminate to destroy a ship
-	// Use placeInSpace to relocate its bullets to an unbound space
-	// NEVER USE REMOVEBULLET!!! Then bullet has no place, which may never happen.
+	// Be careful with the use of this function.
 	
 	/**
 	 * Variable referencing a list collecting all the bullets
@@ -833,39 +793,31 @@ public class Ship extends RoundEntity {
 	}
 		
 	public void fireBullet(){
-		if (this.getNbBullets() != 0){
-			//if statement onnodig, wordt allemaal gechecked in placeInSpace
-				Bullet bullet = this.getBulletAt(this.getNbBullets());
-				double fireOrientation = this.getOrientation();
-				double fireDistance = 1.01*(this.getRadius()+bullet.getRadius());
-				double xFirePosition = this.getxPosition() + fireDistance * Math.cos(fireOrientation);
-				double yFirePosition = this.getyPosition() + fireDistance * Math.sin(fireOrientation);
-				double xFireVelocity = 250*Math.cos(fireOrientation);
-				double yFireVelocity = 250*Math.sin(fireOrientation);
-				bullet.setPosition(xFirePosition, yFirePosition);
-				bullet.setVelocity(xFireVelocity, yFireVelocity);
-				
-				try{
-					bullet.placeInSpace(this.getWorld());
-				}
-				catch (IllegalArgumentException exc){
-					if (bullet.canHaveAsSpace(this.getSpace())){
-							//if statement onnodig omdat als ship een space als space heeft,
-							// het sws voor die bullet ook oke is
-							// dus onderscheid tussen welke reden van exception throwen is niet 
-							// nodig (place in space), zal sws moeten colliden
-						if (bullet.hasHitWall())
-							bullet.terminate();
-						for (RoundEntity entity : this.getSpace().getEntities()){
-							if (entity.canCollide(bullet)){
-								entity.terminate();
-								bullet.terminate();
-							}				
-					}		
-				}
-				bullet.setSource(this);
+		if (this.hasWorld() && this.getNbBullets() != 0){
+			Bullet bullet = this.getBulletAt(this.getNbBullets());
+			double fireOrientation = this.getOrientation();
+			double fireDistance = 1.01*(this.getRadius()+bullet.getRadius());
+			double xFirePosition = this.getxPosition() + fireDistance * Math.cos(fireOrientation);
+			double yFirePosition = this.getyPosition() + fireDistance * Math.sin(fireOrientation);
+			double xFireVelocity = 250*Math.cos(fireOrientation);
+			double yFireVelocity = 250*Math.sin(fireOrientation);
+			bullet.setPosition(xFirePosition, yFirePosition);
+			bullet.setVelocity(xFireVelocity, yFireVelocity);
+			bullet.setSource(this);
+			
+			try{
+				bullet.placeInSpace(this.getWorld());
+			}
+			catch (IllegalArgumentException exc){
+				if (bullet.hasHitWall())
+					bullet.terminate();
+				for (RoundEntity entity : this.getSpace().getEntities()){
+					if (entity.canCollide(bullet)){
+						entity.terminate();
+						bullet.terminate();
+					}				
+				}		
 			}
 		}
-		//IMPLEMENTATIE (totaal)
 	}
 }

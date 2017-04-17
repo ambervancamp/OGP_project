@@ -351,14 +351,6 @@ public abstract class RoundEntity {
 	protected static double getMaxSpeed() {
 		return ABSOLUTE_MAX_SPEED;
 	}
-	// Depends on the round entity it is used on.
-	// Ships have maxspeed = speed of light, this is fixed for all ships.
-	// This fixedness and also the numerical value may vary throughout development.
-	// (but will never exceed the speed of light.)
-	// Bullets have maxspeed = speed of light, this is fixed for all bullets. 
-	// This fixedness and also the numerical value may vary throughout development.
-	// (but will never exceed the speed of light.)
-	//-> can always override so perfect like this
 	
 	/**
 	 * Variable registering the xVelocity of this ship.
@@ -386,9 +378,9 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public double getRadius() {
-		//KAN GEEN CLONE UITVOEREN OP EEN DOUBLE??
 		return this.radius;
 	}
+	//clone?
 
 	/**
 	 * Check whether the given radius is a valid radius for any round entity.
@@ -404,8 +396,6 @@ public abstract class RoundEntity {
 	public boolean canHaveAsRadius(double radius) {
 		return (!Double.isNaN(radius) && radius >= this.getMinRadius());
 	}
-	// PROBLEEM MET GEBRUIK VAN GETMINRADIUS HIER OMDAT DEZE NIET ALS STATIC STAAT AANGEDUID
-	// STATIC LUKT NIET BIJ GETMINRADIUS OMDAT DEZE ABSTRACT IS
 	
 	/**
 	 * Return the lowest possible value for the radius of this round enity.
@@ -413,10 +403,6 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	public abstract double getMinRadius();
-	// Depends on the round entity it is used on.
-	// Ships have minradius = 10, bullets = 1; 
-	// This minradius is fixed for all ships, and all bullets.
-	// throughout the development this number can change.
 	
 	/**
 	 * Variable registering the radius of this ship.
@@ -429,11 +415,6 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	public abstract double getDensity();
-	// Depends on the round entity it is used on.
-	// Bullets have fixed density 7,8*10^12, for all bullets the same. Not mentioned if this number
-	// can change throughout the development.
-	// Ships have at least density 1,42*10^12, the actual density can vary for ships.
-	// Not mentioned if this number can change throughout development.
 	
 	/**
 	 * Return the mass of this round entity.
@@ -441,12 +422,6 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	public abstract double getMass();
-	// Depends on the round entity it is used on.
-	// Bullets have fixed mass (derived from density, and always smaller then double.MAX_VALUE)
-	// for all bullets the same. Not mentioned if this number can change throughout the development.
-	// Ships have a varying mass (derived from the density, and always smaller then double.MAX_VALUE), 
-	// the actual mass can vary for ships because the mass of the bullets they're carrying is also added. 
-	// Not mentioned if this number can change throughout development.
 	
 	/**
 	 * Return the space where this round entity is placed in.
@@ -459,8 +434,6 @@ public abstract class RoundEntity {
 	public Space getSpace(){
 		return this.space;
 	}
-	// A ship always needs to be placed in a space, and can't therefore be null.
-	// a bullet can be places on a ship, and then space can be null
 	
 	/**
 	 * Return the world where this round entity is placed in, if any.
@@ -525,7 +498,7 @@ public abstract class RoundEntity {
 	/**
 	 * Check whether this round entity has a space.
 	 *
-	 * @return 	True if this person references an effective space,
+	 * @return 	True if this round entity references an effective space,
 	 *         	false otherwise.
 	 *       	| result == (this.getSpace != null)
 	 */
@@ -533,10 +506,18 @@ public abstract class RoundEntity {
 		return (this.getSpace() != null);
 	}
 	
+	/**
+	 * Check whether this round entity has a world.
+	 * 
+	 * @return	True if this round entity references an effective world,
+	 *         	false otherwise.
+	 *       	| result == (this.getSpace() instanceof World)
+	 */
 	public boolean hasWorld(){
-		return(this.getSpace() instanceof World);
+		if (this.hasSpace())	
+			return(this.getSpace() instanceof World);
+		return false;
 	}
-	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
 	
 	/**
 	 * Set space from this round entity to given space. If it's already in a space, it's replaced to 
@@ -565,7 +546,7 @@ public abstract class RoundEntity {
 	 * 			| for (RoundEntity entity: space.getEntities())
 	 *			|	this.overlap(entity)
 	 *
-	 *@throws	IllegalArgumentException.
+	 * @throws	IllegalArgumentException.
 	 *			If this entity overlaps the boundaries of the given space.
 	 *			| !space.fitBoundary(this)
 	 */
@@ -586,6 +567,7 @@ public abstract class RoundEntity {
 		else {
 			this.setSpace(space);
 			space.addEntity(this);	
+			// Else statement used in constructor
 		}
 	}
 	
@@ -610,7 +592,7 @@ public abstract class RoundEntity {
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
 	}
-	// If statement in principle not necessary, because RemoveOutSpace() is only used when
+	// If statement not necessary, because RemoveOutSpace() is only used when
 	// sure the round entity has a space (no boundary case).
 	
 	/**
@@ -634,27 +616,12 @@ public abstract class RoundEntity {
 			this.placeInSpace(unboundspace);
 		}
 	}
-
-	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
-	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
-	//OF NET WORDT AANGEMAAKT.
-	
-	// When dealing with 'death', use terminate to destroy a bullet or ship
-	// Use placeInSpace to relocate it to an unbound space
-	// NEVER USE REMOVEOUTSPACE!!! Then round entity has no place, which may never happen.
-
+	// Be careful with the use of this function.
 
 	/**
 	 * Variable registering the space this round entity is placed in.
 	 */
 	protected Space space = null;
-	// SPACE ALS SUPER KLASSE -> WORLD / UNBOUND SPACE
-	// ELKE BULLET EN SHIP MOETEN IN 1 EN SLECHTS 1 SPACE ZITTEN;
-	// TENZIJ: BULLETS KUNNEN OOK IN SHIPS ZITTEN (MEERVOUDIGE ASSOCIATION VOOR SHIP)
-	// !NOOIT IN SPACES OF SHIPS TEZAMEN ZITTEN
-	// als default is de space null, maar moet in elke constructor bij de subklasses meteen
-	// ingesteld worden.		
-	
 	
 	
 	/**
