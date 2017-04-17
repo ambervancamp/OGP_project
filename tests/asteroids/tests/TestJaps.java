@@ -95,5 +95,20 @@ public class TestJaps{
 		assertEquals(thirdShip.getVelocity(),new double[] {25,0});
 	} 
 	
+	@Test 
+	public void testGetEntityToHitWall() throws ModelException{
+		World world = facade.createWorld(8000, 8000);
+		RoundEntity firstShip = facade.createShip(90, 100, -10, 0, 10, Math.PI, 10);
+		RoundEntity secondShip = facade.createShip(210, 100, -50, 0, 10, Math.PI/3, 10);
+		RoundEntity thirdShip = facade.createShip(60,100,-25,0,10,Math.PI,10);
+		firstShip.placeInSpace(world);secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
+		assertTrue(2==thirdShip.getTimeToHitWall());
+		assertEquals(thirdShip.getPositionOfHitWall(),new double[] {0,100});
+		assertTrue(thirdShip.hasHitWall());
+		thirdShip.getVelocityAfterEntityHitWall();
+		assertEquals(thirdShip.getVelocity(),new double[] {10,0});
+		assertFalse(4==firstShip.getTimeToHitWall());
+	}
+	
 	
 }
