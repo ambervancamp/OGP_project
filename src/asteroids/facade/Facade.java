@@ -594,7 +594,6 @@ public class Facade implements asteroids.part2.facade.IFacade {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//OBJECT VERANDEREN NAAR ENTITY? of casten?
 
 	/**
 	 * Return the first position at which the given entity will collide with the
@@ -608,7 +607,6 @@ public class Facade implements asteroids.part2.facade.IFacade {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//implementatie van deze functie, met/zonder argument
 
 	/**
 	 * Return the shortest time in which the first entity will collide with the
@@ -686,7 +684,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public Object getEntityAt(World world, double x, double y) throws ModelException{
 		try{
-			world.getEntityAt(x,y);
+			return world.getEntityAt(x,y);
 		}
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());

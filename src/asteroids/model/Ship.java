@@ -862,28 +862,51 @@ public class Ship extends RoundEntity {
 	private final List<Bullet> bullets = new ArrayList<Bullet>();
 	
 	/**
-	 * a method to check whether the given entity lies within the other entity.
-	 * @param 	other
-	 * 			The other entity we want to check the given entity lies within	
-	 * @return	True if and only if the entities are effective and have the same World and 
-	 * 			the distance between each boundary of the other entity and the centre of the given entity
-	 * 			is >= 0.99*the radius of given entity.
+	 * A method to check whether the given bullet apparently lies within this ship.
+	 * 
+	 * @param 	bullet
+	 * 			The bullet we want to check is within boundaries of this ship.
+	 * 
+	 * @return	True if and only if the distance between each boundary of this ship
+	 * 			and the centre of the given bullet is >= 0.99*the radius of the given bullet.
 	 * 			|@see implementation
+	 * 
+	 * @throws	IllegalArgumentException
+	 * 			If this ship is terminated or the given bullet is terminated or null, or
+	 * 			this ship doesn't have the given bullet as its bullet.
 	 */
-	public boolean withinBoundary(RoundEntity other){
-		if (! this.isTerminated() && !other.isTerminated() && this.getSpace() == other.getSpace() && this.hasWorld())
-			return true;
-		if (other.getxPosition()+other.getRadius()-this.getxPosition() >= 0.99*this.getRadius() &&
-			this.getxPosition()-(other.getxPosition()+other.getRadius()) >= 0.99*this.getRadius() &&
-			other.getyPosition()+other.getRadius()-this.getyPosition() >= 0.99*this.getRadius() &&
-			this.getyPosition()-(other.getyPosition()+other.getRadius()) >= 0.99*this.getRadius())
+	public boolean withinBoundary(Bullet bullet) throws IllegalArgumentException{
+		if (this.isTerminated() || bullet.isTerminated() || bullet == null || !this.hasAsBullet(bullet))
+			throw new IllegalArgumentException();
+		if (this.getxPosition()+this.getRadius()-bullet.getxPosition() >= 0.99*bullet.getRadius() &&
+			bullet.getxPosition()-(this.getxPosition()-this.getRadius()) >= 0.99*bullet.getRadius() &&
+			this.getyPosition()+this.getRadius()-bullet.getyPosition() >= 0.99*bullet.getRadius() &&
+			bullet.getyPosition()-(this.getyPosition()-this.getRadius()) >= 0.99*bullet.getRadius())
 			return true;
 		return false;
 	}
-	//TODO
-	
+		
 	public void fireBullet(){
-		return null
+		if (!this.isTerminated && this.hasWorld() && this.getNbBullets() != 0){
+				Bullet bullet = this.getBulletAt(this.getNbBullets());
+				double fireOrientation = this.getOrientation();
+				double fireDistance = 1.01*(this.getRadius()+bullet.getRadius());
+				double xFirePosition = this.getxPosition() + fireDistance * Math.cos(fireOrientation);
+				double yFirePosition = this.getyPosition() + fireDistance * Math.sin(fireOrientation);
+				double xFireVelocity = 250*Math.cos(fireOrientation);
+				double yFireVelocity = 250*Math.sin(fireOrientation);
+				bullet.setPosition(xFirePosition, yFirePosition);
+				bullet.setVelocity(xFireVelocity, yFireVelocity);
+				
+				try{
+					bullet.placeInSpace(this.getWorld());
+				}
+				catch (IllegalArgumentException exc){
+					
+				}
+				bullet.setSource(this);
+			}
+		}
 		//IMPLEMENTATIE (totaal)
 	}
 }

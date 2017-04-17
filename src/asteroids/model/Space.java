@@ -260,7 +260,7 @@ public abstract class Space {
 				return entity;
 		return null;
 		}
-
+	
 	/**
 	 * 
 	 * @return 	Double.POSITIVE_INFINITY if this entity is terminated.
