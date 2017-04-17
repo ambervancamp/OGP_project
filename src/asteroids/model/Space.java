@@ -206,7 +206,6 @@ public abstract class Space {
 			return true;
 		return false;
 	}
-	// HOPELIJK KOM DIT MEE IN DE PUSH
 	
 	/**
 	 * 

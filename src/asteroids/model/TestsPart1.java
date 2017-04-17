@@ -19,24 +19,22 @@ public class TestsPart1 {
 		assertFalse(ship.hasWorld());
 	}
 	
-	
-//	@Test
-//	public void testShip(){
-//		World world = new World(8000, 8000);
-//		RoundEntity firstShip = new Ship(100, 100, -10, 20, 10, Math.PI, 10E12);
-//		RoundEntity secondShip = new Ship(200, 100, -5, 20, 15, Math.PI/3, 20E12);
-//		RoundEntity thirdShip = new Ship(100, 200, -10, 0, 20, Math.PI/4, 15E12);
-//		firstShip.placeInSpace(world); 
-//		secondShip.placeInSpace(world);
-//		thirdShip.placeInSpace(world);
-//		assertEquals(3, facade.getWorldShips(world).size());
-//		assertEquals(0,facade.getWorldBullets(world));
-//		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
-//		firstBullet.placeInSpace(world);
-//		assertEquals(1,facade.getWorldBullets(world));
-//		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
-//	}
-
+	@Test
+	public void testShip(){
+		World world = new World(8000, 8000);
+		RoundEntity firstShip = new Ship(100, 100, -10, 20, 10, Math.PI, 10E12);
+		RoundEntity secondShip = new Ship(200, 100, -5, 20, 15, Math.PI/3, 20E12);
+		RoundEntity thirdShip = new Ship(100, 200, -10, 0, 20, Math.PI/4, 15E12);
+		firstShip.placeInSpace(world); 
+		secondShip.placeInSpace(world);
+		thirdShip.placeInSpace(world);
+		assertEquals(3, world.getWorldShips().size());
+		assertEquals(0, world.getWorldBullets().size());
+		Bullet firstBullet = new Bullet(1000, 800, 100, 200, 7);
+		firstBullet.placeInSpace(world);
+		assertEquals(1,world.getWorldBullets().size());
+		assertEquals(world,firstBullet.getWorld());
+	}
 	
 	@Test
 	public void testTerminateShip(){
