@@ -31,23 +31,28 @@ public abstract class Space {
 	 * 			the width of this world
 	 * @param	height
 	 * 			the height of this world
+	 * @throws 	IllegalArgumentException
+	 * 			If the given width or height isn't valid for this world.
+	 * 			| !this.canHaveAsHeight(height) || !this.canHaveAsWidth(width)
 	 * 
 	 */
 	@Raw 
 	@Model
 	protected Space(double width, double height) throws IllegalArgumentException{
+		if (!this.canHaveAsHeight(height) || !this.canHaveAsWidth(width))
+			throw new IllegalArgumentException();
 		setWidth(width);
 		setHeight(height);
 		for (RoundEntity allEntities : entities)
 			addEntity(allEntities);
 	}
 	
-	
-	public double[] getSpaceSize(Space space) throws IllegalArgumentException{
-		if (!this.isTerminated())
-			return new double[] {this.getWidth(), this.getHeight()};
-		return new double[] {Double.MAX_VALUE,Double.MAX_VALUE};
-		
+	/**
+	 * 
+	 * @return a list a width an height of the space.
+	 */
+	public double[] getSpaceSize(){
+		return new double[] {this.getWidth(), this.getHeight()};	
 	}
 	/**
 	 * Variable registering whether this world is terminated
@@ -136,7 +141,7 @@ public abstract class Space {
 	 * @return	True if and only if this world is termiated,
 	 * 			or if the given width is effective, not negative and smaller than the maximum width
 	 * 			| result ==
-	 * 			| (isTermiated() ||
+	 * 			| (isTerminated() ||
 	 * 			|( (width != Double.NaN) && (0<width<maxWidth))
 	 */
 	@Raw
@@ -278,10 +283,33 @@ public abstract class Space {
 		return null;
 		}
 	
+	/**
+	 * 
+	 * @return 	Double.POSITIVE_INFINITY if this entity is terminated.
+	 * 			| this.isTerminated()
+	 * @return	The time of the first collision. This will be with a wall or with an other entity.
+	 * 			|
+	 */
+	public double getTimeToFirstCollision(){
+		double smallestTime = Double.POSITIVE_INFINITY;
+		if (this.isTerminated())
+			return smallestTime;
+		for (RoundEntity firstEntity : entities)
+			for(RoundEntity secondEntity : entities)
+				smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
+		return smallestTime;
+	}
+	
+	/**
+	 * A method that consists of a set of sets in which one or 2 entities collide. 
+	 * Respectively with the wall or cith each other.
+	 * @return  The set of sets of collisionPoints.
+	 * 			|@see implementation
+	 */
 	public Set<Set<RoundEntity>> getCollisions(){
 		Set<Set<RoundEntity>> collisionPoints = new HashSet<>();
 		for (RoundEntity entity : entities){
-			if (entity.hitWall()){
+			if (entity.hasHitWall()){
 				Set<RoundEntity> coll = new HashSet<>();
 				coll.add(entity);
 				collisionPoints.add(coll);
@@ -298,6 +326,17 @@ public abstract class Space {
 		return collisionPoints;
 	}
 	
+	/**
+	 * A method that resolves collisions.
+	 * The method checks whether the given entity hits a wall or an other entity and
+	 * puts this in the collisionListener.
+	 * @param 	collisionListener
+	 * 			The given collisionListener
+	 * @throws 	IllegalArgumentException
+	 * 			if the given entity is terminated 
+	 * 			| this.isTerminated()
+	 * 
+	 */
 	public void resolveCollision(CollisionListener collisionListener) throws IllegalArgumentException{
 		if (this.isTerminated())
 			throw new IllegalArgumentException();
@@ -322,54 +361,96 @@ public abstract class Space {
 		}
 	}
 	
-	/**
-	 * This method evolves the world with a given duration time
-	 * @param 	duration
-	 * 			the duration of the time we want the world to evolve
-	 * @throws 	IllegalArgumentException
-	 * 			if and only if the world doesn't exist, the duration is negative or not a number
-	 * 			| this.isTerminated() ||
-	 * 			| duration<0 || 
-	 * 			| duration == Double.NaN
-	 * @effect 	the entities are located on other position conform to the rules of 
-	 * 			movement
-	 */
-	public void evolves(World world, double duration, CollisionListener collisionListener) throws IllegalArgumentException{
-		
-		if (this.isTerminated() || duration<0 || duration == Double.NaN)
-			throw new IllegalArgumentException();
-		if (this.getEntities().size() == 0)
-			return;
-		while 
-		for (RoundEntity firstEntity : entities)
-			for (RoundEntity secondEntity : entities)
-				if (firstEntity.getTimeToFirstCollision(secondEntity) < smallestTimeToCollision)
-					smallestTimeToCollision = firstEntity.getTimeToFirstCollision(secondEntity);
-		
-		if (smallestTimeToCollision >= duration)
-			for (RoundEntity entity : entities){
-				entity.setPosition(entity.getPositionAfterMoving(duration)[0],
-									entity.getPositionAfterMoving(duration)[0]);
-				entity.setVelocity(entity.getVelocityAfterMoving(duration)[0],
-									entity.getVelocityAfterMoving(duration)[1]);
-			}
-				
-		else 
-			for (RoundEntity entity: entities)
-				for (RoundEntity other: entities){
-					entity.collision(other);		
-				entity.move(duration);
-				entity.setVelocity(entity.getVelocityAfterMoving(smallestTimeToCollision)[0],
-									entity.getVelocityAfterMoving(smallestTimeToCollision)[1]);
-				}
-		duration = duration-smallestTimeToCollision;
-		evolves(world,duration,collisionListener);
-		
-	}
 	
+	/**
+	 * A method that let a world change and move with a given duration.
+	 * 
+	 * @param 	world
+	 * 			The world we want to evolve.
+	 * @param 	duration
+	 * 			The duration of the evolving if the world.
+	 * @param 	collisionListener
+	 * 			A list of all collisions that happen during the evolving of the world.
+	 */
+	public void evolve(World world,double duration, CollisionListener collisionListener) 
+			throws IllegalArgumentException{
+		if (this.isTerminated() || world.isTerminated())
+			throw new IllegalArgumentException();
+		double timeToNextHit = getTimeToFirstCollision();
+		while (timeToNextHit <= duration){
+			for (RoundEntity entity : entities){
+				if (entity instanceof Ship){
+					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
+					entity.move(timeToNextHit);
+				}
+			this.resolveCollision(collisionListener);
+			duration = duration-timeToNextHit;
+			timeToNextHit = this.getTimeToFirstCollision();
+			}
+		}
+		if (duration > 0){
+			for (RoundEntity entity : entities){
+				if (entity instanceof Ship){
+					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
+					entity.move(duration);
+				}
+			}
+		}
+	}
 	/**
 	 * a list of all the entities that are located in this world
 	 */
 	private List<RoundEntity> entities = new ArrayList<RoundEntity>();
+	
+	/**
+	 * A list of all the ships that are located in this world
+	 */
+	private List<Ship> ships = new ArrayList<Ship>();
+	
+	/**
+	 * A list of all bullets that are located in this world 
+	 */
+	private List<Bullet> bullets = new ArrayList<Bullet>();
+	
+	/**
+	 *
+	 * @return	a list of all ships in this world
+	 */
+	public List<Ship> getWorldShips(){
+		if (this.isTerminated())
+			return ships;
+		for (RoundEntity entity : entities)
+			if (entity instanceof Ship)
+				ships.add((Ship) entity);
+		return ships;
+	}
+
+	/**
+	 * 
+	 * @return	a list of all bullets in this world
+	 */
+	public List<Bullet> getWorldBullets(){
+		if (this.isTerminated())
+			return bullets;
+		for (RoundEntity entity : entities)
+			if (entity instanceof Bullet)
+				bullets.add((Bullet) entity);
+		return bullets;
+	}
+	
+	/**
+	 * A method that checks whether an entity is part of this world.
+	 * @param 	entity
+	 * 			The entity we want to check is located in this world.
+	 * @return	True if and only if the given world and entity aren't terminated and
+	 * 			the space of the entity equals the given space
+	 * 			| !this.isTerminated() && !entity.isTerminated() && entity.getSpace() == this
+	 */
+	public boolean hasEntity(RoundEntity entity){
+		if (!this.isTerminated() && !entity.isTerminated() && entity.getSpace() == this)
+			return true;
+		return false;
+		
+	}
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

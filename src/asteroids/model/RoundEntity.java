@@ -554,6 +554,10 @@ public abstract class RoundEntity {
 	public boolean hasSpace(){
 		return (this.getSpace() != null);
 	}
+	
+	public boolean hasWorld(){
+		return(this.getSpace() instanceof World);
+	}
 	// 	NEED FOR HASSPACE FUNCTION BECAUSE ENTITY MIGHT NOT HAVE A SPACE YET WHEN CREATED
 	
 	/**
@@ -793,7 +797,7 @@ public abstract class RoundEntity {
 	 * 
 	 * @throws 	NullPointerException()
 	 * 			The given ship must exist.
-	 * 			| ship == null
+	 * 			| ship == null || this ==null
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may collide.
 	 * 			| !canAsCollision(other)
@@ -802,14 +806,13 @@ public abstract class RoundEntity {
 	 */
 	@Raw
 	@Immutable
-	public boolean overlap(RoundEntity ship)	
+	public boolean overlap(RoundEntity other)	
 			throws NullPointerException,IllegalArgumentException {
-		if (ship == null)
+		if (other == null || this == null)
 			throw new NullPointerException();
-		if (!canAsCollision(ship))
+		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
-		
-		return this.getDistanceBetween(ship) <= 0;
+		return this.getDeltaPowDistance(other)  <= 0.99*(this.getRadius()+other.getRadius());
 	}
 	
 	
@@ -831,14 +834,14 @@ public abstract class RoundEntity {
 	 * 			doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
-	 * 			| !canAsCollision(other)
+	 * 			The ships are no valid ships.
+	 * 			| this.isTerminated()
 	 */
 	@Raw
 	@Immutable
 	private double [] getDeltaDistance(RoundEntity other)
 			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
+		if (other == null | this == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -847,6 +850,7 @@ public abstract class RoundEntity {
 		return deltaDistance;
 	}
 	
+
 	/**
 	 * A method that calculates the difference in velocity in x- and y-direction 
 	 * between two round entities.
@@ -864,14 +868,14 @@ public abstract class RoundEntity {
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
+	 * 			The ships are no valid ships.
 	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
 	private double [] getDeltaVelocity(RoundEntity other)
 			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
+		if (other == null || this == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -897,14 +901,14 @@ public abstract class RoundEntity {
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
+	 * 			The ships are no valid ships.
 	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
 	private double getDeltaPowDistance(RoundEntity other) 
 			throws NullPointerException, IllegalArgumentException{
-		if (other == null)
+		if (other == null || this == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -930,14 +934,14 @@ public abstract class RoundEntity {
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
+	 * 			The ships are no valid ships.
 	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
 	private double getDeltaPowVelocity(RoundEntity other) 
 			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
+		if (other == null | this == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -964,14 +968,14 @@ public abstract class RoundEntity {
 	 * 			2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
+	 * 			The ships are no valid ships.
 	 * 			| !canAsCollision(other)
 	 */		
 	@Raw
 	@Immutable
 	private double getDeltaDistanceVelocity(RoundEntity other)
 			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
+		if (other == null || this == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -999,14 +1003,14 @@ public abstract class RoundEntity {
 	 * 			| other == null || this == null
 	 * 
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
+	 * 			The ships are no valid ships.
 	 * 			| !canAsCollision(other)
 	 */	
 	@Raw
 	@Immutable
 	private double getD(RoundEntity other) 
 			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
+		if (other == null || this == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -1016,6 +1020,20 @@ public abstract class RoundEntity {
 		return d;
 	}
 	
+	/**
+	 * a method to check if 2 entities at their given position collide at this moment
+	 * @param 	other
+	 * 			The other entity with which we are colliding
+	 * @return	true if and only if the given and other entity have a world that is equal and
+	 * 			the distance between the centres of the given and other entity is between 99% and 101%
+	 * 			of the sum of the objects’ radii
+	 * 			| @see implementation
+	 */
+	private boolean canCollide(RoundEntity other){
+		return(!this.isTerminated() && !other.isTerminated() && this.hasWorld() && this.getSpace() ==other.getSpace() &&
+				0.99*(this.getRadius()+other.getRadius()) <= this.getDeltaPowDistance(other) && 
+				this.getDeltaPowDistance(other) <= 1.01 *(this.getRadius()+other.getRadius()));
+	}
 	/**
 	 * A method that gives the time between a collision of 2 round entities. 
 	 * This method does not apply on two round entities that overlap.
@@ -1033,17 +1051,20 @@ public abstract class RoundEntity {
 	 * 			Throw a NullPointerException if one of the 2 round entities doesn't exist.
 	 * 			| other == null || this == null
 	 * @throws 	IllegalArgumentException
-	 * 			The ships may collide.
+	 * 			The ships are no valid ships.
 	 * 			| !canAsCollision(other)
 	 */
 	@Raw
 	@Immutable
 	public double getTimeToCollision(RoundEntity other) 
 			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
+		if (other == null || this == null)
 			throw new NullPointerException();
-		if (!canAsCollision(other))
+		if (!canCollide(other))
 			throw new IllegalArgumentException();
+		
+		if (this == other)
+			return Double.POSITIVE_INFINITY;
 		
 		if (this.getDeltaDistanceVelocity(other) >= 0)
 			return Double.POSITIVE_INFINITY;
@@ -1083,7 +1104,7 @@ public abstract class RoundEntity {
 		if (other == null)
 			throw new NullPointerException();
 		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) ||
-				this.getTimeToFirstCollision() != this.getTimeToCollision(other))
+				this.getSpace().getTimeToFirstCollision() != this.getTimeToCollision(other))
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
@@ -1143,9 +1164,7 @@ public abstract class RoundEntity {
 	
 	/**
 	 * A method to check where an entity hits a wall.
-	 * 
-	 * @param 	other
-	 * 			an other entity with which we could collide first.
+	 *
 	 * @return	Positive_Infinity if the entity is terminated
 	 * 			|this.isTerminated()
 	 * 			
@@ -1159,7 +1178,7 @@ public abstract class RoundEntity {
 			return coordinates;
 			}
 		for (RoundEntity other : space.getEntities())
-			if (this.getTimeToHitWall() != this.getTimeToFirstCollision())
+			if (this.getTimeToHitWall() != this.getSpace().getTimeToFirstCollision())
 					return null;			
 		
 		double[] collisionPoint;
@@ -1176,39 +1195,22 @@ public abstract class RoundEntity {
 		else
 			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
 					this.getPositionAfterMoving(this.getTimeToHitWall())[1]-this.getRadius()};
-		nbWallHits = this.getNbWallHits() + 1;
+		Bullet.setNbWallHits() = this.getBullet.getNbWallHits() + 1;
 		return collisionPoint;
 		}
-	
-	/**
-	 * 
-	 * @return 	Double.POSITIVE_INFINITY if this entity is terminated.
-	 * 			| this.isTerminated()
-	 * @return	The time of the first collision. This will be with a wall or with an other entity.
-	 * 			|
-	 */
-	public double getTimeToFirstCollision(){
-		double smallestTime = Double.POSITIVE_INFINITY;
-		if (this.isTerminated())
-			return smallestTime;
-		
-		smallestTime = Math.min(smallestTime,getTimeToHitWall());
-		for (RoundEntity other : space.getEntities())
-			smallestTime =  Math.min(smallestTime, this.getTimeToCollision(other));
-		return smallestTime;
-	}
+
 	
 	/**
 	 * Checks if the entity has hit a wall.
 	 *
-	 * @return	True if and only if the other entity doesn't exist and this entity hits a wall in normal time
+	 * @return	True if and only if this entity hits a wall in normal time
 	 * 			or the time to hit a wall is smaller than the tim eto hit an other entity.
 	 * 			| other.isTerminated() && this.getTimeToHitWall()!=Double.POSITIVE_INFINITY
 	 * 			| this.getTimeToHitWall() <= this.getTimeToCollision(other)
 	 * 			
 	 */
-	public boolean hitWall(){
-		if (this.getTimeToHitWall()!=Double.POSITIVE_INFINITY)
+	public boolean hasHitWall(){
+		if (!this.isTerminated() && this.hasSpace() && this.getTimeToHitWall() != Double.POSITIVE_INFINITY)
 			return true;
 		for (RoundEntity other : space.getEntities())
 			if (this.getTimeToHitWall() <= this.getTimeToCollision(other))
@@ -1216,47 +1218,12 @@ public abstract class RoundEntity {
 		return false;
 	}
 	
-	
-	
-	
-	/**
-	 * A method to see the collision behavior and changes the velocity of the ships if needed.
-	 * 
-	 * 
-	 * @effect 	If the other entity is a bullet of this entity, the bullet will be placed in the given ship.
-	 * 			| other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other)
-	 * 			| result == (Bullet)other).placeInShip((Ship) this
-	 * @effect  If the other entity is a bullet, but not one that belongs to the given ship,
-	 * 			both bullet and ship will be terminated
-	 * 			| other instanceof Bullet && !((Ship)this).hasAsBullet((Bullet)other)
-	 * 			| result == this.terminate(); other.terminate();
-	 * @effect	If the given entity is a bullet of this entity, the bullet will be placed in the other entity.
-	 * 			| other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this)
-	 * 			| result == (Bullet)this).placeInShip((Ship)other
-	 * @effect 	If the given entity is a bullet, but not one that belongs to the other entity (that is a ship),
-	 * 			both bullet and ship will be terminated
-	 * 			| other instanceof Bullet && this instanceof Ship && !((Ship)this).hasAsBullet((Bullet)other)
-	 * 			| result == this.terminate(); other.terminate();
-	 * @effect	If two ships collide there velocity will be changed conform the given rules.
-	 * 			| @see implementation
-	 * @effect	If two bullets hit each other but are not from the same ship, they will be destroyed
-	 * 			| other instanceof Bullet && ((Bullet)other).returnSource() != ((Bullet)this).returnSource(
-	 * 			| result == this.terminate(); other.terminate();
-	 * @effect	If two bullet hit each other and they are from the same ship, there velocity will be changed, conform the given rules.
-	 * 			There number of hits will be updated with one too.
-	 * 			| @see implementation
-	 * @effect	if a ship hits a wall his x- and/or y-velocity will be changed so that he will be reflected from this wall.
-	 * 			| @see implementation
-	 * @effect 	If a bullet hits a wall his x- and/or y-velocity will be changed so that he will be reflected from this wall.
-	 * 			His nubmber of willHits will be updated too
-	 * 			| @see implementation
-	 */
-
 	/**
 	 * A method that changes an entity its velocity after he hit a wall.
 	 * If the entity is a bullet, the nb of times the entity has hit a wall will be changed to his previous, updated with 1
 	 * @throws 	IllegalArgumentException
 	 * 			If the given entity is terminated.
+	 * 			| this.isTerminated() || this.hasSpace()
 	 * @effect	If the entity is a bullet that has hit the wall as many times as the maximum number of hits, 
 	 * 			the bullet will be terminated.
 	 * 			| this.terminate()
@@ -1267,9 +1234,9 @@ public abstract class RoundEntity {
 	 */
 	
 	public void getVelocityAfterEntityHitWall() throws IllegalArgumentException{
-		if (this.isTerminated())
+		if (this.isTerminated() || this.hasWorld())
 			throw new IllegalArgumentException();
-		else if (this.hitWall() && this instanceof Bullet && this.getNbWallHits() > this.getMaxNbWallHits())
+		else if (this.hasHitWall() && this instanceof Bullet && this.getBullet().getNbWallHits() > this.getBullet.getMaxNbWallHits())
 			this.terminate();
 		else
 			if (this.getPositionOfHitWall()[0] == 0 || 
@@ -1278,11 +1245,10 @@ public abstract class RoundEntity {
 			if (this.getPositionOfHitWall()[0] == 0 || 
 					this.getPositionOfHitWall()[0] == this.getSpace().getHeight()){
 				this.setVelocity(this.getxVelocity(), -this.getyVelocity());
-				this.setNbWallHits(this.getNbWallHits()+1);
+				this.setNbWallHits(this.getBullet().getNbWallHits()+1);
 			if (this instanceof Bullet)
-				this.setNbWallHits(this.getNbWallHits()+1);
+				this.setNbWallHits(this.getBullet().getNbWallHits()+1);
 		}
-				
 	}
 	
 	
@@ -1355,7 +1321,7 @@ public abstract class RoundEntity {
 		if (this instanceof Ship){
 			if (other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other)){
 				((Bullet)other).placeInShip((Ship) this);
-				other.setNbWallHits(0);
+				other.getBullet().setNbWallHits(0);
 			}	
 			else if (other instanceof Bullet && !((Ship)this).hasAsBullet((Bullet)other)){
 				this.terminate();
@@ -1367,7 +1333,7 @@ public abstract class RoundEntity {
 		else if (this instanceof Bullet){
 			if (other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this)){
 				((Bullet)this).placeInShip((Ship)other);
-				this.setNbWallHits(0);
+				this.getBullet().setNbWallHits(0);
 			}	
 			else if(other instanceof Ship && !((Ship)other).hasAsBullet((Bullet)this) ){
 				this.terminate();
@@ -1383,88 +1349,5 @@ public abstract class RoundEntity {
 	}
 
 	
-	/**
-	 * a variabele registering the number off time a bullet has hit the wall.
-	 */
-	double nbWallHits = 0;
 	
-	double maxNbWallHits = 2;
-	
-
-	/**
-	 * 
-	 * @return	the number of times a bullet has hit the wall
-	 */
-	public double getNbWallHits(){
-		if (this.isTerminated())
-			return 0;
-		return this.nbWallHits;
-	}
-	
-	/**
-	 * 
-	 * @return	the maximum time a bullet may hit the wall
-	 */
-	public double getMaxNbWallHits(){
-		return this.maxNbWallHits;
-	}
-	
-	/**
-	 * sets the number of wall hits with the given value
-	 * @param 	value
-	 * 			The number of times a bullet has hit the wall
-	 */
-	public void setNbWallHits(double value){
-		if (this.isTerminated())
-			nbWallHits = 0;
-		 this.nbWallHits = value;
-	}
-	
-	/**
-	 * sets the maximum number off wall hits with the given value.
-	 * @param 	value
-	 * 			The maximum number of times a bullet has hit the wall.
-	 */
-	public void setMaxNbWallHits(double value){
-		maxNbWallHits = value;
-	}
-	
-	/**
-	 * A method that let a world change and move with a given duration.
-	 * 
-	 * @param 	world
-	 * 			The world we want to evolve.
-	 * @param 	duration
-	 * 			The duration of the evolving if the world.
-	 * @param 	collisionListener
-	 * 			A list of all collisions that happen during the evolving of the world.
-	 * @throws 	IllegalArgumentException
-	 * 			If the given entity is terminated, the world is terminated or the duration is not a possible puration.
-	 * 			| this.isTerminated() || world.isTerminated() || !this.canHaveAsDuration(duration
-	 */
-	public void evolve(World world,double duration, CollisionListener collisionListener) 
-			throws IllegalArgumentException{
-		if (this.isTerminated() || world.isTerminated() || !this.canHaveAsDuration(duration))
-			throw new IllegalArgumentException();
-		double timeToNextHit = this.getTimeToFirstCollision();
-		while (timeToNextHit <= duration){
-			for (RoundEntity entity : space.getEntities()){
-				if (entity instanceof Ship){
-					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-					entity.move(timeToNextHit);
-				}
-			space.resolveCollision(collisionListener);
-			duration = duration-timeToNextHit;
-			timeToNextHit = this.getTimeToFirstCollision();
-			}
-		}
-		if (duration > 0){
-			for (RoundEntity entity : space.getEntities()){
-				if (entity instanceof Ship){
-					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-					entity.move(duration);
-				}
-			}
-		}
-	}
 }
