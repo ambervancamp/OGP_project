@@ -15,27 +15,27 @@ public class TestsPart1 {
 	
 	@Test
 	public void testCreateShip(){
-		Ship ship = new Ship(40,50,3,4,12,Math.PI,50);
+		Ship ship = new Ship(1,1,3,4,12,Math.PI,50);
 		assertFalse(ship.hasWorld());
 	}
 	
 	
-	@Test
-	public void testShip(){
-		World world = new World(8000, 8000);
-		RoundEntity firstShip = new Ship(100, 100, -10, 20, 10, Math.PI, 10E12);
-		RoundEntity secondShip = new Ship(200, 100, -5, 20, 15, Math.PI/3, 20E12);
-		RoundEntity thirdShip = new Ship(100, 200, -10, 0, 20, Math.PI/4, 15E12);
-		firstShip.placeInSpace(world); 
-		secondShip.placeInSpace(world);
-		thirdShip.placeInSpace(world);
-//		assertEquals(3, facade.getWorldShips(world).size());
-//		assertEquals(0,facade.getWorldBullets(world));
-//		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
-//		firstBullet.placeInSpace(world);
-//		assertEquals(1,facade.getWorldBullets(world));
-//		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
-	}
+//	@Test
+//	public void testShip(){
+//		World world = new World(8000, 8000);
+//		RoundEntity firstShip = new Ship(100, 100, -10, 20, 10, Math.PI, 10E12);
+//		RoundEntity secondShip = new Ship(200, 100, -5, 20, 15, Math.PI/3, 20E12);
+//		RoundEntity thirdShip = new Ship(100, 200, -10, 0, 20, Math.PI/4, 15E12);
+//		firstShip.placeInSpace(world); 
+//		secondShip.placeInSpace(world);
+//		thirdShip.placeInSpace(world);
+////		assertEquals(3, facade.getWorldShips(world).size());
+////		assertEquals(0,facade.getWorldBullets(world));
+////		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
+////		firstBullet.placeInSpace(world);
+////		assertEquals(1,facade.getWorldBullets(world));
+////		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
+//	}
 	
 	@Test
 	public void testTerminateShip(){
@@ -46,12 +46,12 @@ public class TestsPart1 {
 	
 	@Test
 	public void testCanHaveAsPosition(){
-		assertFalse(Ship.canHaveAsPosition(-1,-1));
+		assertTrue(Ship.canHaveAsPosition(-1,-1));
 		assertFalse(Ship.canHaveAsPosition(Double.NaN,Double.NaN));
 		assertTrue(Ship.canHaveAsPosition(0,0));
 		assertTrue(Ship.canHaveAsPosition(5.21, 5.21));
 		assertTrue(Ship.canHaveAsPosition(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
-		assertFalse(Ship.canHaveAsPosition(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
+		assertTrue(Ship.canHaveAsPosition(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
 	}
 }
 	

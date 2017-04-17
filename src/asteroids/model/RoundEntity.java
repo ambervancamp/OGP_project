@@ -197,12 +197,12 @@ public abstract class RoundEntity {
 	 * 			| The given y-coordinate to check.
 	 * 
 	 * @return	Returns true if and only if the xPostion and yPosition are positive numbers.
-	 * 			| result == !Double.isNaN(xPosition) && !Double.isNaN(yPosition) && x > 0 && y > 0
+	 * 			| result == !Double.isNaN(xPosition) && !Double.isNaN(yPosition)
 	 */
 	@Raw
 	@Immutable
 	public static boolean canHaveAsPosition(double x, double y){
-		return (!Double.isNaN(x) && !Double.isNaN(y) && x >= 0 && y >= 0);
+		return (!Double.isNaN(x) && !Double.isNaN(y));
 	}
 	
 	/**

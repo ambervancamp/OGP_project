@@ -184,7 +184,9 @@ public abstract class Space {
 	}
 	
 	/**
-	 * Check whether the given entity can significantly be put in the world.
+	 * Check whether the given entity can significantly be put in this space, regarding the
+	 * boundaries of this space. If the space
+	 * is an unbound space, it has no boundaries, so it will always be true.
 	 * 
 	 * @param 	entity
 	 * 			The entity to check
@@ -195,8 +197,9 @@ public abstract class Space {
 	public boolean fitBoundary(RoundEntity entity){
 		if (!this.canHaveAsEntity(entity))
 			return false;
-		
-		else if (entity.getxPosition()+entity.getRadius() <= 1.01*this.getWidth() &&
+		if (this instanceof UnboundSpace)
+			return true;
+		if (entity.getxPosition()+entity.getRadius() <= 1.01*this.getWidth() &&
 				entity.getxPosition()-entity.getRadius() >= 0 &&
 				entity.getyPosition()+entity.getRadius() <= 1.01*this.getHeight() &&
 				entity.getyPosition()-entity.getRadius() >= 0)
