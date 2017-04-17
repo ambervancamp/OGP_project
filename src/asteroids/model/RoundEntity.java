@@ -1104,7 +1104,7 @@ public abstract class RoundEntity {
 		if (other == null)
 			throw new NullPointerException();
 		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || !canAsCollision(other) ||
-				this.getSpace().getTimeToFirstCollision() != this.getTimeToCollision(other))
+				this.getSpace().getTimeNextCollision() != this.getTimeToCollision(other))
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
@@ -1125,6 +1125,26 @@ public abstract class RoundEntity {
 		}
 	}
 
+	/**
+	 * a method to check whether the given entity lies within the other entity.
+	 * @param 	other
+	 * 			The other entity we want to check the given entity lies within	
+	 * @return	True if and only if the entities are effective and have the same World and 
+	 * 			the distance between each boundary of the other entity and the centre of the given entity
+	 * 			is >= 0.99*the radius of given entity.
+	 * 			|@see implementation
+	 */
+	public boolean withinBoundary(RoundEntity other){
+		if (! this.isTerminated() && !other.isTerminated() && this.getSpace() == other.getSpace() && this.hasWorld())
+			return true;
+		if (other.getxPosition()+other.getRadius()-this.getxPosition() >= 0.99*this.getRadius() &&
+			this.getxPosition()-(other.getxPosition()+other.getRadius()) >= 0.99*this.getRadius() &&
+			other.getyPosition()+other.getRadius()-this.getyPosition() >= 0.99*this.getRadius() &&
+			this.getyPosition()-(other.getyPosition()+other.getRadius()) >= 0.99*this.getRadius())
+			return true;
+		return false;
+	}
+	
 	/**
 	 * Get the time for a ship to hit the wall of its world
 	 * 
@@ -1178,25 +1198,26 @@ public abstract class RoundEntity {
 			return coordinates;
 			}
 		for (RoundEntity other : space.getEntities())
-			if (this.getTimeToHitWall() != this.getSpace().getTimeToFirstCollision())
+			if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
 					return null;			
 		
-		double[] collisionPoint;
+		
 		if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius() == space.getWidth()){
-			collisionPoint = {this.getPositionAfterMoving(this.getTimefirstCollision())[0]+this.getRadius(),
+			return new double[] {this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius(),
 								this.getPositionAfterMoving(this.getTimeToHitWall())[1]};		
 		}
 		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius() == 0)	
-			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius(),
+			return new double[] {this.getPositionAfterMoving(this.getTimeToHitWall())[0]-this.getRadius(),
 							  this.getPositionAfterMoving(this.getTimeToHitWall())[1]};
 		else if (this.getPositionAfterMoving(this.getTimeToHitWall())[1] + this.getRadius() == space.getHeight())
-			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
+			return new double[] {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
 							  this.getPositionAfterMoving(this.getTimeToHitWall())[1]+this.getRadius()};
 		else
-			collisionPoint = {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
+			return new double[] {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
 					this.getPositionAfterMoving(this.getTimeToHitWall())[1]-this.getRadius()};
-		Bullet.setNbWallHits() = this.getBullet.getNbWallHits() + 1;
-		return collisionPoint;
+		if (this instanceof Bullet)
+			this.getBullet().setNbWallHits() = this.getBullet.getNbWallHits() + 1;
+		
 		}
 
 	

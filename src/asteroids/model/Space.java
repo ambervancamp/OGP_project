@@ -290,7 +290,7 @@ public abstract class Space {
 	 * @return	The time of the first collision. This will be with a wall or with an other entity.
 	 * 			|
 	 */
-	public double getTimeToFirstCollision(){
+	public double getTimeNextCollision(){
 		double smallestTime = Double.POSITIVE_INFINITY;
 		if (this.isTerminated())
 			return smallestTime;
@@ -300,6 +300,20 @@ public abstract class Space {
 		return smallestTime;
 	}
 	
+	public double [] getPositionNextCollision() throws IllegalArgumentException{
+		if(this.isTerminated())
+			throw new IllegalArgumentException();
+		for (RoundEntity firstEntity : entities)
+			for (RoundEntity secondEntity : entities)
+				if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
+					return firstEntity.getCollisionPosition(secondEntity);
+				else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
+					return firstEntity.getPositionOfHitWall();
+				else
+					throw new IllegalArgumentException();
+		return new double[] {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+		
+	}
 	/**
 	 * A method that consists of a set of sets in which one or 2 entities collide. 
 	 * Respectively with the wall or cith each other.
@@ -376,7 +390,7 @@ public abstract class Space {
 			throws IllegalArgumentException{
 		if (this.isTerminated() || world.isTerminated())
 			throw new IllegalArgumentException();
-		double timeToNextHit = getTimeToFirstCollision();
+		double timeToNextHit = getTimeNextCollision();
 		while (timeToNextHit <= duration){
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
@@ -385,7 +399,7 @@ public abstract class Space {
 				}
 			this.resolveCollision(collisionListener);
 			duration = duration-timeToNextHit;
-			timeToNextHit = this.getTimeToFirstCollision();
+			timeToNextHit = this.getTimeNextCollision();
 			}
 		}
 		if (duration > 0){
