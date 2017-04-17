@@ -1095,8 +1095,7 @@ public abstract class RoundEntity {
 			throws NullPointerException,IllegalArgumentException{
 		if (other == null)
 			throw new NullPointerException();
-		if (!canCollide(other))
-			throw new IllegalArgumentException();
+		
 		
 		if (this == other)
 			return Double.POSITIVE_INFINITY;
