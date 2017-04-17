@@ -1,6 +1,5 @@
 package asteroids.model;
 
-import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -616,6 +615,31 @@ public abstract class RoundEntity {
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
 	}
+	
+
+	
+	/**
+	 * Remove this round entity from given world, if it's placed in this world. 
+	 * It is then replaced to a new unbound space.
+	 * 
+	 * @param	world
+	 * 			The given world, to remove this entity from.
+	 * 
+	 * @post 	The round entity will be placed in a new unbound space.
+	 * 			| this.getSpace() == new.UnboundSpace()
+	 * 
+	 * @post	The former world of this round entity, if it was the given world, is no
+	 * 			longer its space.
+	 *       	| if (this.getWorld() == world)
+	 *       	|   then ! (new (this.getSpace())).hasEntity(this) 
+	 */
+	public void removeEntityFromWorld(World world){
+		if (this.getWorld() == world){
+			UnboundSpace unboundspace = new UnboundSpace();
+			this.placeInSpace(unboundspace);
+		}
+	}
+
 	//ZOMAAR REMOVEN MAG NIET, ELKE ENTITY MOET ZICH ERGENS BEVINDEN.
 	//ENKEL NODIG WANNEER EEN ROUND ENTITY VOLLEDIG VERWIJDERD WORDT, WANNEER DEZE HERPLAATST WORDT
 	//OF NET WORDT AANGEMAAKT.
@@ -787,7 +811,7 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Check if the given round entity overlaps this round entity.
+	 * Check if the given round entity significantly overlaps this round entity.
 	 * 
 	 * @param 	other
 	 * 			The given round entity.
@@ -808,7 +832,7 @@ public abstract class RoundEntity {
 	@Immutable
 	public boolean overlap(RoundEntity other)	
 			throws NullPointerException,IllegalArgumentException {
-		if (other == null || this == null)
+		if (other == null)
 			throw new NullPointerException();
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
@@ -1021,19 +1045,19 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * a method to check if 2 entities at their given position collide at this moment
+	 * a method to check if 2 entities at their given position significantly collide at this moment.
 	 * @param 	other
 	 * 			The other entity with which we are colliding
 	 * @return	true if and only if the given and other entity have a world that is equal and
 	 * 			the distance between the centres of the given and other entity is between 99% and 101%
 	 * 			of the sum of the objects’ radii
-	 * 			| @see implementation
 	 */
 	private boolean canCollide(RoundEntity other){
 		return(!this.isTerminated() && !other.isTerminated() && this.hasWorld() && this.getSpace() ==other.getSpace() &&
 				0.99*(this.getRadius()+other.getRadius()) <= this.getDeltaPowDistance(other) && 
 				this.getDeltaPowDistance(other) <= 1.01 *(this.getRadius()+other.getRadius()));
 	}
+	
 	/**
 	 * A method that gives the time between a collision of 2 round entities. 
 	 * This method does not apply on two round entities that overlap.
@@ -1124,26 +1148,6 @@ public abstract class RoundEntity {
 			return null;
 		}
 	}
-
-	/**
-	 * a method to check whether the given entity lies within the other entity.
-	 * @param 	other
-	 * 			The other entity we want to check the given entity lies within	
-	 * @return	True if and only if the entities are effective and have the same World and 
-	 * 			the distance between each boundary of the other entity and the centre of the given entity
-	 * 			is >= 0.99*the radius of given entity.
-	 * 			|@see implementation
-	 */
-	public boolean withinBoundary(RoundEntity other){
-		if (! this.isTerminated() && !other.isTerminated() && this.getSpace() == other.getSpace() && this.hasWorld())
-			return true;
-		if (other.getxPosition()+other.getRadius()-this.getxPosition() >= 0.99*this.getRadius() &&
-			this.getxPosition()-(other.getxPosition()+other.getRadius()) >= 0.99*this.getRadius() &&
-			other.getyPosition()+other.getRadius()-this.getyPosition() >= 0.99*this.getRadius() &&
-			this.getyPosition()-(other.getyPosition()+other.getRadius()) >= 0.99*this.getRadius())
-			return true;
-		return false;
-	}
 	
 	/**
 	 * Get the time for a ship to hit the wall of its world
@@ -1200,7 +1204,8 @@ public abstract class RoundEntity {
 		for (RoundEntity other : space.getEntities())
 			if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
 					return null;			
-		
+		if (this instanceof Bullet)
+			((Bullet)this).setNbWallHits( ((Bullet)this).getNbWallHits() + 1);
 		
 		if (this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius() == space.getWidth()){
 			return new double[] {this.getPositionAfterMoving(this.getTimeToHitWall())[0]+this.getRadius(),
@@ -1215,8 +1220,6 @@ public abstract class RoundEntity {
 		else
 			return new double[] {this.getPositionAfterMoving(this.getTimeToHitWall())[0],
 					this.getPositionAfterMoving(this.getTimeToHitWall())[1]-this.getRadius()};
-		if (this instanceof Bullet)
-			this.getBullet().setNbWallHits() = this.getBullet.getNbWallHits() + 1;
 		
 		}
 
@@ -1257,7 +1260,7 @@ public abstract class RoundEntity {
 	public void getVelocityAfterEntityHitWall() throws IllegalArgumentException{
 		if (this.isTerminated() || this.hasWorld())
 			throw new IllegalArgumentException();
-		else if (this.hasHitWall() && this instanceof Bullet && this.getBullet().getNbWallHits() > this.getBullet.getMaxNbWallHits())
+		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits())
 			this.terminate();
 		else
 			if (this.getPositionOfHitWall()[0] == 0 || 
@@ -1266,9 +1269,9 @@ public abstract class RoundEntity {
 			if (this.getPositionOfHitWall()[0] == 0 || 
 					this.getPositionOfHitWall()[0] == this.getSpace().getHeight()){
 				this.setVelocity(this.getxVelocity(), -this.getyVelocity());
-				this.setNbWallHits(this.getBullet().getNbWallHits()+1);
+				((Bullet)this).setNbWallHits(((Bullet)this).getNbWallHits()+1);
 			if (this instanceof Bullet)
-				this.setNbWallHits(this.getBullet().getNbWallHits()+1);
+				((Bullet)this).setNbWallHits(((Bullet)this).getNbWallHits()+1);
 		}
 	}
 	
@@ -1342,7 +1345,7 @@ public abstract class RoundEntity {
 		if (this instanceof Ship){
 			if (other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other)){
 				((Bullet)other).placeInShip((Ship) this);
-				other.getBullet().setNbWallHits(0);
+				((Bullet)other).setNbWallHits(0);
 			}	
 			else if (other instanceof Bullet && !((Ship)this).hasAsBullet((Bullet)other)){
 				this.terminate();
@@ -1354,7 +1357,7 @@ public abstract class RoundEntity {
 		else if (this instanceof Bullet){
 			if (other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this)){
 				((Bullet)this).placeInShip((Ship)other);
-				this.getBullet().setNbWallHits(0);
+				((Bullet)this).setNbWallHits(0);
 			}	
 			else if(other instanceof Ship && !((Ship)other).hasAsBullet((Bullet)this) ){
 				this.terminate();
