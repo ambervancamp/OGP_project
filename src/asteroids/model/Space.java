@@ -265,9 +265,12 @@ public abstract class Space {
 		double smallestTime = Double.POSITIVE_INFINITY;
 		if (this.isTerminated())
 			return smallestTime;
-		for (RoundEntity firstEntity : entities)
-			for(RoundEntity secondEntity : entities)
+		for (RoundEntity firstEntity : entities){
+			for(RoundEntity secondEntity : entities){
 				smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
+			}
+			smallestTime = Math.min(smallestTime, firstEntity.getTimeToHitWall());
+		}
 		return smallestTime;
 	}
 	
