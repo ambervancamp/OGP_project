@@ -17,6 +17,10 @@ import be.kuleuven.cs.som.annotate.*;
  *       
  * @invar  	Each bullet must have a proper space, or ship.
  *       	| hasProperSpace() || hasProperShip()
+ * 
+ * @invar  	The source of each bullet must be a valid source for any
+ *        	 bullet.
+ *       	| isValidSource(getSource())
  *        
  * @author amber_000
  *
@@ -277,7 +281,7 @@ public class Bullet extends RoundEntity {
 	 */
 	public void removeBulletFromShip(Ship ship){
 		if (this.getShip() == ship){
-			UnboundSpace unboundspace = UnboundSpace();
+			UnboundSpace unboundspace = new UnboundSpace();
 			this.placeInSpace(unboundspace);
 		}
 	}
@@ -360,16 +364,56 @@ public class Bullet extends RoundEntity {
 	 */
 	double nbWallHits = 0;	
 	
+	
 	/**
-	 * Return the ship that fired this bullet, if any.
-	 * @return
+	 * Return the source of this bullet.
 	 */
-	public Ship returnSource(){
-		return this.getShip();
-		//IMPLEMENTATIE
-	}	
+	@Basic @Raw
+	public Ship getSource() {
+		return this.source;
+	}
 	
+	/**
+	 * Check whether the given source is a valid source for
+	 * any bullet.
+	 *  
+	 * @param  	source
+	 *         	The source to check.
+	 *         
+	 * @return 	The source must be a Ship, that is not yet terminated.
+	 *       	| result == source!=null && (source instanceof Ship) && !source.isTerminated()
+	*/
+	public static boolean isValidSource(Ship source) {
+		return source!=null && (source instanceof Ship) && !source.isTerminated();
+	}
 	
+	/**
+	 * Set the source of this bullet to the given source.
+	 * 
+	 * @param  	source
+	 *         	The new source for this bullet.
+	 *         
+	 * @post   	The source of this new bullet is equal to
+	 *         	the given source.
+	 *       	| new.getSource() == source
+	 *       
+	 * @throws 	IllegalArgumentException
+	 *         	The given source is not a valid source for any
+	 *         	bullet.
+	 *       	| ! isValidSource(getSource())
+	 */
+	@Raw
+	public void setSource(Ship source) 
+			throws IllegalArgumentException {
+		if (! isValidSource(source))
+			throw new IllegalArgumentException();
+		this.source = source;
+	}
+	
+	/**
+	 * Variable registering the source of this bullet, the ship that fired this bullet.
+	 */
+	private Ship source = null;
 	
 	
 	/**

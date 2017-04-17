@@ -861,7 +861,6 @@ public class Ship extends RoundEntity {
 	 */
 	private final List<Bullet> bullets = new ArrayList<Bullet>();
 	
-	
 	public void fireBullet(){
 		return null
 		//IMPLEMENTATIE (totaal)

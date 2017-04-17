@@ -426,19 +426,32 @@ public class Facade implements asteroids.part2.facade.IFacade {
 			throw new ModelException(exc.getMessage());
 		}
 	}
-	//Moet hergedefinieerd worden
 
 	/**
 	 * Return all ships located within <code>world</code>.
 	 */
-	public Set<? extends Ship> getWorldShips(World world) throws ModelException;
-	//METHODE MOET NOG WORDEN GEMAAKT
+	public Set<? extends Ship> getWorldShips(World world) throws ModelException{
+		try {
+			Set<Ship> ships = new HashSet<Ship>(world.getWorldShips());
+			return ships;
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Return all bullets located in <code>world</code>.
 	 */
-	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException;
-	//METHODE MOET NOG WORDEN GEMAAKT
+	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException{
+		try {
+			Set<Bullet> bullets = new HashSet<Bullet>(world.getWorldBullets());
+			return bullets;
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 
 	/**
 	 * Add <code>ship</code> to <code>world</code>.
@@ -628,17 +641,22 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * collision will take place in the given world. Positive Infinity is
 	 * returned if no collision will occur.
 	 */
-	public double getTimeNextCollision(World world) throws ModelException
-	//Moet hergedefinieerd worden
-
+	public double getTimeNextCollision(World world) throws ModelException{
+		try{
+			return world.getTimeToFirstCollision();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 	/**
 	 * Return the position of the first boundary collision or entity collision
 	 * that will take place in the given world. Null is returned if no collision
 	 * will occur.
 	 */
 	public double[] getPositionNextCollision(World world) throws ModelException;
-	//Moet nog gedefinieerd worden
-
+	//MOET NOG GEDEFINIEERD WORDEN
+	
 	/**
 	 * Advance <code>world</code> by <code>dt<code> seconds. 
 	 * 
@@ -648,9 +666,14 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * <code>collisionListener</code> is <code>null</code>, do not call its
 	 * notify methods.
 	 */
-	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException;
-	//Moet hergedefinieerd worden
-
+	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException{
+		try{
+			world.evolve(dt, collisionListener);
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 	/**
 	 * Return the entity at the given <code>position</code> in the given
 	 * <code>world</code>.
