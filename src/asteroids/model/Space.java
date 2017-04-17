@@ -300,6 +300,20 @@ public abstract class Space {
 		return smallestTime;
 	}
 	
+	public double [] getPositionNextCollision() throws IllegalArgumentException{
+		if(this.isTerminated())
+			throw new IllegalArgumentException();
+		for (RoundEntity firstEntity : entities)
+			for (RoundEntity secondEntity : entities)
+				if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
+					return firstEntity.getCollisionPosition(secondEntity);
+				else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
+					return firstEntity.getPositionOfHitWall();
+				else
+					throw new IllegalArgumentException();
+		return new double[] {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+		
+	}
 	/**
 	 * A method that consists of a set of sets in which one or 2 entities collide. 
 	 * Respectively with the wall or cith each other.
