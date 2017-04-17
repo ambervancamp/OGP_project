@@ -1168,7 +1168,7 @@ public abstract class RoundEntity {
 	 * 			| @see implementation
 	 */	
 	public double getTimeToHitWall(){
-		if(this.isTerminated() || (this.getyVelocity() == 0 && this.getyVelocity() == 0))
+		if(this.isTerminated() || (this.getxVelocity() == 0 && this.getyVelocity() == 0))
 			return Double.POSITIVE_INFINITY;
 		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
 			this.getxPosition() - this.getRadius() == 0 ||
@@ -1183,11 +1183,12 @@ public abstract class RoundEntity {
 		if (this.getyVelocity() > 0)
 			timeToHitUpperYWall = (space.getHeight()-this.getyPosition()+this.getRadius())/this.getyVelocity();
 		else if (this.getyVelocity() < 0)
-			timeToHitLowerYWall = (-this.getyPosition()+this.getRadius()/this.getyVelocity());
+			timeToHitLowerYWall = (-this.getyPosition()+this.getRadius())/this.getyVelocity();
 		if (this.getxVelocity() > 0)
 			timeToHitUpperXWall = (space.getWidth()-this.getxPosition()+this.getRadius())/this.getxVelocity();
 		else if (this.getxVelocity() < 0)
-			timeToHitLowerXWall = (-this.getxPosition()+this.getRadius()/this.getxVelocity());
+			timeToHitLowerXWall = (-this.getxPosition()+this.getRadius())/this.getxVelocity();
+		
 		// returns the minimal time to hit a wall
 		return Math.min(Math.min(timeToHitUpperXWall, timeToHitLowerXWall),
 						Math.min(timeToHitUpperYWall, timeToHitLowerYWall));
@@ -1266,18 +1267,16 @@ public abstract class RoundEntity {
 	 */
 	
 	public void getVelocityAfterEntityHitWall() throws IllegalArgumentException{
-		if (this.isTerminated() || this.hasWorld())
+		if (this.isTerminated() || !this.hasWorld())
 			throw new IllegalArgumentException();
 		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits())
 			this.terminate();
 		else
 			if (this.getPositionOfHitWall()[0] == 0 || 
-				this.getPositionOfHitWall()[0] == this.getSpace().getWidth())
+				 this.getPositionOfHitWall()[0] == this.getSpace().getWidth())
 				this.setVelocity(-this.getxVelocity(), this.getyVelocity());
-			if (this.getPositionOfHitWall()[0] == 0 || 
-					this.getPositionOfHitWall()[0] == this.getSpace().getHeight()){
+			if (this.getPositionOfHitWall()[1] == 0 || this.getPositionOfHitWall()[1] == this.getSpace().getHeight()){
 				this.setVelocity(this.getxVelocity(), -this.getyVelocity());
-				((Bullet)this).setNbWallHits(((Bullet)this).getNbWallHits()+1);
 			if (this instanceof Bullet)
 				((Bullet)this).setNbWallHits(((Bullet)this).getNbWallHits()+1);
 		}
