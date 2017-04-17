@@ -55,25 +55,6 @@ public class Bullet extends RoundEntity {
 		this.placeInSpace(unboundspace);
 		// Bullets need to be associated with an unbound space until associated with a world or ship.
 	}
-	// Wait for definition of uboundspace constructor for width and height.
-
-//	
-//	/**
-//	 * Create a new bullet with a default position, velocity, radius.
-//	 * 
-//	 * @post  	The position of this new ship is (0,0).
-//	 *        
-//	 * @post  	The velocity of this new ship is (0,0).
-//	 *        
-//	 * @post  	The radius of this new ship is getMinRadius.
-//	 *        
-//	 * @effect 	The result is a circle with radius getMinRadius() 
-//	 * 			centered on (0, 0) with speed zero.
-//	 */
-//	public Bullet(){
-//		this(0,0,0,0,getMinRadius());
-//	}
-//	//DEFAULT LOCATIE 0,0?? ----> Wordt nergens gebruikt in facade
 	
 	/**
 	 * Terminate this bullet.
@@ -101,10 +82,9 @@ public class Bullet extends RoundEntity {
 	@Override
 	@Basic
 	@Raw
-	public static double getMinRadius() {
+	public double getMinRadius() {
 		return 1;
 	}
-	//OVERRIDE PROBLEEM MET STATIC GETMINRADIUS
 	
 	/**
 	 * Return the density for all bullets.

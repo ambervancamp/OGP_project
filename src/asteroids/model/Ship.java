@@ -72,7 +72,7 @@ public class Ship extends RoundEntity {
 	 *       	|   else new.getMass() == 5.948*Math.pow(10,15)
 	 *       
 	 * @effect	This ship is placed in a new unbound space.
-	 * 			| UnboundSpace unboundspace = UnboundSpace()
+	 * 			| UnboundSpace unboundspace = new UnboundSpace()
 	 * 			| this.placeInSpace(unboundspace)
 	 * 
 	 * @post   	This new ship has no bullets yet.
@@ -101,36 +101,7 @@ public class Ship extends RoundEntity {
 		this.placeInSpace(unboundspace);
 		// Ships need to be associated with an unbound space until associated with a world.
 	}
-	// Wait for definition of uboundspace constructor for width and height.
 	
-//	/**
-//	 * Create a new ship with a default position, velocity, radius,
-//	 * orientation and mass.
-//	 * 
-//	 * @post  	The position of this new ship is (0,0).
-//	 *        	| new.getPosition() == {0,0}
-//	 *        
-//	 * @post  	The velocity of this new ship is (0,0).
-//	 *        	| new.getVelocity() == {0,0}
-//	 *        
-//	 * @post  	The radius of this new ship is getMinRadius.
-//	 *        	| new.getRadius() == getMinRadius
-//	 *        
-//	 * @post  	This new ship is facing right.
-//	 *        	| new.getOrientation() == 0
-//	 *        
-//	 * @post	The mass of this new ship is derived from the minimum density
-//	 * 			and current radius, this is the minimum radius. So the default mass
-//	 * 			is 5,948*10^15.
-//	 * 			| new.getMass() == 5,948*10^15
-//	 *        
-//	 * @effect 	The result is a circle with radius getMinRadius() 
-//	 * 			centered on (0, 0) facing right and with speed zero.
-//	 */
-//	public Ship() {
-//		this(0,0,0,0,getMinRadius(),0,5.948*Math.pow(10,15));
-//	}
-//	//DEFAULT LOCATIE 0,0?? -------> Wordt nergens gebruikt in facade
 	
 	/**
 	 * Terminate this round entity, its bullets and remove it out of its space.
@@ -256,10 +227,9 @@ public class Ship extends RoundEntity {
 	@Override
 	@Basic
 	@Raw
-	public static double getMinRadius() {
+	public double getMinRadius() {
 		return 10;
 	}
-	//OVERRIDE PROBLEEM MET STATIC GETMINRADIUS
 
 	/**
 	 * Return the mass of this ship. This is the mass of the ship itself, 
@@ -576,11 +546,11 @@ public class Ship extends RoundEntity {
 	 *         	and that bullet can have this ship as its ship.
 	 *       	| result ==
 	 *       	|   (bullet != null) &&
-	 *       	|   bullet.canHaveAsShip(this)
+	 *       	|   bullet.canHaveAsShip(this) && !bullet.isTerminated())
 	 */
 	@Raw
 	public boolean canHaveAsBullet(Bullet bullet) {
-		return (bullet != null) && (bullet.canHaveAsShip(this));
+		return (bullet != null) && (bullet.canHaveAsShip(this) && !bullet.isTerminated());
 	}
 
 	/**
@@ -887,7 +857,8 @@ public class Ship extends RoundEntity {
 	}
 		
 	public void fireBullet(){
-		if (!this.isTerminated && this.hasWorld() && this.getNbBullets() != 0){
+		if (this.getNbBullets() != 0){
+			//if statement onnodig, wordt allemaal gechecked in placeInSpace
 				Bullet bullet = this.getBulletAt(this.getNbBullets());
 				double fireOrientation = this.getOrientation();
 				double fireDistance = 1.01*(this.getRadius()+bullet.getRadius());
@@ -902,7 +873,12 @@ public class Ship extends RoundEntity {
 					bullet.placeInSpace(this.getWorld());
 				}
 				catch (IllegalArgumentException exc){
-					
+					if (bullet.canHaveAsSpace(this.getSpace())
+							//if statement onnodig omdat als ship een space als space heeft,
+							// het sws voor die bullet ook oke is
+							// dus onderscheid tussen welke reden van exception throwen is niet 
+							// nodig (place in space), zal sws moeten colliden
+							
 				}
 				bullet.setSource(this);
 			}

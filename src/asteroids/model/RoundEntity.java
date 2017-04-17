@@ -208,10 +208,6 @@ public abstract class RoundEntity {
 	@Immutable
 	public static boolean canHaveAsPosition(double x, double y){
 		return !Double.isNaN(x) && !Double.isNaN(y);
-		
-		// POSTION FOR ROUND ENTITIES IS RESTRICTED BY THE AREA THEY'RE IN:
-		// EITHER AN UNBOUND SPACE (NO RESTRICTIONS), A WORLD (BOUNDARIES)
-		// OR FOR A BULLET ALSO A SHIP (BOUNDARIES)
 	}
 	
 	/**
@@ -562,6 +558,8 @@ public abstract class RoundEntity {
 	/**
 	 * Set space from this round entity to given space. If it's already in a space, it's replaced to 
 	 * the new space. Also places round entity in given space.
+	 * When the newly placed entity collides with another entity allready in this world,
+	 * it throws an IllegalArgumentException.
 	 * 
 	 * @param 	space
 	 * 			The given space to put the round entity in.
@@ -578,10 +576,25 @@ public abstract class RoundEntity {
 	 * @throws 	IllegalArgumentException
 	 * 			If the space is not valid.
 	 * 			| !canHaveAsSpace(space)
+	 * 
+	 * @throws	IllegalArgumentException.
+	 * 			If this entity overlaps with any entity already in the space.
+	 * 			| for (RoundEntity entity: space.getEntities())
+	 *			|	this.overlap(entity)
+	 *
+	 *@throws	IllegalArgumentException.
+	 *			If this entity overlaps the boundaries of the given space.
+	 *			| !space.fitBoundary(this)
 	 */
 	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();
+		for (RoundEntity entity: space.getEntities()){
+			if (this.overlap(entity))
+				throw new IllegalArgumentException();
+		}
+		if (!space.fitBoundary(this))
+			throw new IllegalArgumentException();		
 		if (this.hasSpace()){
 			this.removeOutSpace();
 			this.setSpace(space);
@@ -592,7 +605,6 @@ public abstract class RoundEntity {
 			space.addEntity(this);	
 		}
 	}
-	// used in subclasses in constructor to place in space
 	
 	/**
 	 * Remove the space from this round entity, if any. It is not placed into a new space.
@@ -626,7 +638,7 @@ public abstract class RoundEntity {
 	 * 			The given world, to remove this entity from.
 	 * 
 	 * @post 	The round entity will be placed in a new unbound space.
-	 * 			| this.getSpace() == new.UnboundSpace()
+	 * 			| this.getSpace() == new UnboundSpace()
 	 * 
 	 * @post	The former world of this round entity, if it was the given world, is no
 	 * 			longer its space.
