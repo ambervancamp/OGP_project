@@ -57,13 +57,43 @@ public class TestJaps{
 		RoundEntity firstShip = facade.createShip(100, 100, -10, 20, 10, Math.PI, 10);
 		RoundEntity secondShip = facade.createShip(200, 100, -5, 20, 15, Math.PI/3, 20);
 		RoundEntity thirdShip = facade.createShip(100, 200, -10, 0, 20, Math.PI/4, 15);
+		firstShip.placeInSpace(world); secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
 		assertEquals(3, facade.getWorldShips(world).size());
 		assertEquals(0,facade.getWorldBullets(world));
 		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
+		firstBullet.placeInSpace(world);
 		assertEquals(1,facade.getWorldBullets(world));
 		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
 	}
 	
+	@Test
+	public void testGetTimeAndPlaceToNextCollision() throws ModelException{
+		World world = facade.createWorld(8000, 8000);
+		RoundEntity firstShip = facade.createShip(90, 100, -10, 0, 10, Math.PI, 15);
+		RoundEntity secondShip = facade.createShip(210, 100, -50, 0, 10, Math.PI/3, 10);
+		firstShip.placeInSpace(world);secondShip.placeInSpace(world);
+		assertEquals(firstShip.getSpace(),secondShip.getSpace());
+		assertTrue(world.getTimeNextCollision()==5/2);
+		assertTrue(world.getPositionNextCollision() == new double[] {75,100});
+		RoundEntity thirdShip = facade.createShip(60,100,-25,18,10,Math.PI,20);
+		thirdShip.placeInSpace(world);
+		assertTrue(world.getTimeNextCollision() == 2);
+		assertTrue(world.getPositionNextCollision() == new double[] {0,136});
+		
+	}
+	
+	@Test 
+	public void testEvolveWorld() throws ModelException{
+		World world = facade.createWorld(8000, 8000);
+		RoundEntity firstShip = facade.createShip(90, 100, -10, 0, 10, Math.PI, 10);
+		RoundEntity secondShip = facade.createShip(210, 100, -50, 0, 10, Math.PI/3, 10);
+		RoundEntity thirdShip = facade.createShip(60,100,-25,0,10,Math.PI,10);
+		firstShip.placeInSpace(world);secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
+		world.evolve(3, null);
+		assertEquals(firstShip.getVelocity(),new double[] {-30,0});
+		assertEquals(secondShip.getVelocity(),new double[] {90,0});
+		assertEquals(thirdShip.getVelocity(),new double[] {25,0});
+	}
 	
 	
 }
