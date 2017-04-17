@@ -40,10 +40,10 @@ public class TestJaps{
 	
 	@Test
 	public void testEntity() throws ModelException {
-		RoundEntity entity = facade.createBullet(400, 20, -7, 12, 5);
 		World world = facade.createWorld(1000, 800);
+		RoundEntity entity = facade.createBullet(400, 20, -7, 3, 5);
 		assertTrue(world.fitBoundary(entity));
-		world.addEntity(entity);
+		entity.placeInSpace(world);
 		assertEquals(1,facade.getWorldBullets(world).size());
 		assertEquals(entity, world.getEntityAt((double)400, (double)20));
 		world.deleteEntity(entity);
@@ -54,9 +54,9 @@ public class TestJaps{
 	@Test
 	public void testShip() throws ModelException {
 		World world = facade.createWorld(8000, 8000);
-		RoundEntity firstShip = facade.createShip(100, 100, -10, 20, 10, Math.PI, 10);
-		RoundEntity secondShip = facade.createShip(200, 100, -5, 20, 15, Math.PI/3, 20);
-		RoundEntity thirdShip = facade.createShip(100, 200, -10, 0, 20, Math.PI/4, 15);
+		RoundEntity firstShip = facade.createShip(100, 100, -10, 20, 10, Math.PI, 10E18);
+		RoundEntity secondShip = facade.createShip(200, 100, -5, 20, 15, Math.PI/3, 20E18);
+		RoundEntity thirdShip = facade.createShip(100, 200, -10, 0, 20, Math.PI/4, 15E18);
 		firstShip.placeInSpace(world); secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
 		assertEquals(3, facade.getWorldShips(world).size());
 		assertEquals(0,facade.getWorldBullets(world));

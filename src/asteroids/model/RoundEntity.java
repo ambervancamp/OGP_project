@@ -196,13 +196,13 @@ public abstract class RoundEntity {
 	 * @param 	y
 	 * 			| The given y-coordinate to check.
 	 * 
-	 * @return	Returns true if and only if the xPostion and yPosition are numbers.
-	 * 			| result == !Double.isNaN(xPosition) && !Double.isNaN(yPosition)
+	 * @return	Returns true if and only if the xPostion and yPosition are positive numbers.
+	 * 			| result == !Double.isNaN(xPosition) && !Double.isNaN(yPosition) && x > 0 && y > 0
 	 */
 	@Raw
 	@Immutable
 	public static boolean canHaveAsPosition(double x, double y){
-		return !Double.isNaN(x) && !Double.isNaN(y);
+		return (!Double.isNaN(x) && !Double.isNaN(y) && x > 0 && y > 0);
 	}
 	
 	/**
@@ -320,7 +320,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public static boolean canHaveAsVelocity(double xVelocity, double yVelocity){
-		return !Double.isNaN(xVelocity) && !Double.isNaN(yVelocity);
+		return (!Double.isNaN(xVelocity) && !Double.isNaN(yVelocity));
 	}	
 		
 	/**
