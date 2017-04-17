@@ -54,10 +54,12 @@ public class TestJaps{
 	@Test
 	public void testShip() throws ModelException {
 		World world = facade.createWorld(8000, 8000);
-		RoundEntity firstShip = facade.createShip(100, 100, -10, 20, 10, Math.PI, 10E18);
-		RoundEntity secondShip = facade.createShip(200, 100, -5, 20, 15, Math.PI/3, 20E18);
-		RoundEntity thirdShip = facade.createShip(100, 200, -10, 0, 20, Math.PI/4, 15E18);
-		firstShip.placeInSpace(world); secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
+		RoundEntity firstShip = facade.createShip(100, 100, -10, 20, 10, Math.PI, 10E12);
+		RoundEntity secondShip = facade.createShip(200, 100, -5, 20, 15, Math.PI/3, 20E12);
+		RoundEntity thirdShip = facade.createShip(100, 200, -10, 0, 20, Math.PI/4, 15E12);
+		firstShip.placeInSpace(world); 
+		secondShip.placeInSpace(world);
+		thirdShip.placeInSpace(world);
 		assertEquals(3, facade.getWorldShips(world).size());
 		assertEquals(0,facade.getWorldBullets(world));
 		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
@@ -75,6 +77,7 @@ public class TestJaps{
 		assertEquals(firstShip.getSpace(),secondShip.getSpace());
 		assertTrue(world.getTimeNextCollision()==5/2);
 		assertTrue(world.getPositionNextCollision() == new double[] {75,100});
+		
 		RoundEntity thirdShip = facade.createShip(60,100,-25,18,10,Math.PI,20);
 		thirdShip.placeInSpace(world);
 		assertTrue(world.getTimeNextCollision() == 2);
@@ -90,6 +93,7 @@ public class TestJaps{
 		RoundEntity thirdShip = facade.createShip(60,100,-25,0,10,Math.PI,10);
 		firstShip.placeInSpace(world);secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
 		world.evolve(3, null);
+		firstShip.getVelocityAfterShipHitShip(secondShip);
 		assertEquals(firstShip.getVelocity(),new double[] {-30,0});
 		assertEquals(secondShip.getVelocity(),new double[] {90,0});
 		assertEquals(thirdShip.getVelocity(),new double[] {25,0});
