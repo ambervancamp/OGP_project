@@ -873,12 +873,19 @@ public class Ship extends RoundEntity {
 					bullet.placeInSpace(this.getWorld());
 				}
 				catch (IllegalArgumentException exc){
-					if (bullet.canHaveAsSpace(this.getSpace())
+					if (bullet.canHaveAsSpace(this.getSpace())){
 							//if statement onnodig omdat als ship een space als space heeft,
 							// het sws voor die bullet ook oke is
 							// dus onderscheid tussen welke reden van exception throwen is niet 
 							// nodig (place in space), zal sws moeten colliden
-							
+						if (bullet.hasHitWall())
+							bullet.terminate();
+						for (RoundEntity entity : this.getSpace().getEntities()){
+							if (entity.canCollide(bullet)){
+								entity.terminate();
+								bullet.terminate();
+							}				
+					}		
 				}
 				bullet.setSource(this);
 			}

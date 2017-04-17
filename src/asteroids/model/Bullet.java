@@ -284,10 +284,22 @@ public class Bullet extends RoundEntity {
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			If the space is not valid.
+	 * 
+	 * @throws	IllegalArgumentException.
+	 * 			If this entity overlaps with any entity already in the space.
+	 *
+	 *@throws	IllegalArgumentException.
+	 *			If this entity overlaps the boundaries of the given space.
 	 */
 	@Override
 	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
+			throw new IllegalArgumentException();	
+		for (RoundEntity entity: space.getEntities()){
+			if (this.overlap(entity))
+				throw new IllegalArgumentException();
+		}
+		if (!space.fitBoundary(this))
 			throw new IllegalArgumentException();
 		if (this.hasSpace()){
 			this.removeOutSpace();

@@ -574,9 +574,14 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	/**
 	 * <code>ship</code> fires a bullet.
 	 */
-	public void fireBullet(Ship ship) throws ModelException;
-	//METHODE MOET NOG WORDEN GEMAAKT
-
+	public void fireBullet(Ship ship) throws ModelException{
+		try {
+			ship.fireBullet();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 	
 	/******************
 	 * COLLISIONS
