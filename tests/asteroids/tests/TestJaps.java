@@ -93,7 +93,7 @@ public class TestJaps{
 		assertEquals(firstShip.getVelocity(),new double[] {-30,0});
 		assertEquals(secondShip.getVelocity(),new double[] {90,0});
 		assertEquals(thirdShip.getVelocity(),new double[] {25,0});
-	}
+	} 
 	
 	
 }
