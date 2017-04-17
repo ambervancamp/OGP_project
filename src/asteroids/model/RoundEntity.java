@@ -196,13 +196,13 @@ public abstract class RoundEntity {
 	 * @param 	y
 	 * 			| The given y-coordinate to check.
 	 * 
-	 * @return	Returns true if and only if the xPostion and yPosition are numbers.
-	 * 			| result == !Double.isNaN(xPosition) && !Double.isNaN(yPosition)
+	 * @return	Returns true if and only if the xPostion and yPosition are positive numbers.
+	 * 			| result == !Double.isNaN(xPosition) && !Double.isNaN(yPosition) && x > 0 && y > 0
 	 */
 	@Raw
 	@Immutable
 	public static boolean canHaveAsPosition(double x, double y){
-		return !Double.isNaN(x) && !Double.isNaN(y);
+		return (!Double.isNaN(x) && !Double.isNaN(y) && x > 0 && y > 0);
 	}
 	
 	/**
@@ -320,7 +320,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public static boolean canHaveAsVelocity(double xVelocity, double yVelocity){
-		return !Double.isNaN(xVelocity) && !Double.isNaN(yVelocity);
+		return (!Double.isNaN(xVelocity) && !Double.isNaN(yVelocity));
 	}	
 		
 	/**
@@ -1211,9 +1211,9 @@ public abstract class RoundEntity {
 			double [] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 			return coordinates;
 			}
-		for (RoundEntity other : space.getEntities())
-			if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
-					return null;			
+		
+		if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
+			return null;			
 		if (this instanceof Bullet)
 			((Bullet)this).setNbWallHits( ((Bullet)this).getNbWallHits() + 1);
 		
@@ -1305,10 +1305,10 @@ public abstract class RoundEntity {
 		else{
 			double J;
 			J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
-					( (this.getDistanceBetween(other))*(this.getMass()+other.getMass()));
+					( (this.getRadius()+other.getRadius())*(this.getMass()+other.getMass()));
 			
-			double JX = J*this.getDeltaDistance(other)[0]/(this.getDistanceBetween(other));
-			double JY = J*this.getDeltaDistance(other)[1]/(this.getDistanceBetween(other));
+			double JX = J*this.getDeltaDistance(other)[0]/(this.getRadius()+other.getRadius());
+			double JY = J*this.getDeltaDistance(other)[1]/(this.getRadius()+other.getRadius());
 			
 			double [] VelocityThis = {this.getVelocity()[0]+JX/this.getMass(),
 							this.getVelocity()[1]+JY/this.getMass()};
