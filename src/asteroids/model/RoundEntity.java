@@ -816,7 +816,6 @@ public abstract class RoundEntity {
 	}
 	
 	
-	
 	/**
 	 * A method that calculates the distance in x- and y-direction between the 
 	 * centres of the round entities.

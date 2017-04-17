@@ -861,6 +861,27 @@ public class Ship extends RoundEntity {
 	 */
 	private final List<Bullet> bullets = new ArrayList<Bullet>();
 	
+	/**
+	 * a method to check whether the given entity lies within the other entity.
+	 * @param 	other
+	 * 			The other entity we want to check the given entity lies within	
+	 * @return	True if and only if the entities are effective and have the same World and 
+	 * 			the distance between each boundary of the other entity and the centre of the given entity
+	 * 			is >= 0.99*the radius of given entity.
+	 * 			|@see implementation
+	 */
+	public boolean withinBoundary(RoundEntity other){
+		if (! this.isTerminated() && !other.isTerminated() && this.getSpace() == other.getSpace() && this.hasWorld())
+			return true;
+		if (other.getxPosition()+other.getRadius()-this.getxPosition() >= 0.99*this.getRadius() &&
+			this.getxPosition()-(other.getxPosition()+other.getRadius()) >= 0.99*this.getRadius() &&
+			other.getyPosition()+other.getRadius()-this.getyPosition() >= 0.99*this.getRadius() &&
+			this.getyPosition()-(other.getyPosition()+other.getRadius()) >= 0.99*this.getRadius())
+			return true;
+		return false;
+	}
+	//TODO
+	
 	public void fireBullet(){
 		return null
 		//IMPLEMENTATIE (totaal)

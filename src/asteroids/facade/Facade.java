@@ -366,7 +366,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public Ship getBulletSource(Bullet bullet) throws ModelException{
 		try {
-			return bullet.returnSource();
+			return bullet.getSource();
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -643,7 +643,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 */
 	public double getTimeNextCollision(World world) throws ModelException{
 		try{
-			return world.getTimeToFirstCollision();
+			return world.getTimeNextCollision();
 		}
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -654,8 +654,14 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	 * that will take place in the given world. Null is returned if no collision
 	 * will occur.
 	 */
-	public double[] getPositionNextCollision(World world) throws ModelException;
-	//MOET NOG GEDEFINIEERD WORDEN
+	public double[] getPositionNextCollision(World world) throws ModelException{
+		try{
+			return world.getPositionNextCollision();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+	}
 	
 	/**
 	 * Advance <code>world</code> by <code>dt<code> seconds. 

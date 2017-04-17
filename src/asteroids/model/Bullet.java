@@ -414,35 +414,6 @@ public class Bullet extends RoundEntity {
 	 * Variable registering the source of this bullet, the ship that fired this bullet.
 	 */
 	private Ship source = null;
-	
-	
-	/**
-	 * FUNCTIE MOET IN ROUND ENITTY STAAN!!!!!!
-	 */
-	
-	
-	/**
-	 * Remove this round entity from given world, if it's placed in this world. 
-	 * It is then replaced to a new unbound space.
-	 * 
-	 * @param	world
-	 * 			The given world, to remove this entity from.
-	 * 
-	 * @post 	The round entity will be placed in a new unbound space.
-	 * 			| this.getSpace() == new.UnboundSpace()
-	 * 
-	 * @post	The former world of this round entity, if it was the given world, is no
-	 * 			longer its space.
-	 *       	| if (this.getWorld() == world)
-	 *       	|   then ! (new (this.getSpace())).hasEntity(this) 
-	 */
-	public void removeEntityFromWorld(World world){
-		if (this.getWorld() == world){
-			UnboundSpace unboundspace = new UnboundSpace();
-			this.placeInSpace(unboundspace);
-		}
-		// Wait for definition of uboundspace constructor for width and height.
-	}
 
 }
 
