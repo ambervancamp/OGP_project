@@ -83,7 +83,7 @@ public class Bullet extends RoundEntity {
 	@Basic
 	@Raw
 	public double getMinRadius() {
-		return 1;
+		return 1.0;
 	}
 	
 	/**

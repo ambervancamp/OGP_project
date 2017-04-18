@@ -83,8 +83,8 @@ public abstract class RoundEntity {
 			throws IllegalArgumentException {
 		this.setPosition(x,y);
 		if (!canHaveAsVelocity(xVelocity, yVelocity)){
-			this.xVelocity = 0;
-			this.yVelocity = 0;
+			xVelocity = 0;
+			yVelocity = 0;
 		}
 		// Default value because of total programming style
 		this.setVelocity(xVelocity, yVelocity);
@@ -369,7 +369,7 @@ public abstract class RoundEntity {
 	 * 			of light = 30000 kilometer/second.
 	 *		 	| result == 30000
 	 */
-	protected static int ABSOLUTE_MAX_SPEED = 300000;	
+	protected static double ABSOLUTE_MAX_SPEED = 300000.0;	
 	
 	/**
 	 * Return the radius of this round entity.

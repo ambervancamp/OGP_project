@@ -84,18 +84,17 @@ public class Ship extends RoundEntity {
 			double mass) throws IllegalArgumentException {
 		super(x, y, xVelocity, yVelocity, radius);
 		this.setOrientation(orientation);
+		if (!canHaveAsMass(mass)){
+			mass = 4.0/3.0*Math.PI*Math.pow(this.getRadius(),3)*MIN_DENSITY;
+		}
+		this.setMass(mass);
 		
-		double density = mass/(4/3*Math.PI*Math.pow(this.getRadius(),3));
+		double density = this.getMass()/(4.0/3.0*Math.PI*Math.pow(this.getRadius(),3));
 		if (!canHaveAsDensity(density))
 			this.density = MIN_DENSITY;
 		else
 			this.density = density;
 			// No setter for density because it is final variable.
-		
-		if (!canHaveAsMass(mass))
-			mass = 5.948*Math.pow(10,15);
-		this.setMass(mass);
-		// No 'else' needed, setMass() sets the new defined mass.
 		
 		UnboundSpace unboundspace = new UnboundSpace();
 		this.placeInSpace(unboundspace);
@@ -200,7 +199,7 @@ public class Ship extends RoundEntity {
 	@Basic
 	@Raw
 	public double getMinRadius() {
-		return 10;
+		return 10.0;
 	}
 
 	/**
@@ -226,7 +225,7 @@ public class Ship extends RoundEntity {
 	@Basic 
 	@Raw
 	public double getShipMass() {
-		return 4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity();
+		return 4.0/3.0*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity();
 	}
 	
 	/**
@@ -259,7 +258,7 @@ public class Ship extends RoundEntity {
 	 *			|	&& mass < Double.MAX_VALUE
 	 */
 	public boolean canHaveAsMass(double mass) {
-		return !Double.isNaN(mass) && mass >= 4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity()
+		return !Double.isNaN(mass) && mass >= 4.0/3.0*Math.PI*Math.pow(this.getRadius(),3)*MIN_DENSITY
 				&& mass < Double.MAX_VALUE;
 	}
 	//mass < Double.MAX_VALUE -> eigenlijk niet nodig, want aanname dat het altijd kleiner gaat zijn
@@ -429,7 +428,7 @@ public class Ship extends RoundEntity {
 	 */
 	public double getAcceleration() {
 		if (!this.isThrusterOn()) 
-			return 0;
+			return 0.0;
 		return this.getForce()/this.getMass();
 	}
 	
