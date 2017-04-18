@@ -104,7 +104,7 @@ public class Bullet extends RoundEntity {
 	 */
 	@Override
 	public double getMass() {
-		return 4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity();
+		return 4.0/3.0*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity();
 	}
 	// AANNAME DAT MASS ALTIJD KLEINER ZAL ZIJN DAN DOUBLE.MAX_VALUE
 

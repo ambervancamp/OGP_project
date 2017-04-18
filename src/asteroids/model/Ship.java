@@ -126,6 +126,7 @@ public class Ship extends RoundEntity {
 			
 			if (getNbBullets()!=0){
 				for (Bullet bullet: bullets){
+					this.removeBullet(bullet);
 					bullet.terminate();
 				}}
 			this.isTerminated = true;
@@ -239,8 +240,8 @@ public class Ship extends RoundEntity {
 	public double getTotalMass(){
 		double total_mass = this.getShipMass();
 		
-		for (int i = 1; i <= getNbBullets(); i++) {
-			total_mass += getBulletAt(i).getMass();
+		for (Bullet bullet: bullets) {
+			total_mass += bullet.getMass();
 		}
 		return total_mass;		
 	}
@@ -701,8 +702,8 @@ public class Ship extends RoundEntity {
 			else {
 				bullet.setShip(this);
 			}
-		this.addBullets(bullets);
 		}
+		this.addBullets(bullets);
 	}
 	//BULLETS MOETEN BINNEN GRENZEN VAN SHIP BEWEGEN!!!!
 	//is else statement necessary? will it ever be reached?

@@ -2,6 +2,8 @@ package asteroids.model;
 
 import static org.junit.Assert.*;
 
+import java.util.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,6 +30,8 @@ public class TestsPart1 {
 		Ship ship = new Ship(40,50,3,4,12,Math.PI,50);
 		ship.terminate();
 		assertFalse(ship.hasSpace());
+		assertTrue(ship.isTerminated());
+		assertEquals(ship.getNbBullets(),0, EPSILON);
 	}
 		
 	@Test
@@ -73,9 +77,23 @@ public class TestsPart1 {
 		Ship ship1 = new Ship(4,5,2,3,15,2,1);
 		assertNotNull(ship1.getMass());
 		assertEquals(2.0074777056438776*Math.pow(10,16),ship1.getMass(),EPSILON);
+		
 		Ship ship2 = new Ship(4,5,2,3,15,2,6*Math.pow(10,16));
 		assertEquals(6*Math.pow(10,16), ship2.getMass(),EPSILON);
 		
+		Bullet bullet1 = new Bullet(1000, 800, 100, 200, 7);
+		bullet1.placeInShip(ship2);
+		assertEquals(7.1206689313885504*Math.pow(10, 16), ship2.getMass(),EPSILON);
+		
+		Ship ship3 = new Ship(4,5,2,3,15,2,6*Math.pow(10,16));
+		Bullet bullet2 = new Bullet(1000, 800, 100, 200, 7);
+		Bullet bullet3 = new Bullet(100, 800, 101, 20, 7);
+		List<Bullet> bullets1 = new ArrayList<Bullet>();
+		bullets1.add(bullet2);
+		bullets1.add(bullet3);
+		assertEquals(bullets1.size(),2);
+		ship3.placeBulletsInShip(bullets1);
+		System.out.println(ship3.getMass());
 	}
 	
 	@Test
