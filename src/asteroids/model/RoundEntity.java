@@ -447,7 +447,7 @@ public abstract class RoundEntity {
 	 */
 	@Basic
 	@Raw
-	public World getWorld(){
+	public World getWorld(){ 
 		if (this.getSpace() instanceof World)
 			return (World) this.getSpace();
 		return null;
