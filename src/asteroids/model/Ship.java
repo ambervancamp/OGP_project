@@ -812,7 +812,7 @@ public class Ship extends RoundEntity {
 				if (bullet.hasHitWall())
 					bullet.terminate();
 				for (RoundEntity entity : this.getSpace().getEntities()){
-					if (entity.canCollide(bullet)){
+					if (entity.currentlyCollide(bullet)){
 						entity.terminate();
 						bullet.terminate();
 					}				

@@ -139,7 +139,7 @@ public class TestsPart1 {
 	
 	@Test
 	public void testMove(){
-		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4,1);
+		Ship ship = new Ship(5,7,-3,2,12,5*Math.PI/4,1); 
 		ship.move(1);
 		assertEquals(2,ship.getPosition()[0],EPSILON);
 		assertEquals(9,ship.getPosition()[1],EPSILON);		
@@ -165,16 +165,7 @@ public class TestsPart1 {
 		Ship ship2 = new Ship(4,5,2,3,15,0,1);
 		ship1.thrust(0,5);
 		assertTrue(ship2.getVelocity()[0] == 2);
-		assertTrue(ship2.getVelocity()[1] == 3);
-		
-	}
-	
-	@Test
-	public void testCanHaveAsA() {
-		assertFalse(Ship.canHaveAsAcceleration(-1));
-		assertTrue(Ship.canHaveAsAcceleration(0));
-		assertFalse(Ship.canHaveAsAcceleration(Double.NaN));
-		assertTrue(Ship.canHaveAsAcceleration(3));
+		assertTrue(ship2.getVelocity()[1] == 3);	
 	}
 	
 	@Test
@@ -210,50 +201,36 @@ public class TestsPart1 {
 		Ship ship5 = new Ship(0,20,2,3,15,2,1);
 		Ship ship6 = new Ship(0,5,3,5,10,2,1);
 		assertTrue(ship5.overlap(ship6));
-	}	
-	
-	Ship ship;
-	Ship other;
-	Space world;
-	@Before
-	public void setup(){
-		ship = new Ship(10,40,10,5,10,5*Math.PI/4,1);
-		other =  new Ship(50,50,-10,0,20,2.5,1);
-		world = new World(1000,2000);
-		ship.placeInSpace(world);
-		other.placeInSpace(world);
 	}
 	
-//	@Test
-//	public void testSetPosition(){
-//		ship.setPosition(4,3);
-//		assertNotNull(ship.getPosition()[0]);
-//		assertNotNull(ship.getPosition()[1]);
-//		assertEquals(4,ship.getPosition()[0],EPSILON);
-//		assertNotEquals(5,ship.getPosition()[0],EPSILON);
-//		assertEquals(3,ship.getPosition()[1],EPSILON);
-//		assertNotEquals(7,ship.getPosition()[1],EPSILON);
-//	}
-//	
-//	@Test
-//	public void testSetVelocity(){
-//		ship.setVelocity(3,4);
-//		assertEquals(3,ship.getVelocity()[0],EPSILON);
-//		assertNotEquals(5,ship.getVelocity()[0],EPSILON);
-//		assertEquals(4,ship.getVelocity()[1],EPSILON);
-//		assertNotEquals(Double.NaN,ship.getVelocity()[1],EPSILON);	
-//	}
+	
+	
+	Ship ship1;
+	Ship ship2;
+	Ship other1;
+	Space world1;
+	@Before
+	public void setup(){
+		ship1 = new Ship(20,50,10,0,10,5*Math.PI/4,1000);
+		ship2 = new Ship(400,500,20,30,15,2,1000);
+		other1 =  new Ship(60,50,-10,0,20,2.5,1000);
+		world1 = new World(1000,2000);
+		ship1.placeInSpace(world1);
+		ship2.placeInSpace(world1);
+		other1.placeInSpace(world1);
+	}
 	
 	@Test 
 	public void testGetTimeToCollision(){
-		assertEquals(2-Math.sqrt(36*17)/17.0,ship.getTimeToCollision(other),EPSILON);
-		assertNotEquals(Double.POSITIVE_INFINITY,ship.getTimeToCollision(other),EPSILON);
+		assertEquals(Double.POSITIVE_INFINITY, ship2.getTimeToCollision(other1), EPSILON);
+		assertEquals(2-Math.sqrt(36*17)/17.0,ship1.getTimeToCollision(other1),EPSILON);
+		assertNotEquals(Double.POSITIVE_INFINITY,ship1.getTimeToCollision(other1),EPSILON);
 	}
 	
 	@Test 
 	public void testGetCollisionPosition(){
 		//assertEquals(25.14928745,ship.getCollisionPosition(other)[0],EPSILON);
-		assertEquals(45.1492875,ship.getCollisionPosition(other)[1],EPSILON);
+		assertEquals(45.1492875,ship1.getCollisionPosition(other1)[1],EPSILON);
 	}
 		
 }

@@ -520,6 +520,18 @@ public abstract class RoundEntity {
 	}
 	
 	/**
+	 * Check whether this round entity is placed in the same space as the given
+	 * round entity.
+	 * 
+	 * @return	True if this round entity references the same space as the
+	 * 			given entity.
+	 *       	| result == (this.getSpace() == other.getSpace())
+	 */
+	public boolean inSameSpace(RoundEntity other){
+		return this.getSpace().equals(other.getSpace());
+	}
+		
+	/**
 	 * Set space from this round entity to given space. If it's already in a space, it's replaced to 
 	 * the new space. Also places round entity in given space.
 	 * When the newly placed entity collides with another entity allready in this world,
@@ -624,25 +636,10 @@ public abstract class RoundEntity {
 	protected Space space = null;
 	
 	
+	
 	/**
 	 * COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS - COLLISIONS 
 	 */
-	
-
-	/**
-	 * a method to check whether two entities may collide
-	 * @param 	entity
-	 * 			The entity with which we could collide
-	 * @return	True if and only if the 2 entities exist and are in the some world
-	 * 			|!entity.isTerminated() &&
-	 * 			| !this.isTerminated()
-	 */
-	public boolean canAsCollision(RoundEntity entity){
-		if (!entity.isTerminated() && !this.isTerminated())
-			return true;
-		return false;
-	}
-	// && entity.getSpace() == this.getSpace() uit if statement!!
 	
 
 	/**
@@ -746,11 +743,7 @@ public abstract class RoundEntity {
 	 * 
 	 * @post	The distance between a round entity and itself is zero.
 	 * 			| if (distance == (-2*this.getRadius()))
-	 *			|	then return 0;		
-	 * 
-	 * @throws	NullPointerException()
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
+	 *			|	then return 0;
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The round entities may not ever collide.
@@ -759,10 +752,8 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public double getDistanceBetween(RoundEntity other)
-		throws NullPointerException, IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
-		if (!canAsCollision(other))
+		throws IllegalArgumentException{
+		if (!canAsCollision(other) || this.inSameSpace(other))
 			throw new IllegalArgumentException();
 		
 		double new_x = this.getxPosition() - other.getxPosition();
@@ -796,11 +787,10 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public boolean overlap(RoundEntity other)	
-			throws NullPointerException,IllegalArgumentException {
-		if (other == null)
-			throw new NullPointerException();
-		if (!canAsCollision(other))
+			throws IllegalArgumentException {
+		if (!this.canAsCollision(other) || this.inSameSpace(other))
 			throw new IllegalArgumentException();
+		
 		return (Math.sqrt(this.getDeltaPowDistance(other)) <= 0.99*(this.getRadius()+other.getRadius()));
 	}
 	
@@ -816,10 +806,6 @@ public abstract class RoundEntity {
 	 * 			the 2 centres of the round entities.
 	 * 			| deltaDistance =  {other.getxPosition()-this.getxPosition(),
 	 *			| other.getyPosition()-this.getyPosition()}
-	 *			
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide.
@@ -828,9 +814,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	private double [] getDeltaDistance(RoundEntity other)
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
 		double [] deltaDistance = {other.getxPosition()-this.getxPosition(),
@@ -850,10 +834,6 @@ public abstract class RoundEntity {
 	 * 			velocity between the 2 round entities.
 	 * 			| deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
 	 *			| other.getyVelocity()-this.getyVelocity()};
-	 *
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide.
@@ -862,9 +842,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	private double [] getDeltaVelocity(RoundEntity other)
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
 		double [] deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
@@ -883,10 +861,6 @@ public abstract class RoundEntity {
 	 * 			distance between the centres of the round entities.
 	 * 			| deltaPowDistance = Math.pow(getDeltaDistance(other)[0],2)+
 	 *			|	Math.pow(getDeltaDistance(other)[1],2);
-	 *				
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide. 
@@ -895,9 +869,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	private double getDeltaPowDistance(RoundEntity other) 
-			throws NullPointerException, IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
 		double deltaPowDistance = Math.pow(this.getDeltaDistance(other)[0],2)+
@@ -916,10 +888,6 @@ public abstract class RoundEntity {
 	 * 			y- difference in velocity between the round entities.
 	 * 			| double deltaPowVelocity = Math.pow(getDeltaVelocity(other)[0], 2)+
 	 *			|	Math.pow(getDeltaVelocity(other)[1], 2);
-	 *
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide.
@@ -928,9 +896,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	private double getDeltaPowVelocity(RoundEntity other) 
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
 		double deltaPowVelocity = Math.pow(this.getDeltaVelocity(other)[0], 2)+
@@ -950,10 +916,6 @@ public abstract class RoundEntity {
 	 * 			y-distance and difference in velocity of the two round entities.
 	 * 			| deltaDistanceVelocity = (getDeltaVelocity(other)[0]*getDeltaDistance(other)[0])+
 	 *			|	(getDeltaVelocity(other)[1]*getDeltaDistance(other)[1]);
-	 *
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide.
@@ -962,9 +924,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	private double getDeltaDistanceVelocity(RoundEntity other)
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
 		double deltaDistanceVelocity = (this.getDeltaVelocity(other)[0]*this.getDeltaDistance(other)[0])+
@@ -985,10 +945,6 @@ public abstract class RoundEntity {
 	 * 			deltaPowVelocity and the distance between the two round entities.
 	 * 			| d = Math.pow(getDeltaDistanceVelocity(other),2)-
 	 *			|	(getDeltaPowVelocity(other))*(getDeltaPowDistance(other)-this.getDistanceBetween());
-	 *
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide.
@@ -997,9 +953,7 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	private double getD(RoundEntity other) 
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
 		if (!canAsCollision(other))
 			throw new IllegalArgumentException();
 		double d = Math.pow(this.getDeltaDistanceVelocity(other),2)-
@@ -1007,6 +961,19 @@ public abstract class RoundEntity {
 													-Math.pow((this.getRadius()+other.getRadius()),2));
 		return d;
 	}
+	
+	/**
+	 * a method to check whether two entities may collide
+	 * @param 	entity
+	 * 			The entity with which we could collide
+	 * @return	True if and only if the 2 entities exist and are in the some world
+	 * 			|!entity.isTerminated() &&
+	 * 			| !this.isTerminated()
+	 */
+	public boolean canAsCollision(RoundEntity entity){
+		return entity != null && !entity.isTerminated() && !this.isTerminated();
+	}
+	// && entity.getSpace() == this.getSpace() uit if statement!!
 	
 	/**
 	 * A method to check if 2 entities at their given position significantly collide at this moment.
@@ -1018,8 +985,8 @@ public abstract class RoundEntity {
 	 * 			the distance between the centres of the given and other entity is between 99% and 101%
 	 * 			of the sum of the objects’ radii.
 	 */
-	protected boolean canCollide(RoundEntity other){
-		return(!this.isTerminated() && !other.isTerminated() && this.hasWorld() && this.getSpace() ==other.getSpace() &&
+	protected boolean currentlyCollide(RoundEntity other){
+		return( this.canAsCollision(other) && this.inSameSpace(other) &&
 				0.99*(this.getRadius()+other.getRadius()) <= this.getDeltaPowDistance(other) && 
 				this.getDeltaPowDistance(other) <= 1.01 *(this.getRadius()+other.getRadius()));
 	}
@@ -1037,10 +1004,6 @@ public abstract class RoundEntity {
 	 * @return 	The time will be positive infinity if the round entities will never collide.
 	 * 			| result == Double.POSITIVE_INFINITY
 	 * 
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
-	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The entities may not ever collide.
 	 * 			| !canAsCollision(other)
@@ -1048,12 +1011,11 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public double getTimeToCollision(RoundEntity other) 
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
+			throws IllegalArgumentException{
+		if (!this.canAsCollision(other) || this.overlap(other))
+			throw new IllegalArgumentException();
 		
-		if (this == other || this.getDeltaDistanceVelocity(other) >= 0 || 
-				getD(other) <= 0)
+		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)
 			return Double.POSITIVE_INFINITY;
 
 		
@@ -1070,10 +1032,6 @@ public abstract class RoundEntity {
 	 * @post 	The collisionPoint will be the point where the two round entities hit.
 	 * 			| collisionPoint = this.getPositionAfterMoving(time)+
 	 *			|					this.getRadius()*getDeltaDistance(other)/getD(other)
-	 *								
-	 * @throws 	NullPointerException
-	 * 			The given round entity doesn't exist.
-	 * 			| other == null
 	 * 
 	 * @throws 	IllegalArgumentException
 	 * 			The ships may not ever collide.
@@ -1083,11 +1041,10 @@ public abstract class RoundEntity {
 	@Raw
 	@Immutable
 	public double [] getCollisionPosition(RoundEntity other) 
-			throws NullPointerException,IllegalArgumentException{
-		if (other == null)
-			throw new NullPointerException();
-		if (!canAsCollision(other) || this.getTimeToCollision(other) == Double.POSITIVE_INFINITY || 
-				this.getSpace().getTimeNextCollision() != this.getTimeToCollision(other))
+			throws IllegalArgumentException{
+		if (!canAsCollision(other) 
+				|| this.getTimeToCollision(other) == Double.POSITIVE_INFINITY 
+				|| this.getSpace().getTimeNextCollision() != this.getTimeToCollision(other))
 			throw new IllegalArgumentException();
 		try{
 		double dt = this.getTimeToCollision(other);
@@ -1123,7 +1080,7 @@ public abstract class RoundEntity {
 			return Double.POSITIVE_INFINITY;
 		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
 			this.getxPosition() - this.getRadius() == 0 ||
-			this.getyPosition() + this.getRadius() == this.getSpace().getWidth() ||
+			this.getyPosition() + this.getRadius() == this.getSpace().getHeight() ||
 			this.getyPosition() - this.getRadius() == 0)
 			return 0;
 		

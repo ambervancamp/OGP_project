@@ -133,7 +133,7 @@ public class TestJaps {
 		Ship secondShip = facade.createShip(200, 120, 10, 0, 50, Math.PI, 1.1E18);
 		facade.addShipToWorld(world, firstShip);
 		facade.addShipToWorld(world, secondShip);
-		assertEquals(world.getTimeNextCollision(),10,EPSILON)
+		assertEquals(world.getTimeNextCollision(),10,EPSILON);
 	}
 	
 }
