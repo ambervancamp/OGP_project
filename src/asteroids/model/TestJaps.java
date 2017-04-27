@@ -127,4 +127,13 @@ public class TestJaps {
 		facade.addBulletToWorld(world, bullet);	
 	}
 	
+	@Test public void testGetTimeNextCollision() throws ModelException {
+		World world = facade.createWorld(5000, 5000);
+		Ship firstShip = facade.createShip(100, 120, 20, 0, 50, Math.PI, 1.1E18);
+		Ship secondShip = facade.createShip(200, 120, 10, 0, 50, Math.PI, 1.1E18);
+		facade.addShipToWorld(world, firstShip);
+		facade.addShipToWorld(world, secondShip);
+		assertEquals(world.getTimeNextCollision(),10,EPSILON)
+	}
+	
 }
