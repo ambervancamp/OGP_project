@@ -751,11 +751,7 @@ public abstract class RoundEntity {
 	 */
 	@Raw
 	@Immutable
-	public double getDistanceBetween(RoundEntity other)
-		throws IllegalArgumentException{
-		if (!canAsCollision(other) || this.inSameSpace(other))
-			throw new IllegalArgumentException();
-		
+	public double getDistanceBetween(RoundEntity other){		
 		double new_x = this.getxPosition() - other.getxPosition();
 		double new_y = this.getyPosition() - other.getyPosition();
 		double distance_between_centers = Math.sqrt(Math.pow(new_x, 2) + Math.pow(new_y, 2));
@@ -786,11 +782,7 @@ public abstract class RoundEntity {
 	 */
 	@Raw
 	@Immutable
-	public boolean overlap(RoundEntity other)	
-			throws IllegalArgumentException {
-		if (!this.canAsCollision(other) || this.inSameSpace(other))
-			throw new IllegalArgumentException();
-		
+	public boolean overlap(RoundEntity other){		
 		return (Math.sqrt(this.getDeltaPowDistance(other)) <= 0.99*(this.getRadius()+other.getRadius()));
 	}
 	
@@ -813,10 +805,7 @@ public abstract class RoundEntity {
 	 */
 	@Raw
 	@Immutable
-	private double [] getDeltaDistance(RoundEntity other)
-			throws IllegalArgumentException{
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
+	private double [] getDeltaDistance(RoundEntity other){
 		double [] deltaDistance = {other.getxPosition()-this.getxPosition(),
 				other.getyPosition()-this.getyPosition()};
 		return deltaDistance;
@@ -841,10 +830,7 @@ public abstract class RoundEntity {
 	 */	
 	@Raw
 	@Immutable
-	private double [] getDeltaVelocity(RoundEntity other)
-			throws IllegalArgumentException{
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
+	private double [] getDeltaVelocity(RoundEntity other){
 		double [] deltaVelocity = {other.getxVelocity()-this.getxVelocity(),
 				other.getyVelocity()-this.getyVelocity()};
 		return deltaVelocity;
@@ -868,10 +854,7 @@ public abstract class RoundEntity {
 	 */	
 	@Raw
 	@Immutable
-	private double getDeltaPowDistance(RoundEntity other) 
-			throws IllegalArgumentException{
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
+	private double getDeltaPowDistance(RoundEntity other){
 		double deltaPowDistance = Math.pow(this.getDeltaDistance(other)[0],2)+
 					Math.pow(this.getDeltaDistance(other)[1],2);
 		return deltaPowDistance;
@@ -895,10 +878,7 @@ public abstract class RoundEntity {
 	 */	
 	@Raw
 	@Immutable
-	private double getDeltaPowVelocity(RoundEntity other) 
-			throws IllegalArgumentException{
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
+	private double getDeltaPowVelocity(RoundEntity other){
 		double deltaPowVelocity = Math.pow(this.getDeltaVelocity(other)[0], 2)+
 					Math.pow(this.getDeltaVelocity(other)[1], 2);
 		return deltaPowVelocity;
@@ -923,10 +903,7 @@ public abstract class RoundEntity {
 	 */		
 	@Raw
 	@Immutable
-	private double getDeltaDistanceVelocity(RoundEntity other)
-			throws IllegalArgumentException{
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
+	private double getDeltaDistanceVelocity(RoundEntity other){
 		double deltaDistanceVelocity = (this.getDeltaVelocity(other)[0]*this.getDeltaDistance(other)[0])+
 						(this.getDeltaVelocity(other)[1]*this.getDeltaDistance(other)[1]);
 		return deltaDistanceVelocity;
@@ -952,10 +929,7 @@ public abstract class RoundEntity {
 	 */	
 	@Raw
 	@Immutable
-	private double getD(RoundEntity other) 
-			throws IllegalArgumentException{
-		if (!canAsCollision(other))
-			throw new IllegalArgumentException();
+	private double getD(RoundEntity other){
 		double d = Math.pow(this.getDeltaDistanceVelocity(other),2)-
 					(this.getDeltaPowVelocity(other))*(this.getDeltaPowDistance(other)
 													-Math.pow((this.getRadius()+other.getRadius()),2));
@@ -1012,7 +986,7 @@ public abstract class RoundEntity {
 	@Immutable
 	public double getTimeToCollision(RoundEntity other) 
 			throws IllegalArgumentException{
-		if (!this.canAsCollision(other) || this.overlap(other))
+		if (!this.canAsCollision(other) || this.overlap(other) || !this.inSameSpace(other))
 			throw new IllegalArgumentException();
 		
 		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)

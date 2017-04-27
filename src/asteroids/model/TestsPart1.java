@@ -222,9 +222,9 @@ public class TestsPart1 {
 	
 	@Test 
 	public void testGetTimeToCollision(){
+		assertTrue(ship1.inSameSpace(ship2));
 		assertEquals(Double.POSITIVE_INFINITY, ship2.getTimeToCollision(other1), EPSILON);
-		assertEquals(2-Math.sqrt(36*17)/17.0,ship1.getTimeToCollision(other1),EPSILON);
-		assertNotEquals(Double.POSITIVE_INFINITY,ship1.getTimeToCollision(other1),EPSILON);
+		assertEquals(0.5,ship1.getTimeToCollision(other1),EPSILON);
 	}
 	
 	@Test 
