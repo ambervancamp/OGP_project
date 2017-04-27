@@ -1,5 +1,5 @@
 package asteroids.model;
-
+ 
 import be.kuleuven.cs.som.annotate.Raw;
 
 public class World extends Space {
