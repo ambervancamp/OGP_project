@@ -1052,15 +1052,10 @@ public abstract class RoundEntity {
 		if (other == null)
 			throw new NullPointerException();
 		
-		
-		if (this == other)
+		if (this == other || this.getDeltaDistanceVelocity(other) >= 0 || 
+				getD(other) <= 0)
 			return Double.POSITIVE_INFINITY;
-		
-		if (this.getDeltaDistanceVelocity(other) >= 0)
-			return Double.POSITIVE_INFINITY;
-		
-		if (getD(other) <= 0)
-			return Double.POSITIVE_INFINITY;
+
 		
 		return -(getDeltaDistanceVelocity(other)+Math.sqrt(getD(other)))/getDeltaPowVelocity(other);
 		// d will be negative if the ships overlap

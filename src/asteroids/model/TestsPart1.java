@@ -214,35 +214,39 @@ public class TestsPart1 {
 	
 	Ship ship;
 	Ship other;
+	Space world;
 	@Before
 	public void setup(){
 		ship = new Ship(10,40,10,5,10,5*Math.PI/4,1);
 		other =  new Ship(50,50,-10,0,20,2.5,1);
+		world = new World(1000,2000);
+		ship.placeInSpace(world);
+		other.placeInSpace(world);
 	}
 	
-	@Test
-	public void testSetPosition(){
-		ship.setPosition(4,3);
-		assertNotNull(ship.getPosition()[0]);
-		assertNotNull(ship.getPosition()[1]);
-		assertEquals(4,ship.getPosition()[0],EPSILON);
-		assertNotEquals(5,ship.getPosition()[0],EPSILON);
-		assertEquals(3,ship.getPosition()[1],EPSILON);
-		assertNotEquals(7,ship.getPosition()[1],EPSILON);
-	}
-	
-	@Test
-	public void testSetVelocity(){
-		ship.setVelocity(3,4);
-		assertEquals(3,ship.getVelocity()[0],EPSILON);
-		assertNotEquals(5,ship.getVelocity()[0],EPSILON);
-		assertEquals(4,ship.getVelocity()[1],EPSILON);
-		assertNotEquals(Double.NaN,ship.getVelocity()[1],EPSILON);	
-	}
+//	@Test
+//	public void testSetPosition(){
+//		ship.setPosition(4,3);
+//		assertNotNull(ship.getPosition()[0]);
+//		assertNotNull(ship.getPosition()[1]);
+//		assertEquals(4,ship.getPosition()[0],EPSILON);
+//		assertNotEquals(5,ship.getPosition()[0],EPSILON);
+//		assertEquals(3,ship.getPosition()[1],EPSILON);
+//		assertNotEquals(7,ship.getPosition()[1],EPSILON);
+//	}
+//	
+//	@Test
+//	public void testSetVelocity(){
+//		ship.setVelocity(3,4);
+//		assertEquals(3,ship.getVelocity()[0],EPSILON);
+//		assertNotEquals(5,ship.getVelocity()[0],EPSILON);
+//		assertEquals(4,ship.getVelocity()[1],EPSILON);
+//		assertNotEquals(Double.NaN,ship.getVelocity()[1],EPSILON);	
+//	}
 	
 	@Test 
 	public void testGetTimeToCollision(){
-		assertEquals(2-Math.sqrt(36*17)/17,ship.getTimeToCollision(other),EPSILON);
+		assertEquals(2-Math.sqrt(36*17)/17.0,ship.getTimeToCollision(other),EPSILON);
 		assertNotEquals(Double.POSITIVE_INFINITY,ship.getTimeToCollision(other),EPSILON);
 	}
 	
