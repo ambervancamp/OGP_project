@@ -988,7 +988,6 @@ public abstract class RoundEntity {
 			throws IllegalArgumentException{
 		if (!this.canAsCollision(other) || this.overlap(other) || !this.inSameSpace(other))
 			throw new IllegalArgumentException();
-		
 		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)
 			return Double.POSITIVE_INFINITY;
 
@@ -1050,7 +1049,7 @@ public abstract class RoundEntity {
 	 * 			| @see implementation
 	 */	
 	public double getTimeToHitWall(){
-		if(this.isTerminated() || (this.getxVelocity() == 0 && this.getyVelocity() == 0))
+		if(this.isTerminated())
 			return Double.POSITIVE_INFINITY;
 		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
 			this.getxPosition() - this.getRadius() == 0 ||
@@ -1058,22 +1057,22 @@ public abstract class RoundEntity {
 			this.getyPosition() - this.getRadius() == 0)
 			return 0;
 		
-		double timeToHitUpperYWall=Double.POSITIVE_INFINITY;
-		double timeToHitLowerYWall=Double.POSITIVE_INFINITY;
-		double timeToHitUpperXWall=Double.POSITIVE_INFINITY;
-		double timeToHitLowerXWall=Double.POSITIVE_INFINITY;
+		double timeToHitYWall=Double.POSITIVE_INFINITY;
+		double timeToHitXWall=Double.POSITIVE_INFINITY;
 		if (this.getyVelocity() > 0)
-			timeToHitUpperYWall = (space.getHeight()-this.getyPosition()+this.getRadius())/this.getyVelocity();
+			timeToHitYWall = (space.getHeight()-this.getyPosition()+this.getRadius())/this.getyVelocity();
 		else if (this.getyVelocity() < 0)
-			timeToHitLowerYWall = (-this.getyPosition()+this.getRadius())/this.getyVelocity();
+			timeToHitYWall = (-this.getyPosition()+this.getRadius())/this.getyVelocity();
+		else
+			timeToHitYWall = Double.POSITIVE_INFINITY;
 		if (this.getxVelocity() > 0)
-			timeToHitUpperXWall = (space.getWidth()-this.getxPosition()+this.getRadius())/this.getxVelocity();
+			timeToHitXWall = (space.getWidth()-this.getxPosition()+this.getRadius())/this.getxVelocity();
 		else if (this.getxVelocity() < 0)
-			timeToHitLowerXWall = (-this.getxPosition()+this.getRadius())/this.getxVelocity();
+			timeToHitXWall = (-this.getxPosition()+this.getRadius())/this.getxVelocity();
+		else
+			timeToHitXWall = Double.POSITIVE_INFINITY;
 		
-		// returns the minimal time to hit a wall
-		return Math.min(Math.min(timeToHitUpperXWall, timeToHitLowerXWall),
-						Math.min(timeToHitUpperYWall, timeToHitLowerYWall));
+		return Math.min(timeToHitXWall, timeToHitYWall);
 	}
 	
 	
@@ -1148,7 +1147,7 @@ public abstract class RoundEntity {
 	 * 			|this.setVelocity(this.getxVelocity(), -this.getyVelocity());
 	 */
 	
-	public void getVelocityAfterEntityHitWall() throws IllegalArgumentException{
+	public void setVelocityAfterEntityHitWall() throws IllegalArgumentException{
 		if (this.isTerminated() || !this.hasWorld())
 			throw new IllegalArgumentException();
 		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits())

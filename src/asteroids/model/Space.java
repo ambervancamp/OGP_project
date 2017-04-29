@@ -276,7 +276,8 @@ public abstract class Space {
 			return smallestTime;
 		for (RoundEntity firstEntity : entities){
 			for(RoundEntity secondEntity : entities){
-				smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
+				if (firstEntity != secondEntity)
+					smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
 			}
 			smallestTime = Math.min(smallestTime, firstEntity.getTimeToHitWall());
 		}
@@ -295,12 +296,13 @@ public abstract class Space {
 			throw new IllegalArgumentException();
 		for (RoundEntity firstEntity : entities)
 			for (RoundEntity secondEntity : entities)
-				if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
-					return firstEntity.getCollisionPosition(secondEntity);
-				else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
-					return firstEntity.getPositionOfHitWall();
-				else
-					throw new IllegalArgumentException();
+				if (firstEntity != secondEntity)
+					if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
+						return firstEntity.getCollisionPosition(secondEntity);
+					else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
+						return firstEntity.getPositionOfHitWall();
+					else
+						throw new IllegalArgumentException();
 		return new double[] {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 	}
 	
@@ -351,7 +353,7 @@ public abstract class Space {
 				collisionListener.boundaryCollision(entityThatHitWall, 
 													entityThatHitWall.getxPosition(),
 													entityThatHitWall.getyPosition());
-				entityThatHitWall.getVelocityAfterEntityHitWall();
+				entityThatHitWall.setVelocityAfterEntityHitWall();
 				}
 			else if (collision.size() == 2){
 				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
