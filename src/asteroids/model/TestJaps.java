@@ -137,14 +137,14 @@ public class TestJaps {
 		Ship firstShip = facade.createShip(100, 120, 10, 0, 50, Math.PI, 1.1E18);
 		Ship secondShip = facade.createShip(200, 120, 10, 0, 50, Math.PI, 1.1E18);
 		Ship thirdShip = facade.createShip(4950, 120, 10, 0, 200, Math.PI, 1.1E18);
-//		Bullet bullet = facade.createBullet(100, 150, -1, 2, 2);
+		Bullet bullet = facade.createBullet(100, 200, -1, 2, 2);
 		facade.addShipToWorld(world, firstShip);
 		facade.addShipToWorld(world, secondShip);
 		assertFalse(world.fitBoundary(thirdShip));
 		assertEquals(firstShip.getSpace(),world);
 		List<RoundEntity> entity = new ArrayList<>(Arrays.asList(firstShip, secondShip));
 		assertEquals(world.getEntities(),entity);
-//		facade.addBulletToWorld(world, bullet);	
+		facade.addBulletToWorld(world, bullet);	
 	}
 	
 }
