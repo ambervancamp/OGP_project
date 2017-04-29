@@ -362,7 +362,7 @@ public abstract class Space {
 				collisionListener.objectCollision(firstEntity,secondEntity,
 												  firstEntity.getCollisionPosition(secondEntity)[0],
 												  firstEntity.getCollisionPosition(secondEntity)[1]);
-				firstEntity.getVelocityAfterEntityHitEntity(secondEntity);
+				firstEntity.getVelocityAfterCollision(secondEntity);
 			}
 		}
 	}

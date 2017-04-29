@@ -1233,7 +1233,7 @@ public abstract class RoundEntity {
 	 * 			| this.terminate()
 	 * 			| other.terminate()
 	 */
-	public void getVelocityAfterEntityHitEntity(RoundEntity other, double x, double y) throws IllegalArgumentException{
+	public void getVelocityAfterCollision(RoundEntity other) throws IllegalArgumentException{
 		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace())
 			throw new IllegalArgumentException();
 		if ( (this instanceof Ship && other instanceof Ship) ||
@@ -1267,6 +1267,8 @@ public abstract class RoundEntity {
 			other.terminate();
 		
 		else if (this instanceof Ship && other instanceof Planetoid){
+			double x;
+			double y;
 			x = this.getSpace().getWidth()*(new Random().nextDouble());
 			y = this.getSpace().getHeight()*(new Random().nextDouble());
 			if (!this.canHaveAsPosition(x, y))
@@ -1276,6 +1278,7 @@ public abstract class RoundEntity {
 			}
 			
 		else if (other instanceof Ship && this instanceof Planetoid){
+			double x; double y;
 			x = this.getSpace().getWidth()*(new Random().nextDouble());
 			y = this.getSpace().getHeight()*(new Random().nextDouble());
 			if (!other.canHaveAsPosition(x, y))
