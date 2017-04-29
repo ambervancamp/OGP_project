@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.util.Random;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -182,7 +184,8 @@ public abstract class RoundEntity {
 	public void setPosition(double x, double y) throws IllegalArgumentException {
 		if (!canHaveAsPosition(x, y))
 			throw new IllegalArgumentException();
-		
+		// Houdt geen rekening met het feit dat schepen kunnen overlappen as ze geplaatst worden.
+		// Hier moet toch ook rekening mee gehouden worden, of is da al te specifiek?
 		this.xPosition = x;
 		this.yPosition = y;	
 	}
@@ -1029,9 +1032,9 @@ public abstract class RoundEntity {
 									this.getPositionAfterMoving(dt)[1]+
 									this.getRadius()*newDeltaDistance[1]/
 									(this.getRadius()+other.getRadius())};
-		// position of hit = 	position of ship after moving till contact+
+		// position of hit = 	position of entity after moving till contact+
 		//						(difference in centra qua x-and y direction*
-		// 						radius of the first schip/distance two centres)
+		// 						radius of the first eentity/distance two centres)
 		return collisionPoint;
 		} catch (IllegalArgumentException noCollision) {
 			return null;
@@ -1039,7 +1042,7 @@ public abstract class RoundEntity {
 	}
 	
 	/**
-	 * Get the time for a ship to hit the wall of its world
+	 * Get the time for an entity to hit the wall of its world
 	 * 
 	 * @return	Double.POSITIVE_INFINITY if and only if the entity is terminated or will never hit the wall
 	 * 			| this.isTerminated() || (this.getyVelocity() == 0 && this.getyVelocity() == 0)
@@ -1176,9 +1179,10 @@ public abstract class RoundEntity {
 	 * @effect 	both the velocities will be changed
 	 * 			| @see implementation
 	 */
-	public void getVelocityAfterShipHitShip(RoundEntity other) throws IllegalArgumentException{
-		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace()
-			|| !(this instanceof Ship) || !(other instanceof Ship))
+	public void setVelocityAfterBounce(RoundEntity other) throws IllegalArgumentException{
+		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace() ||
+				!(this instanceof Ship) || !(other instanceof Ship) ||
+				!(this instanceof MinorPlanet) || !(other instanceof MinorPlanet))
 			throw new IllegalArgumentException();
 		else{
 			double J;
@@ -1202,6 +1206,8 @@ public abstract class RoundEntity {
 	 * 
 	 * @param 	other
 	 * 			The other entity with which we want to check the given entity collides with.
+	 * @param x 
+	 * @param y 
 	 * @throws 	IllegalArgumentException
 	 * 			If the given or the other entity is terminated or
 	 * 			the two entities are not located in the same world
@@ -1227,35 +1233,56 @@ public abstract class RoundEntity {
 	 * 			| this.terminate()
 	 * 			| other.terminate()
 	 */
-	public void getVelocityAfterEntityHitEntity(RoundEntity other) throws IllegalArgumentException{
+	public void getVelocityAfterEntityHitEntity(RoundEntity other, double x, double y) throws IllegalArgumentException{
 		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace())
 			throw new IllegalArgumentException();
-		if (this instanceof Ship){
-			if (other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other)){
-				((Bullet)other).placeInShip((Ship) this);
-				((Bullet)other).setNbWallHits(0);
-			}	
-			else if (other instanceof Bullet && !((Ship)this).hasAsBullet((Bullet)other)){
-				this.terminate();
-				other.terminate();
+		if ( (this instanceof Ship && other instanceof Ship) ||
+				(this instanceof MinorPlanet && other instanceof MinorPlanet) )
+			this.setVelocityAfterBounce(other);	
+		
+		else if (this instanceof Ship && other instanceof Bullet && ((Ship)this).hasAsBullet((Bullet)other) ){
+			((Bullet)other).placeInShip((Ship) this);
+			((Bullet)other).setNbWallHits(0);
 			}
-			else if (other instanceof Ship)
-				this.getVelocityAfterShipHitShip(other);	
-		}
+		
+		else if  (other instanceof Bullet && this instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this) ){ 
+			((Bullet)this).placeInShip((Ship)other);
+			((Bullet)this).setNbWallHits(0);
+			}
+		
 		else if (this instanceof Bullet){
-			if (other instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this)){
-				((Bullet)this).placeInShip((Ship)other);
-				((Bullet)this).setNbWallHits(0);
-			}	
-			else if(other instanceof Ship && !((Ship)other).hasAsBullet((Bullet)this) ){
-				this.terminate();
-				other.terminate();
-			}	
-			else {// other instanceof Bullet
-				this.terminate();
-				other.terminate();
+			this.terminate();
+			other.terminate();
 			}
-		}
+		
+		else if (other instanceof Bullet){
+			this.terminate();
+			other.terminate();
+			}
+		
+		else if (this instanceof Ship && other instanceof Asteroid))
+			this.terminate();
+			
+		else if (this instanceof Asteroid && other instanceof Ship)
+			other.terminate();
+		
+		else if (this instanceof Ship && other instanceof Planetoid){
+			x = this.getSpace().getWidth()*(new Random().nextDouble());
+			y = this.getSpace().getHeight()*(new Random().nextDouble());
+			if (!this.canHaveAsPosition(x, y))
+				this.terminate();
+			else	
+				this.setPosition(x, y);
+			}
+			
+		else if (other instanceof Ship && this instanceof Planetoid){
+			x = this.getSpace().getWidth()*(new Random().nextDouble());
+			y = this.getSpace().getHeight()*(new Random().nextDouble());
+			if (!other.canHaveAsPosition(x, y))
+				other.terminate();
+			else	
+				other.setPosition(x, y);
+			}
 		else
 			throw new IllegalArgumentException();
 	}
