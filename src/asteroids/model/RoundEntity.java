@@ -986,7 +986,7 @@ public abstract class RoundEntity {
 	@Immutable
 	public double getTimeToCollision(RoundEntity other) 
 			throws IllegalArgumentException{
-		if (!this.canAsCollision(other) || this.overlap(other) || !this.inSameSpace(other))
+		if (!this.canAsCollision(other) || !this.inSameSpace(other) || this.overlap(other))
 			throw new IllegalArgumentException();
 		
 		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)

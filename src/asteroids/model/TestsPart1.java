@@ -202,9 +202,7 @@ public class TestsPart1 {
 		Ship ship6 = new Ship(0,5,3,5,10,2,1);
 		assertTrue(ship5.overlap(ship6));
 	}
-	
-	
-	
+		
 	Ship ship1;
 	Ship ship2;
 	Ship other1;
@@ -232,5 +230,4 @@ public class TestsPart1 {
 		//assertEquals(25.14928745,ship.getCollisionPosition(other)[0],EPSILON);
 		assertEquals(45.1492875,ship1.getCollisionPosition(other1)[1],EPSILON);
 	}
-		
 }
