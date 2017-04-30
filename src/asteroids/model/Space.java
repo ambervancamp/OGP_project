@@ -276,7 +276,8 @@ public abstract class Space {
 			return smallestTime;
 		for (RoundEntity firstEntity : entities){
 			for(RoundEntity secondEntity : entities){
-				smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
+				if (firstEntity != secondEntity)
+					smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
 			}
 			smallestTime = Math.min(smallestTime, firstEntity.getTimeToHitWall());
 		}
@@ -295,32 +296,34 @@ public abstract class Space {
 			throw new IllegalArgumentException();
 		for (RoundEntity firstEntity : entities)
 			for (RoundEntity secondEntity : entities)
-				if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
-					return firstEntity.getCollisionPosition(secondEntity);
-				else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
-					return firstEntity.getPositionOfHitWall();
-				else
-					throw new IllegalArgumentException();
+				if (firstEntity != secondEntity)
+					if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
+						return firstEntity.getCollisionPosition(secondEntity);
+					else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
+						return firstEntity.getPositionOfHitWall();
+					else
+						throw new IllegalArgumentException();
 		return new double[] {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 	}
 	
 	
 	/**
 	 * A method that consists of a set of sets in which one or 2 entities collide. 
-	 * Respectively with the wall or cith each other.
+	 * Respectively with the wall or with each other.
 	 * @return  The set of sets of collisionPoints.
 	 * 			
 	 */
 	public Set<Set<RoundEntity>> getCollisions(){
 		Set<Set<RoundEntity>> collisionPoints = new HashSet<>();
 		for (RoundEntity entity : entities){
-			if (entity.hasHitWall()){
+			if (entity.hasHitWall() && this.getTimeNextCollision() == entity.getTimeToHitWall()){
 				Set<RoundEntity> coll = new HashSet<>();
 				coll.add(entity);
 				collisionPoints.add(coll);
 			}
 			for (RoundEntity other : entities){
-				if (other != entity && entity.canAsCollision(other)){
+				if (other != entity && entity.canAsCollision(other) &&
+						this.getTimeNextCollision() == entity.getTimeToCollision(other)){
 					Set<RoundEntity> coll = new HashSet<>();
 					coll.add(other); coll.add(entity);
 					collisionPoints.add(coll);
@@ -351,7 +354,7 @@ public abstract class Space {
 				collisionListener.boundaryCollision(entityThatHitWall, 
 													entityThatHitWall.getxPosition(),
 													entityThatHitWall.getyPosition());
-				entityThatHitWall.getVelocityAfterEntityHitWall();
+				entityThatHitWall.setVelocityAfterEntityHitWall();
 				}
 			else if (collision.size() == 2){
 				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
@@ -359,7 +362,7 @@ public abstract class Space {
 				collisionListener.objectCollision(firstEntity,secondEntity,
 												  firstEntity.getCollisionPosition(secondEntity)[0],
 												  firstEntity.getCollisionPosition(secondEntity)[1]);
-				firstEntity.getVelocityAfterEntityHitEntity(secondEntity);
+				firstEntity.getVelocityAfterCollision(secondEntity);
 			}
 		}
 	}
@@ -382,8 +385,11 @@ public abstract class Space {
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-					entity.move(timeToNextHit);
+				entity.move(timeToNextHit);
 				}
+				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
+				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
+				// maar zou deze altijd 0 moeten zijn...
 			this.resolveCollision(collisionListener);
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
@@ -393,7 +399,7 @@ public abstract class Space {
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-					entity.move(duration);
+				entity.move(duration);
 				}
 			}
 		}
@@ -429,5 +435,16 @@ public abstract class Space {
 		return bullets;
 	}
 	
+	public List<MinorPlanet> getWorldMinorPlanet(){
+		List<MinorPlanet> minorPlanets = new ArrayList<MinorPlanet>();
+		if (this.isTerminated())
+			return minorPlanets;
+		for (RoundEntity entity : entities)
+			if (entity instanceof MinorPlanet)
+				minorPlanets.add((MinorPlanet)entity);
+		return minorPlanets;
+	}
+//	All these list should be made automatically, so without changing the class world
+//	--> moet nog gedaan worden ambie, maar weeet even niet hoe we dat kunnen doen
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 
