@@ -110,8 +110,8 @@ public class TestsPart1 {
 		firstShip.placeInSpace(world); 
 		secondShip.placeInSpace(world);
 		thirdShip.placeInSpace(world);
-		assertEquals(3, world.getWorldShips().size());
-		assertEquals(0, world.getWorldBullets().size());
+		assertEquals(3, world.getShips().size());
+		assertEquals(0, world.getBullets().size());
 	}
 	
 
@@ -125,7 +125,7 @@ public class TestsPart1 {
 		World world = new World(8000, 8000);
 		Bullet firstBullet = new Bullet(1000, 800, 100, 200, 7);
 		firstBullet.placeInSpace(world);
-		assertEquals(1,world.getWorldBullets().size());
+		assertEquals(1,world.getBullets().size());
 		assertEquals(world,firstBullet.getWorld());
 	}
 	

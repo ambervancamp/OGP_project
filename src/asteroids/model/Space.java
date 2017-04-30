@@ -412,39 +412,16 @@ public abstract class Space {
 	/**
 	 * @return	a list of all ships in this world
 	 */
-	public List<Ship> getWorldShips(){
-		List<Ship> ships = new ArrayList<Ship>();
+	public List<RoundEntity> getCertainEntities(Class<?> cls){
+		List<RoundEntity> certainEntities = new ArrayList<RoundEntity>();
 		if (this.isTerminated())
-			return ships;
+			return certainEntities;
 		for (RoundEntity entity : entities)
-			if (entity instanceof Ship)
-				ships.add((Ship) entity);
-		return ships;
+			if (entity instanceof cls)
+				certainEntities.add((RoundEntity) entity);
+		return certainEntities;
 	}
+	// CLS wordt niet herkend de tweede keer? :( 
 
-	/** 
-	 * @return	a list of all bullets in this world
-	 */
-	public List<Bullet> getWorldBullets(){
-		List<Bullet> bullets = new ArrayList<Bullet>();
-		if (this.isTerminated())
-			return bullets;
-		for (RoundEntity entity : entities)
-			if (entity instanceof Bullet)
-				bullets.add((Bullet) entity);
-		return bullets;
-	}
-	
-	public List<MinorPlanet> getWorldMinorPlanet(){
-		List<MinorPlanet> minorPlanets = new ArrayList<MinorPlanet>();
-		if (this.isTerminated())
-			return minorPlanets;
-		for (RoundEntity entity : entities)
-			if (entity instanceof MinorPlanet)
-				minorPlanets.add((MinorPlanet)entity);
-		return minorPlanets;
-	}
-//	All these list should be made automatically, so without changing the class world
-//	--> moet nog gedaan worden ambie, maar weeet even niet hoe we dat kunnen doen
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

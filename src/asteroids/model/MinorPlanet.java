@@ -45,7 +45,11 @@ abstract class MinorPlanet extends RoundEntity{
 
 	@Override
 	public void terminate() {
-		// TODO Auto-generated method stub	
+		if (!this.isTerminated()){
+			if (this.hasSpace())
+				this.removeOutSpace();	
+			this.isTerminated = true;
+		}
 	}
 	
 	/**
