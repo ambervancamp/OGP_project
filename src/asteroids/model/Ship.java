@@ -70,10 +70,6 @@ public class Ship extends RoundEntity {
 	 *      	| if (canHaveAsMass(mass))
 	 *       	|   then new.getMass() == mass
 	 *       	|   else new.getMass() == 5.948*Math.pow(10,15)
-	 *       
-	 * @effect	This ship is placed in a new unbound space.
-	 * 			| UnboundSpace unboundspace = new UnboundSpace()
-	 * 			| this.placeInSpace(unboundspace)
 	 * 
 	 * @post   	This new ship has no bullets yet.
 	 *       	| new.getNbBullets() == 0
@@ -95,10 +91,6 @@ public class Ship extends RoundEntity {
 		else
 			this.density = density;
 			// No setter for density because it is final variable.
-		
-		UnboundSpace unboundspace = new UnboundSpace();
-		this.placeInSpace(unboundspace);
-		// Ships need to be associated with an unbound space until associated with a world.
 	}
 	
 	
@@ -207,7 +199,7 @@ public class Ship extends RoundEntity {
 	 * Return the mass of this ship. This is the mass of the ship itself, 
 	 * but also the bullets it is carrying.
 	 * 
-	 * @return 	The current mass of this ship.
+	 * @return 	The current mass of this ship in kg.
 	 * 			| result == this.mass
 	 */
 	@Override
@@ -221,7 +213,7 @@ public class Ship extends RoundEntity {
 	 * Return the mass of this ship itself, without any bullets if any.
 	 * 
 	 * @return 	The mass of this ship.
-	 * 			| result == 4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity()
+	 * 			| result == 4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity(), in kg.
 	 */
 	@Basic 
 	@Raw
@@ -232,7 +224,7 @@ public class Ship extends RoundEntity {
 	/**
 	 * Return the total mass of this ship itself, with all of its bullets, if any.
 	 * 
-	 * @return 	The total mass of this ship.
+	 * @return 	The total mass of this ship, in kg.
 	 * 			| result == this.getShipMass()
 	 */
 	@Basic 
@@ -440,7 +432,7 @@ public class Ship extends RoundEntity {
 	 * 			| result == 1.1*Math.pow(10, 21)
 	 */
 	public double getForce(){
-		return 1.1*Math.pow(10, 21);
+		return 1.1*Math.pow(10, 18);
 	}
 	
 	/**

@@ -8,13 +8,13 @@ import be.kuleuven.cs.som.annotate.*;
  * A class of round things that are defined by a position, velocity and radius.
  * It also has a mass, density, and can be placed in a space.
  * 
- * @invar 	Each ship can have its position, determined by x- and y-coordinate, as position.
+ * @invar 	Each round entity can have its position, determined by x- and y-coordinate, as position.
  * 			| canHaveAsPosition(this.getPosition())
  *        
- * @invar 	Each ship can have its velocity, determined by x- and y-coordinate, as velocity.
+ * @invar 	Each round entity can have its velocity, determined by x- and y-coordinate, as velocity.
  * 			| canHaveAsVelocity(this.getVelocity)
  *        
- * @invar  	Each ship can have its radius as radius.
+ * @invar  	Each round entity can have its radius as radius.
  *        	| canHaveAsRadius(this.getRadius())
  *        
  * @invar  	Each round entity must have a proper space.
@@ -80,6 +80,9 @@ public abstract class RoundEntity {
 	 * @post 	The lowest possible value for the radius of this round entity is getMinRadius().
 	 * 			| new.getRadius >= getMinRadius()
 	 * 
+	 * @effect	This ship is placed in a new unbound space.
+	 * 			| this.placeInSpace(new.unboundspace)
+	 * 
 	 */
 	protected RoundEntity(double x, double y, double xVelocity, double yVelocity, double radius) 
 			throws IllegalArgumentException {
@@ -94,6 +97,10 @@ public abstract class RoundEntity {
 			throw new IllegalArgumentException();
 		this.radius = radius;
 		// No setter for density because radius is final variable
+		
+		UnboundSpace unboundspace = new UnboundSpace();
+		this.placeInSpace(unboundspace);
+		// Round entities need to be associated with an unbound space until associated with another space.
 	}
 	
 	/**

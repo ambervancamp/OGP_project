@@ -45,15 +45,13 @@ public class Bullet extends RoundEntity {
 	 * @param	radius
 	 * 			The radius of this new ship, in kilometer. 	
 	 * 
-	 * @effect	This ship is placed in a new unbound space.	
 	 */
 	public Bullet(double x, double y, double xVelocity, double yVelocity, double radius)
 			throws IllegalArgumentException {
 		super(x, y, xVelocity, yVelocity, radius);
-		
-		UnboundSpace unboundspace = new UnboundSpace();
-		this.placeInSpace(unboundspace);
-		// Bullets need to be associated with an unbound space until associated with a world or ship
+		this.density = 7.8*Math.pow(10,12);
+		this.mass = 4.0/3.0*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity();
+		// No setter for density or mass because final variables.
 	}
 	
 	/**
@@ -87,26 +85,62 @@ public class Bullet extends RoundEntity {
 	}
 	
 	/**
-	 * Return the density for all bullets.
+	 * Return the density of this bullet.
 	 * 
-	 * @return	Returns the density, which equals to 7.8*Math.pow(10,12)
+	 * @return	Returns the density of this bullet.
 	 */
 	@Override
+	@Basic 
+	@Raw 
+	@Immutable
 	public double getDensity() {
-		return 7.8*Math.pow(10,12);
-	}	
+		return this.density;
+	}
+	
+	/**
+	 * Check whether this bullet can have the given density as its density.
+	 *  
+	 * @param  	density
+	 *         	The density to check.
+	 *         
+	 * @return 	The density must be a number.
+	*/
+	@Raw
+	public boolean canHaveAsDensity(double density) {
+		return !Double.isNaN(density);
+	}
+	
+	/**
+	 * Variable registering the density of this bullet.
+	 */
+	private final double density;		
 	
 	/**
 	 * Return the mass of this bullet computed by its radius and density.
 	 * 
-	 * @return	Returns the mass, which equals to 
-	 * 			4/3*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity()
+	 * @return	Returns the mass of this bullet.
 	 */
 	@Override
 	public double getMass() {
-		return 4.0/3.0*Math.PI*Math.pow(this.getRadius(),3)*this.getDensity();
+		return this.mass;
 	}
-	// AANNAME DAT MASS ALTIJD KLEINER ZAL ZIJN DAN DOUBLE.MAX_VALUE
+	
+	/**
+	 * Check whether the given mass is a valid mass for any bullet.
+	 * 
+	 * @param  	mass
+	 *         	The mass to check.
+	 *         
+	 * @return 	The given mass must be a number.
+	 */
+	public boolean canHaveAsMass(double mass) {
+		return !Double.isNaN(mass);
+	}
+		
+	/**
+	 * Variable registering the mass of this bullet.
+	 */
+	private double mass;
 
 	/**
 	 * Return the ship where this bullet is placed in.
