@@ -421,7 +421,8 @@ public abstract class Space {
 				certainEntities.add((RoundEntity) entity);
 		return certainEntities;
 	}
-	// CLS wordt niet herkend de tweede keer? :( 
+	// CLS wordt niet herkend de tweede keer? :(
+	// Weet de compiler wat cls allemaal kan zijn? Waarvoor staat die afkorting zelf?
 
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

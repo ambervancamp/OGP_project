@@ -1267,7 +1267,7 @@ public abstract class RoundEntity {
 			other.terminate();
 			}
 		
-		else if (this instanceof Ship && other instanceof Asteroid))
+		else if (this instanceof Ship && other instanceof Asteroid)
 			this.terminate();
 			
 		else if (this instanceof Asteroid && other instanceof Ship)
