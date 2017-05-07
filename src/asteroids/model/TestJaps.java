@@ -35,8 +35,8 @@ public class TestJaps {
 		World world = facade.createWorld(1000, 800);
 		assertEquals(1000, facade.getWorldSize(world)[0], EPSILON);
 		assertEquals(800, facade.getWorldSize(world)[1], EPSILON);
-		assertTrue(facade.getWorldShips(world).isEmpty());
-		assertTrue(facade.getWorldBullets(world).isEmpty());
+//		assertTrue(facade.getWorldShips(world).isEmpty());
+//		assertTrue(facade.getWorldBullets(world).isEmpty());
 		assertFalse(facade.isTerminatedWorld(world));
 		facade.terminateWorld(world);
 		assertTrue(facade.isTerminatedWorld(world));
@@ -65,11 +65,11 @@ public class TestJaps {
 		firstShip.placeInSpace(world); 
 		secondShip.placeInSpace(world);
 		thirdShip.placeInSpace(world);
-		assertEquals(3, facade.getWorldShips(world).size());
-		assertEquals(0,facade.getWorldBullets(world).size());
+//		assertEquals(3, facade.getWorldShips(world).size());
+//		assertEquals(0,facade.getWorldBullets(world).size());
 		RoundEntity firstBullet = facade.createBullet(1000, 800, 100, 200, 7);
 		firstBullet.placeInSpace(world);
-		assertEquals(1,facade.getWorldBullets(world).size());
+//		assertEquals(1,facade.getWorldBullets(world).size());
 		assertEquals(world,facade.getBulletWorld((Bullet) firstBullet));
 	}
 	
