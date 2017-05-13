@@ -422,6 +422,6 @@ public abstract class Space {
 				certainEntities.add((RoundEntity) entity);
 		return certainEntities;
 	}	
-	
+
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 
