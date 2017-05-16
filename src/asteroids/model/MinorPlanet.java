@@ -89,7 +89,8 @@ abstract class MinorPlanet extends RoundEntity{
 	/**
 	 * Variable registering the density of this minor planet.
 	 */
-	protected double density;
+	protected double density; 
+//	change this eh
 	
 	/**
 	 * Return the mass of this minor planet computed by its radius and density.

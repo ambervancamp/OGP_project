@@ -404,24 +404,24 @@ public abstract class Space {
 			}
 		}
 	}
+
 	/**
 	 * a list of all the entities that are located in this world
 	 */
-	private List<RoundEntity> entities = new ArrayList<RoundEntity>();
+	List<RoundEntity> entities = new ArrayList<RoundEntity>();
 
 	/**
-	 * @return	a list of all ships in this world
+	 * @return	a list of all entities in this world
 	 */
 	public List<RoundEntity> getCertainEntities(Class<?> cls){
 		List<RoundEntity> certainEntities = new ArrayList<RoundEntity>();
 		if (this.isTerminated())
 			return certainEntities;
 		for (RoundEntity entity : entities)
-			if (entity instanceof cls)
+			if (entity.getClass().isAssignableFrom(cls))
 				certainEntities.add((RoundEntity) entity);
 		return certainEntities;
-	}
-	// CLS wordt niet herkend de tweede keer? :( 
+	}	
 
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

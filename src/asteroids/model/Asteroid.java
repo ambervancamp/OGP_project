@@ -1,7 +1,5 @@
 package asteroids.model;
 
-import be.kuleuven.cs.som.annotate.*;
-
 /**
  *	A class to represent asteroids as a special kind of minor planets.
  *

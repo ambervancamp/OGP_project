@@ -211,7 +211,7 @@ public abstract class RoundEntity {
 	 */
 	@Raw
 	@Immutable
-	public static boolean canHaveAsPosition(double x, double y){
+	public boolean canHaveAsPosition(double x, double y){
 		return (!Double.isNaN(x) && !Double.isNaN(y));
 	}
 	
@@ -1160,7 +1160,7 @@ public abstract class RoundEntity {
 	public void setVelocityAfterEntityHitWall() throws IllegalArgumentException{
 		if (this.isTerminated() || !this.hasWorld())
 			throw new IllegalArgumentException();
-		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits())
+		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() >= ((Bullet)this).getMaxNbWallHits())
 			this.terminate();
 		else
 			if (this.getPositionOfHitWall()[0] == 0 || 
@@ -1179,19 +1179,17 @@ public abstract class RoundEntity {
 	 * @param 	other
 	 * 			The other ship with which we want to check the given ship collides with.
 	 * @throws 	IllegalArgumentException
-	 * 			If the given or the other entity is or terminated or not a ship or
-	 * 			the 2 ships are not in the same world.
-	 * 			| this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace() ||
-	 *			| !(this instanceof Ship) || !(other instanceof Ship)
+	 * 			If the given or the other entity is terminated or not a ship,
+	 * 			or the 2 ships are not in the same world.
+	 * 			| @see implementation
 	 * @effect 	both the velocities will be changed
 	 * 			| @see implementation
 	 */
 	public void setVelocityAfterBounce(RoundEntity other) throws IllegalArgumentException{
-		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace() ||
-				!(this instanceof Ship) || !(other instanceof Ship) ||
-				!(this instanceof MinorPlanet) || !(other instanceof MinorPlanet))
+		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace())
 			throw new IllegalArgumentException();
-		else{
+		else if ( this instanceof Ship && other instanceof Ship ||
+			 this instanceof MinorPlanet && other instanceof MinorPlanet){
 			double J;
 			J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
 					( (this.getRadius()+other.getRadius())*(this.getMass()+other.getMass()));
@@ -1206,6 +1204,8 @@ public abstract class RoundEntity {
 			this.setVelocity(VelocityThis[0], VelocityThis[1]);
 			other.setVelocity(VelocityOther[0], VelocityOther[1]);
 		}
+		else
+			throw new IllegalArgumentException();
 	}
 	
 	/**
@@ -1243,6 +1243,7 @@ public abstract class RoundEntity {
 	public void getVelocityAfterCollision(RoundEntity other) throws IllegalArgumentException{
 		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace())
 			throw new IllegalArgumentException();
+		
 		if ( (this instanceof Ship && other instanceof Ship) ||
 				(this instanceof MinorPlanet && other instanceof MinorPlanet) )
 			this.setVelocityAfterBounce(other);	
@@ -1251,23 +1252,31 @@ public abstract class RoundEntity {
 			((Bullet)other).placeInShip((Ship) this);
 			((Bullet)other).setNbWallHits(0);
 			}
-		
 		else if  (other instanceof Bullet && this instanceof Ship && ((Ship)other).hasAsBullet((Bullet)this) ){ 
 			((Bullet)this).placeInShip((Ship)other);
 			((Bullet)this).setNbWallHits(0);
 			}
 		
-		else if (this instanceof Bullet){
+		else if (this instanceof Bullet && other instanceof RoundEntity){
 			this.terminate();
 			other.terminate();
 			}
 		
-		else if (other instanceof Bullet){
+		else if (other instanceof Bullet && this instanceof RoundEntity){
 			this.terminate();
 			other.terminate();
 			}
 		
-		else if (this instanceof Ship && other instanceof Asteroid))
+		else if (this instanceof Bullet &&
+				((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits()){
+				this.terminate();
+			}
+		else if (other instanceof Bullet &&
+				((Bullet)other).getNbWallHits() > ((Bullet)other).getMaxNbWallHits()){
+				other.terminate();
+			}
+		
+		else if (this instanceof Ship && other instanceof Asteroid)
 			this.terminate();
 			
 		else if (this instanceof Asteroid && other instanceof Ship)
@@ -1283,7 +1292,6 @@ public abstract class RoundEntity {
 			else	
 				this.setPosition(x, y);
 			}
-			
 		else if (other instanceof Ship && this instanceof Planetoid){
 			double x; double y;
 			x = this.getSpace().getWidth()*(new Random().nextDouble());
@@ -1297,6 +1305,5 @@ public abstract class RoundEntity {
 			throw new IllegalArgumentException();
 	}
 
-	
 	
 }
