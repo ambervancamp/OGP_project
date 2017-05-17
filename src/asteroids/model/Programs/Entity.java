@@ -1,5 +1,5 @@
 package asteroids.model.Programs;
 
-public class Entity extends Expression {
+public class Entity extends Expression{
 
 }
