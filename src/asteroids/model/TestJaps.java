@@ -75,7 +75,7 @@ public class TestJaps {
 		assertTrue(thirdShip.hasHitWall());
 		world.evolve(2, null);
 		assertEquals(thirdShip.getVelocity()[0],25,EPSILON);
-//		assertEquals(thirdShip.getVelocity()[1],0,EPSILON);
+		assertEquals(thirdShip.getVelocity()[1],0,EPSILON);
 	}
 	
 	@Test public void testGetTimeNextCollision() throws ModelException {

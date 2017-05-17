@@ -347,20 +347,17 @@ public abstract class Space {
 		for (Set<RoundEntity> collision : this.getCollisions()){
 			if (collision.size() == 1){
 				RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
-				System.out.println(entityThatHitWall);
-				System.out.println(entityThatHitWall.getPositionOfHitWall()[0]);
-				System.out.println(entityThatHitWall.getPositionOfHitWall()[1]);
-				collisionListener.boundaryCollision(entityThatHitWall, 
-													entityThatHitWall.getPositionOfHitWall()[0],
-													entityThatHitWall.getPositionOfHitWall()[1]);
+//				collisionListener.boundaryCollision(entityThatHitWall, 
+//													entityThatHitWall.getPositionOfHitWall()[0],
+//													entityThatHitWall.getPositionOfHitWall()[1]);
 				entityThatHitWall.setVelocityAfterEntityHitWall();
 				}
 			else if (collision.size() == 2){
 				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
 				RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
-				collisionListener.objectCollision(firstEntity,secondEntity,
-												  firstEntity.getCollisionPosition(secondEntity)[0],
-												  firstEntity.getCollisionPosition(secondEntity)[1]);
+//				collisionListener.objectCollision(firstEntity,secondEntity,
+//												  firstEntity.getCollisionPosition(secondEntity)[0],
+//												  firstEntity.getCollisionPosition(secondEntity)[1]);
 				firstEntity.getVelocityAfterCollision(secondEntity);
 			}
 		}
@@ -385,7 +382,7 @@ public abstract class Space {
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
 				entity.move(timeToNextHit);
-				}
+				}}
 				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
 				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
 				// maar zou deze altijd 0 moeten zijn...
@@ -393,7 +390,6 @@ public abstract class Space {
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
 			}
-		}
 		if (duration > 0){
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
