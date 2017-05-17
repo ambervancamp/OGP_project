@@ -433,26 +433,30 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	 */
 	public Set<? extends Ship> getWorldShips(World world) throws ModelException{
 		try {
-			Set<Ship> ships = new HashSet<Ship>(world.getCertainEntities(ship));
+			Ship ship = new Ship(0,25,2,3,10,2,1);
+			Set<RoundEntity> ships = new HashSet<RoundEntity>(ship.getCertainEntities(world));
 			return ships;
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
+	// Alles naar sets omzetten
 
 	/**
 	 * Return all bullets located in <code>world</code>.
 	 */
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException{
 		try {
-			Set<Bullet> bullets = new HashSet<Bullet>(world.getCertainEntities(Bullet));
+			Bullet bullet = new Bullet(1000, 800, 100, 200, 7);
+			Set<RoundEntity> bullets = new HashSet<RoundEntity>(bullet.getCertainEntities(world));
 			return bullets;
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
 	}
+	// Alles naar sets omzetten
 
 	/**
 	 * Add <code>ship</code> to <code>world</code>.
@@ -713,8 +717,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public int getNbStudentsInTeam() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 2;
 	}
 
 	@Override

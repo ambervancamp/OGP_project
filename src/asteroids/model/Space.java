@@ -71,13 +71,13 @@ public abstract class Space {
 	 * 		
 	 */
 	public void terminate(){
-		this.isTerminated = true;
 		for (RoundEntity entity : entities)
 			this.deleteEntity(entity);
+		this.isTerminated = true;
 	}
 	
-	private double width = Double.POSITIVE_INFINITY;
-	private double height = Double.POSITIVE_INFINITY;
+	private double width;
+	private double height;
 	private double maxWidth = Double.POSITIVE_INFINITY;
 	private double maxHeight = Double.POSITIVE_INFINITY;
 	
@@ -105,7 +105,7 @@ public abstract class Space {
 	 * 		
 	 */
 	public void setHeight(double height){
-		if (!canHaveAsWidth(width))
+		if (!canHaveAsHeight(height))
 			this.height=maxHeight;
 		this.height = height;
 	}
@@ -136,9 +136,7 @@ public abstract class Space {
 	 */
 	@Raw
 	public boolean canHaveAsWidth(double width){
-		if (isTerminated())
-			return true;
-		else if (this.getWidth() == Double.NaN || this.getWidth() < 0 || this.getWidth()>maxWidth);
+		if (Double.isNaN(width)|| width < 0 || width>maxWidth);
 			return false;
 	}
 	
@@ -151,10 +149,8 @@ public abstract class Space {
 	 * 			
 	 */
 	@Raw 
-	public boolean canHaveAsHeight(double Height){
-		if (isTerminated())
-			return true;
-		if (this.getHeight() == Double.NaN || this.getHeight() < 0 || this.getHeight()>maxHeight);
+	public boolean canHaveAsHeight(double height){
+		if (Double.isNaN(height) || height < 0 || height>maxHeight);
 			return false;
 	}
 	
@@ -408,20 +404,7 @@ public abstract class Space {
 	/**
 	 * a list of all the entities that are located in this world
 	 */
-	List<RoundEntity> entities = new ArrayList<RoundEntity>();
-
-	/**
-	 * @return	a list of all entities in this world
-	 */
-	public List<RoundEntity> getCertainEntities(Class<?> cls){
-		List<RoundEntity> certainEntities = new ArrayList<RoundEntity>();
-		if (this.isTerminated())
-			return certainEntities;
-		for (RoundEntity entity : entities)
-			if (entity.getClass().isAssignableFrom(cls))
-				certainEntities.add((RoundEntity) entity);
-		return certainEntities;
-	}	
+	List<RoundEntity> entities = new ArrayList<RoundEntity>();	
 
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

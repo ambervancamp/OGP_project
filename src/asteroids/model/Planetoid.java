@@ -1,5 +1,9 @@
 package asteroids.model;
 
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Immutable;
+import be.kuleuven.cs.som.annotate.Raw;
+
 /**
  *	A class to represent planetoids as a special kind of minor planets.
  *
@@ -18,6 +22,39 @@ public class Planetoid extends MinorPlanet {
 	@Override
 	public double getRadius() {
 		return this.radius;
+	}	
+	// DE RADIUS MOET KLEINER WORDEN BIJ HET BEWEGEN!!!!! Bij move()?
+	
+	/**
+	 * Return the mass of this planetoid computed by its radius and density.
+	 * 
+	 * @return	Returns the mass of this planetoid.
+	 */
+	@Override
+	public double getMass() {
+		return this.mass;
 	}
-	// De radius wordt kleiner bij het bewegen van een plantoid
+	
+	/**
+	 * Return the density of this planetoid.
+	 * 
+	 * @return	Returns the density of this planetoid.
+	 */
+	@Override
+	@Basic 
+	@Raw 
+	@Immutable
+	public double getDensity() {
+		return this.density;
+	}
+	
+	/**
+	 * Variable registering the density of this planetoid.
+	 */
+	private final double density;	
+	
+	/**
+	 * Variable registering the mass of this planetoid.
+	 */
+	private double mass;
 }

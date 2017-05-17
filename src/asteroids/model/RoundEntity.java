@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -640,6 +642,43 @@ public abstract class RoundEntity {
 	}
 	// Be careful with the use of this function.
 
+	/**
+	 * @return	a list of all entities of this type placed in the given Space.
+	 */
+	public List<RoundEntity> getCertainEntities(Space space){
+		List<RoundEntity> certainEntities = new ArrayList<RoundEntity>();
+		if (space == null || space.isTerminated())
+			return certainEntities;
+		
+		if (this instanceof Ship){
+			for (RoundEntity entity : space.getEntities()){
+				if(entity instanceof Ship)
+					certainEntities.add((RoundEntity) entity);
+			}
+		}
+		else if (this instanceof Bullet){
+			for (RoundEntity entity : space.getEntities()){
+				if(entity instanceof Bullet)
+					certainEntities.add((RoundEntity) entity);
+			}
+		}
+		
+		else if (this instanceof Asteroid){
+			for (RoundEntity entity : space.getEntities()){
+				if(entity instanceof Asteroid)
+					certainEntities.add((RoundEntity) entity);
+			}
+		}
+		else if (this instanceof Planetoid){
+			for (RoundEntity entity : space.getEntities()){
+				if(entity instanceof Planetoid)
+					certainEntities.add((RoundEntity) entity);
+			}
+		}
+				
+		return certainEntities;
+	}	
+	
 	/**
 	 * Variable registering the space this round entity is placed in.
 	 */

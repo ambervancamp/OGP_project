@@ -73,6 +73,13 @@ public class TestsPart1 {
 	}
 	
 	@Test
+	public void testGetRadius(){
+		Ship ship1 = new Ship(4,5,2,3,15,2,1);
+		assertNotNull(ship1.getRadius());
+		assertEquals(15, ship1.getRadius(),EPSILON);
+	}
+
+	@Test
 	public void testGetMass(){
 		Ship ship1 = new Ship(4,5,2,3,15,2,1);
 		assertNotNull(ship1.getMass());

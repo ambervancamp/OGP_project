@@ -61,19 +61,6 @@ abstract class MinorPlanet extends RoundEntity{
 	}
 	
 	/**
-	 * Return the density of this bullet.
-	 * 
-	 * @return	Returns the density of this bullet.
-	 */
-	@Override
-	@Basic 
-	@Raw 
-	@Immutable
-	public double getDensity() {
-		return this.density;
-	}
-	
-	/**
 	 * Check whether this minor planet can have the given density as its density.
 	 *  
 	 * @param  	density
@@ -87,22 +74,6 @@ abstract class MinorPlanet extends RoundEntity{
 	}
 	
 	/**
-	 * Variable registering the density of this minor planet.
-	 */
-	protected double density; 
-//	change this eh
-	
-	/**
-	 * Return the mass of this minor planet computed by its radius and density.
-	 * 
-	 * @return	Returns the mass of this minor planet.
-	 */
-	@Override
-	public double getMass() {
-		return this.mass;
-	}
-	
-	/**
 	 * Check whether the given mass is a valid mass for any minor planet.
 	 * 
 	 * @param  	mass
@@ -112,10 +83,5 @@ abstract class MinorPlanet extends RoundEntity{
 	 */
 	public boolean canHaveAsMass(double mass) {
 		return !Double.isNaN(mass);
-	}
-		
-	/**
-	 * Variable registering the mass of this minor planet.
-	 */
-	protected double mass;	
+	}	
 }
