@@ -435,7 +435,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			Ship ship = new Ship(0,25,2,3,10,2,1);
 			Set<RoundEntity> ships = new HashSet<RoundEntity>(ship.getCertainEntities(world));
-			return ships;
+			return (Set<? extends Ship>) ((Ship)ships);
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
@@ -450,7 +450,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			Bullet bullet = new Bullet(1000, 800, 100, 200, 7);
 			Set<RoundEntity> bullets = new HashSet<RoundEntity>(bullet.getCertainEntities(world));
-			return bullets;
+			return (Set<? extends Bullet>) ((Bullet)bullets);
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
