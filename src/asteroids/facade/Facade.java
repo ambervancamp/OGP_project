@@ -20,7 +20,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	 */
 	public double[] getShipPosition(Ship ship) throws ModelException {
 		try {
-		return ship.getPosition();
+			return ship.getPosition();
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
@@ -728,14 +728,22 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void addAsteroidToWorld(World world, Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			asteroid.placeInSpace(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public void removeAsteroidFromWorld(World world, Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			asteroid.removeEntityFromWorld(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -746,63 +754,100 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void addPlanetoidToWorld(World world, Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			planetoid.placeInSpace(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public void removePlanetoidFromWorld(World world, Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			planetoid.removeEntityFromWorld(world);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public Asteroid createAsteroid(double x, double y, double xVelocity, double yVelocity, double radius)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return new Asteroid(x,y,xVelocity,yVelocity,radius);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public void terminateAsteroid(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			asteroid.terminate();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public boolean isTerminatedAsteroid(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			return asteroid.isTerminated();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double[] getAsteroidPosition(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return asteroid.getPosition();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double[] getAsteroidVelocity(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return asteroid.getVelocity();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double getAsteroidRadius(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return asteroid.getRadius();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double getAsteroidMass(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return asteroid.getMass();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public World getAsteroidWorld(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return asteroid.getWorld();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -814,38 +859,59 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void terminatePlanetoid(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			planetoid.terminate();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public boolean isTerminatedPlanetoid(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			return planetoid.isTerminated();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double[] getPlanetoidPosition(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return planetoid.getPosition();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double[] getPlanetoidVelocity(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return planetoid.getVelocity();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double getPlanetoidRadius(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return planetoid.getRadius();
+		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double getPlanetoidMass(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return planetoid.getMass();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -856,8 +922,12 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public World getPlanetoidWorld(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return planetoid.getWorld();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -874,8 +944,12 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public List<Object> executeProgram(Ship ship, double dt) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			return ship.executeProgram(dt);
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}	
 	}
 
 	@Override

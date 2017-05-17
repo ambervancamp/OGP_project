@@ -1,5 +1,5 @@
 package asteroids.model.Programs;
 
-public class FunctionDefinition {
+public class Function {
 
 }

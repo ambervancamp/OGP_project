@@ -1,6 +1,8 @@
 package asteroids.model;
 
 import java.util.*;
+
+import asteroids.model.Programs.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -812,4 +814,21 @@ public class Ship extends RoundEntity {
 			}
 		}
 	}
+	
+	public Program<Function,Statement> getProgram(){
+		return this.program;
+	}
+	
+	public void setProgram(Program<Function,Statement> program){
+		this.program = program;
+		if (program != null)
+			program.setShip(this);		
+	}
+	
+	public List<Object> executeProgram(Double duration){
+		return this.program.execute(duration);
+	}
+	
+	private Program<Function,Statement> program;
+	
 }

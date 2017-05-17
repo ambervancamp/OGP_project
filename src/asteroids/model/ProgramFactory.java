@@ -6,16 +6,18 @@ import asteroids.model.Programs.*;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
-public class ProgramFactory implements IProgramFactory<Expression, Statement, FunctionDefinition, ProgramFactory> {
-
+public class ProgramFactory implements IProgramFactory<Expression, Statement, Function, Program> {
+	
+	//ExpressionInParenthesis WORDT MOMENTEEL NIET GEBRUIKT
+	
 	@Override
-	public ProgramFactory createProgram(List<FunctionDefinition> functions, Statement main) {
+	public Program createProgram(List<Function> functions, Statement main) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public FunctionDefinition createFunctionDefinition(String functionName, Statement body,
+	public Function createFunctionDefinition(String functionName, Statement body,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
@@ -85,11 +87,8 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createDoubleLiteralExpression(double value, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Constant(value, location);
 	}
-	// Is dit expression: - Constant of - ExpressionInParenthesis
-	// Een van de twee wordt niet gebruikt in ProgramFactory
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
