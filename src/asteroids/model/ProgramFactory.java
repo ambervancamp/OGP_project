@@ -2,9 +2,7 @@ package asteroids.model;
 
 import java.util.List;
 
-import asteroids.model.Programs.Expression;
-import asteroids.model.Programs.FunctionDefinition;
-import asteroids.model.Programs.Statement;
+import asteroids.model.Programs.*;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
@@ -25,76 +23,64 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Statement createAssignmentStatement(String variableName, Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Assignment(variableName, value, sourceLocation);
 	}
 
 	@Override
 	public Statement createWhileStatement(Expression condition, Statement body, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new While(condition, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createBreakStatement(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Break(sourceLocation);
 	}
 
 	@Override
 	public Statement createReturnStatement(Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Return(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createIfStatement(Expression condition, Statement ifBody, Statement elseBody,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IfThenElse(condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
 	public Statement createPrintStatement(Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Print(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createSequenceStatement(List<Statement> statements, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Block(statements, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadVariableExpression(String variableName, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Variable(variableName, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadParameterExpression(String parameterName, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Parameter(parameterName, sourceLocation);
 	}
 
 	@Override
 	public Expression createFunctionCallExpression(String functionName, List<Expression> actualArgs,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new FunctionInvocation(functionName, actualArgs, sourceLocation);
 	}
 
 	@Override
 	public Expression createChangeSignExpression(Expression expression, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ChangeSign(expression, sourceLocation);
 	}
 
 	@Override
 	public Expression createNotExpression(Expression expression, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new LogicalNegation(expression, sourceLocation);
 	}
 
 	@Override
@@ -105,26 +91,22 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Null(location);
 	}
 
 	@Override
 	public Expression createSelfExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Self(location);
 	}
 
 	@Override
 	public Expression createShipExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ShipExpression(location);
 	}
 
 	@Override
 	public Expression createAsteroidExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Asteroid(location);
 	}
 
 	@Override
@@ -213,40 +195,32 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createGetDirectionExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Statement createThrustOnStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ThrustOn(location);
 	}
 
 	@Override
 	public Statement createThrustOffStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ThrustOff(location);
 	}
 
 	@Override
 	public Statement createFireStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Shoot(location);
 	}
 
 	@Override
 	public Statement createTurnStatement(Expression angle, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Turn(angle, location);
 	}
 
 	@Override
 	public Statement createSkipStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Skip(location);
 	}
-	
-	
 
 }

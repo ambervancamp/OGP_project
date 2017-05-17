@@ -1,5 +1,11 @@
 package asteroids.model.Programs;
 
-public class IfThenElse {
+import asteroids.part3.programs.SourceLocation;
+
+public class IfThenElse extends Statement{
+
+	public IfThenElse(Expression condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
+		// TODO Auto-generated constructor stub
+	}
 
 }
