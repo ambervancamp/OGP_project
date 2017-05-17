@@ -107,13 +107,8 @@ public class TestsPart1 {
 		firstShip.placeInSpace(world); 
 		secondShip.placeInSpace(world);
 		thirdShip.placeInSpace(world);
-<<<<<<< HEAD
-		assertEquals(3, world.getCertainEntities(ShipExpression).size());
-		assertEquals(0, world.getBullets().size());
-=======
 		assertEquals(3, firstShip.getCertainEntities(world).size());
 		assertEquals(0, firstBullet.getCertainEntities(world).size());
->>>>>>> branch 'master' of git@github.com:ambervancamp/OGP_project.git
 	}
 	
 
