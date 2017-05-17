@@ -994,7 +994,7 @@ public abstract class RoundEntity {
 	 * 			| !this.isTerminated()
 	 */
 	public boolean canAsCollision(RoundEntity entity){
-		return entity != null && !entity.isTerminated() && !this.isTerminated();
+		return (entity != null && !entity.isTerminated() && !this.isTerminated());
 	}
 	// && entity.getSpace() == this.getSpace() uit if statement!!
 	
@@ -1035,7 +1035,7 @@ public abstract class RoundEntity {
 	@Immutable
 	public double getTimeToCollision(RoundEntity other) 
 			throws IllegalArgumentException{
-		if (!this.canAsCollision(other) || !this.inSameSpace(other) || this.overlap(other))
+		if (!this.canAsCollision(other) || !this.inSameSpace(other))
 			throw new IllegalArgumentException();
 		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)
 			return Double.POSITIVE_INFINITY;
@@ -1140,9 +1140,8 @@ public abstract class RoundEntity {
 			double [] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 			return coordinates;
 			}
-		
 		if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
-			return null;			
+			return null;	
 		if (this instanceof Bullet)
 			((Bullet)this).setNbWallHits( ((Bullet)this).getNbWallHits() + 1);
 		
@@ -1197,15 +1196,16 @@ public abstract class RoundEntity {
 	 */
 	
 	public void setVelocityAfterEntityHitWall() throws IllegalArgumentException{
+		double[] positionOfHitWall = null;
 		if (this.isTerminated() || !this.hasWorld())
 			throw new IllegalArgumentException();
 		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() >= ((Bullet)this).getMaxNbWallHits())
 			this.terminate();
 		else
-			if (this.getPositionOfHitWall()[0] == 0 || 
-				 this.getPositionOfHitWall()[0] == this.getSpace().getWidth())
+			positionOfHitWall = this.getPositionOfHitWall();
+			if (positionOfHitWall[0] == 0 || positionOfHitWall[0] == this.getSpace().getWidth())
 				this.setVelocity(-this.getxVelocity(), this.getyVelocity());
-			if (this.getPositionOfHitWall()[1] == 0 || this.getPositionOfHitWall()[1] == this.getSpace().getHeight()){
+			if (positionOfHitWall[1] == 0 || positionOfHitWall[1] == this.getSpace().getHeight()){
 				this.setVelocity(this.getxVelocity(), -this.getyVelocity());
 			if (this instanceof Bullet)
 				((Bullet)this).setNbWallHits(((Bullet)this).getNbWallHits()+1);
