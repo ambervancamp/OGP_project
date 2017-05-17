@@ -88,6 +88,8 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 		// TODO Auto-generated method stub
 		return null;
 	}
+	// Is dit expression: - Constant of - ExpressionInParenthesis
+	// Een van de twee wordt niet gebruikt in ProgramFactory
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
@@ -106,91 +108,77 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createAsteroidExpression(SourceLocation location) {
-		return new Asteroid(location);
+		return new AsteroidExpression(location);
 	}
 
 	@Override
 	public Expression createPlanetoidExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PlanetoidExpression(location);
 	}
 
 	@Override
 	public Expression createBulletExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new BulletExpression(location);
 	}
 
 	@Override
 	public Expression createPlanetExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Planet(location);
 	}
 
 	@Override
 	public Expression createAnyExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Any(location);
 	}
 
 	@Override
 	public Expression createGetXExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetX(e, location);
 	}
 
 	@Override
 	public Expression createGetYExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetY(e, location);
 	}
 
 	@Override
 	public Expression createGetVXExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetVX(e, location);
 	}
 
 	@Override
 	public Expression createGetVYExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetVY(e, location);
 	}
 
 	@Override
 	public Expression createGetRadiusExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GetRadius(e, location);
 	}
 
 	@Override
 	public Expression createLessThanExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new LessThen(e1, e2, location);
 	}
 
 	@Override
 	public Expression createEqualityExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new EqualTo(e1, e2, location);
 	}
 
 	@Override
 	public Expression createAdditionExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Addition(e1, e2, location);
 	}
 
 	@Override
 	public Expression createMultiplicationExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Multiplication(e1, e2, location);
 	}
 
 	@Override
 	public Expression createSqrtExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Sqrt(e, location);
 	}
 
 	@Override
