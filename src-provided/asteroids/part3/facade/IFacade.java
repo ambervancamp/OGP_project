@@ -240,12 +240,12 @@ public interface IFacade extends asteroids.part2.facade.IFacade {
 	/**
 	 * Return the program loaded on the given ship.
 	 */
-	public Program getShipProgram(Ship ship) throws ModelException;
+	public ProgramFactory getShipProgram(Ship ship) throws ModelException;
 
 	/**
 	 * Load the given program on the given ship.
 	 */
-	public void loadProgramOnShip(Ship ship, Program program) throws ModelException;
+	public void loadProgramOnShip(Ship ship, ProgramFactory program) throws ModelException;
 
 	/**
 	 * Execute the program loaded on the given ship during the given period of
@@ -262,5 +262,5 @@ public interface IFacade extends asteroids.part2.facade.IFacade {
 	/**
 	 * Creates a new program factory.
 	 */
-	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException;
+	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException;
 }

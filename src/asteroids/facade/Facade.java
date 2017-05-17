@@ -861,13 +861,13 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	}
 
 	@Override
-	public Program getShipProgram(Ship ship) throws ModelException {
+	public ProgramFactory getShipProgram(Ship ship) throws ModelException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void loadProgramOnShip(Ship ship, Program program) throws ModelException {
+	public void loadProgramOnShip(Ship ship, ProgramFactory program) throws ModelException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -879,7 +879,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	}
 
 	@Override
-	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException {
+	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
 		// TODO Auto-generated method stub
 		return null;
 	}
