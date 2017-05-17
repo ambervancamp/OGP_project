@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +62,7 @@ public class TestJaps {
 	public void testGetEntityToHitWall() throws ModelException{
 		World world = facade.createWorld(8000, 8000);
 		RoundEntity firstShip = facade.createShip(90, 100, -10, 0, 10, Math.PI, 10);
-		RoundEntity secondShip = facade.createShip(210, 100, -50, 0, 10, Math.PI/3, 10);
+		RoundEntity secondShip = facade.createShip(230, 100, -50, 0, 10, Math.PI/3, 10);
 		RoundEntity thirdShip = facade.createShip(60,100,-25,0,10,Math.PI,10);
 		firstShip.placeInSpace(world);
 		secondShip.placeInSpace(world);
@@ -73,9 +72,10 @@ public class TestJaps {
 		assertEquals(thirdShip.getPositionOfHitWall()[0],0,EPSILON);
 		assertEquals(thirdShip.getPositionOfHitWall()[1],100,EPSILON);
 		assertTrue(thirdShip.hasHitWall());
-		world.evolve(2, null);
+		world.evolve(3, null);
 		assertEquals(thirdShip.getVelocity()[0],25,EPSILON);
 		assertEquals(thirdShip.getVelocity()[1],0,EPSILON);
+		assertEquals(secondShip.getVelocity()[0],-10,EPSILON);
 	}
 	
 	@Test public void testGetTimeNextCollision() throws ModelException {
