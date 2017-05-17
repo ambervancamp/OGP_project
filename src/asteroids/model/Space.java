@@ -355,9 +355,9 @@ public abstract class Space {
 			else if (collision.size() == 2){
 				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
 				RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
-//				collisionListener.objectCollision(firstEntity,secondEntity,
-//												  firstEntity.getCollisionPosition(secondEntity)[0],
-//												  firstEntity.getCollisionPosition(secondEntity)[1]);
+				collisionListener.objectCollision(firstEntity,secondEntity,
+												  firstEntity.getCollisionPosition(secondEntity)[0],
+												  firstEntity.getCollisionPosition(secondEntity)[1]);
 				firstEntity.getVelocityAfterCollision(secondEntity);
 			}
 		}
