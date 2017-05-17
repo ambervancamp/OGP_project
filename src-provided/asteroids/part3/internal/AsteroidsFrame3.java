@@ -11,7 +11,7 @@ import java.util.Set;
 import asteroids.model.Asteroid;
 import asteroids.model.Bullet;
 import asteroids.model.Planetoid;
-import asteroids.model.Program;
+import asteroids.model.ProgramFactory;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part2.internal.AsteroidsFrame2;
@@ -151,9 +151,9 @@ public class AsteroidsFrame3 extends AsteroidsFrame2<IFacade> {
 		}
 
 		try {
-			ParseOutcome<? extends Program> parseOutcome;
+			ParseOutcome<? extends ProgramFactory> parseOutcome;
 			try {
-				IProgramFactory<?, ?, ?, ? extends Program> programFactory = facade.createProgramFactory();
+				IProgramFactory<?, ?, ?, ? extends ProgramFactory> programFactory = facade.createProgramFactory();
 				parseOutcome = ProgramParser.create(programFactory).parseFile(aiProgramUrl);
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
@@ -161,7 +161,7 @@ public class AsteroidsFrame3 extends AsteroidsFrame2<IFacade> {
 				return;
 			}
 			if (parseOutcome.isSuccess()) {
-				Program program = parseOutcome.getSuccessValue();
+				ProgramFactory program = parseOutcome.getSuccessValue();
 				facade.loadProgramOnShip(playerAI, program);
 			} else {
 				System.err.println(parseOutcome.getFailValue());

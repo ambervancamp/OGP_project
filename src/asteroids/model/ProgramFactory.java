@@ -8,10 +8,10 @@ import asteroids.model.Programs.Statement;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
-public class Program implements IProgramFactory<Expression, Statement, FunctionDefinition, Program> {
+public class ProgramFactory implements IProgramFactory<Expression, Statement, FunctionDefinition, ProgramFactory> {
 
 	@Override
-	public Program createProgram(List<FunctionDefinition> functions, Statement main) {
+	public ProgramFactory createProgram(List<FunctionDefinition> functions, Statement main) {
 		// TODO Auto-generated method stub
 		return null;
 	}
