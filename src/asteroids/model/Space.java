@@ -347,9 +347,12 @@ public abstract class Space {
 		for (Set<RoundEntity> collision : this.getCollisions()){
 			if (collision.size() == 1){
 				RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
+				System.out.println(entityThatHitWall);
+				System.out.println(entityThatHitWall.getPositionOfHitWall()[0]);
+				System.out.println(entityThatHitWall.getPositionOfHitWall()[1]);
 				collisionListener.boundaryCollision(entityThatHitWall, 
-													entityThatHitWall.getxPosition(),
-													entityThatHitWall.getyPosition());
+													entityThatHitWall.getPositionOfHitWall()[0],
+													entityThatHitWall.getPositionOfHitWall()[1]);
 				entityThatHitWall.setVelocityAfterEntityHitWall();
 				}
 			else if (collision.size() == 2){

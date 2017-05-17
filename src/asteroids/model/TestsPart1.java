@@ -72,12 +72,6 @@ public class TestsPart1 {
 		assertEquals(15, ship1.getRadius(),EPSILON);
 	}
 	
-	@Test
-	public void testGetRadius(){
-		Ship ship1 = new Ship(4,5,2,3,15,2,1);
-		assertNotNull(ship1.getRadius());
-		assertEquals(15, ship1.getRadius(),EPSILON);
-	}
 
 	@Test
 	public void testGetMass(){
@@ -104,21 +98,17 @@ public class TestsPart1 {
 	}
 	
 	@Test
-	public void testGetShipWorld(){
-		
-	}
-	
-	@Test
 	public void testPlaceShipInWorld(){
 		World world = new World(8000, 8000);
 		RoundEntity firstShip = new Ship(100, 100, -10, 20, 10, Math.PI, 10E12);
 		RoundEntity secondShip = new Ship(200, 100, -5, 20, 15, Math.PI/3, 20E12);
 		RoundEntity thirdShip = new Ship(100, 200, -10, 0, 20, Math.PI/4, 15E12);
+		RoundEntity firstBullet = new Bullet(500,100,0,0,10);
 		firstShip.placeInSpace(world); 
 		secondShip.placeInSpace(world);
 		thirdShip.placeInSpace(world);
-		assertEquals(3, world.getCertainEntities(Ship).size());
-		assertEquals(0, world.getBullets().size());
+		assertEquals(3, firstShip.getCertainEntities(world).size());
+		assertEquals(0, firstBullet.getCertainEntities(world).size());
 	}
 	
 
@@ -132,7 +122,7 @@ public class TestsPart1 {
 		World world = new World(8000, 8000);
 		Bullet firstBullet = new Bullet(1000, 800, 100, 200, 7);
 		firstBullet.placeInSpace(world);
-		assertEquals(1,world.getBullets().size());
+		assertEquals(1,firstBullet.getCertainEntities(world).size());
 		assertEquals(world,firstBullet.getWorld());
 	}
 	
@@ -151,7 +141,10 @@ public class TestsPart1 {
 		assertEquals(2,ship.getPosition()[0],EPSILON);
 		assertEquals(9,ship.getPosition()[1],EPSILON);		
 		assertNotEquals(7,ship.getPosition()[0],EPSILON);		
-		assertNotEquals(Double.NaN,ship.getPosition()[1],EPSILON);		
+		assertNotEquals(Double.NaN,ship.getPosition()[1],EPSILON);	
+		ship.move(1);
+		assertEquals(-1,ship.getPosition()[0],EPSILON);
+		assertEquals(11,ship.getPosition()[1],EPSILON);		
 	}
 
 	@Test	
@@ -230,11 +223,17 @@ public class TestsPart1 {
 		assertTrue(ship1.inSameSpace(ship2));
 		assertEquals(Double.POSITIVE_INFINITY, ship2.getTimeToCollision(other1), EPSILON);
 		assertEquals(0.5,ship1.getTimeToCollision(other1),EPSILON);
+		
 	}
 	
 	@Test 
 	public void testGetCollisionPosition(){
-		//assertEquals(25.14928745,ship.getCollisionPosition(other)[0],EPSILON);
-		assertEquals(45.1492875,ship1.getCollisionPosition(other1)[1],EPSILON);
+		assertEquals(35,ship1.getCollisionPosition(other1)[0],EPSILON);
+		assertEquals(50,ship1.getCollisionPosition(other1)[1],EPSILON);
+	}
+	
+	@Test 
+	public void testEvolveWorld(){
+		
 	}
 }

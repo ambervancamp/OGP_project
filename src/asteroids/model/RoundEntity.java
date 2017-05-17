@@ -994,7 +994,7 @@ public abstract class RoundEntity {
 	 * 			| !this.isTerminated()
 	 */
 	public boolean canAsCollision(RoundEntity entity){
-		return entity != null && !entity.isTerminated() && !this.isTerminated();
+		return (entity != null && !entity.isTerminated() && !this.isTerminated());
 	}
 	// && entity.getSpace() == this.getSpace() uit if statement!!
 	
@@ -1035,7 +1035,7 @@ public abstract class RoundEntity {
 	@Immutable
 	public double getTimeToCollision(RoundEntity other) 
 			throws IllegalArgumentException{
-		if (!this.canAsCollision(other) || !this.inSameSpace(other) || this.overlap(other))
+		if (!this.canAsCollision(other) || !this.inSameSpace(other))
 			throw new IllegalArgumentException();
 		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)
 			return Double.POSITIVE_INFINITY;
