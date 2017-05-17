@@ -2,6 +2,9 @@ package asteroids.model;
 
 import java.util.List;
 
+import asteroids.model.Programs.Expression;
+import asteroids.model.Programs.FunctionDefinition;
+import asteroids.model.Programs.Statement;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
