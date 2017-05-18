@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Turn extends Action{
+public class ThrustOffStatement extends ActionStatement{
 
-	public Turn(Expression angle, SourceLocation location) {
+	public ThrustOffStatement(SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

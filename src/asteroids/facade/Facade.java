@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import asteroids.model.*;
-
+import asteroids.model.Programs.Program;
 import asteroids.part2.CollisionListener;
 import asteroids.part2.facade.IFacade;
 import asteroids.part3.programs.IProgramFactory;
@@ -931,15 +931,23 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	}
 
 	@Override
-	public ProgramFactory getShipProgram(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+	public Program getShipProgram(Ship ship) throws ModelException {
+		try {
+			return ship.getProgram();
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}	
 	}
 
 	@Override
-	public void loadProgramOnShip(Ship ship, ProgramFactory program) throws ModelException {
-		// TODO Auto-generated method stub
-		
+	public void loadProgramOnShip(Ship ship, Program program) throws ModelException {
+		try {
+			ship.setProgram(program);
+		} 
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -954,8 +962,12 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			return new ProgramFactory();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}	
 	}
 
 }

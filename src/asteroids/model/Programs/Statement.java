@@ -2,7 +2,8 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Statement {
+public abstract class Statement {
+	//enkele wijzer naar program
 	
 	private SourceLocation sourceLocation;
 	private Program program;
@@ -26,4 +27,6 @@ public class Statement {
 	public void setSourceLocation(SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
 	}
+	
+	public abstract void execute();
 }

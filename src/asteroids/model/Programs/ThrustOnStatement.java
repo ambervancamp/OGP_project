@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class While extends Statement{
+public class ThrustOnStatement extends ActionStatement{
 
-	public While(Expression condition, Statement body, SourceLocation sourceLocation) {
+	public ThrustOnStatement(SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

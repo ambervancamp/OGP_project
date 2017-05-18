@@ -815,20 +815,20 @@ public class Ship extends RoundEntity {
 		}
 	}
 	
-	public Program<Function,Statement> getProgram(){
+	public Program getProgram(){
 		return this.program;
 	}
 	
-	public void setProgram(Program<Function,Statement> program){
+	public void setProgram(Program program){
 		this.program = program;
 		if (program != null)
 			program.setShip(this);		
 	}
 	
 	public List<Object> executeProgram(Double duration){
-		return this.program.execute(duration);
+//		return this.program.execute(duration);
 	}
 	
-	private Program<Function,Statement> program;
+	private Program program;
 	
 }

@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Break extends Statement{
+public class BreakStatement extends Statement{
 
-	public Break(SourceLocation sourceLocation) {
+	public BreakStatement(SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Skip extends Action{
+public class ShootStatement extends ActionStatement{
 
-	public Skip(SourceLocation location) {
+	public ShootStatement(SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

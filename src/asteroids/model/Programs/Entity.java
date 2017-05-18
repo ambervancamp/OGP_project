@@ -1,5 +1,7 @@
 package asteroids.model.Programs;
 
-public class Entity extends Expression{
+import asteroids.model.RoundEntity;
+
+public class Entity implements Expression<RoundEntity>{
 
 }

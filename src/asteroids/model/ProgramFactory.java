@@ -7,56 +7,52 @@ import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
 public class ProgramFactory implements IProgramFactory<Expression, Statement, Function, Program> {
-	
-	//ExpressionInParenthesis WORDT MOMENTEEL NIET GEBRUIKT
-	
+		
 	@Override
 	public Program createProgram(List<Function> functions, Statement main) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Program(functions, main);
 	}
 
 	@Override
 	public Function createFunctionDefinition(String functionName, Statement body,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Function(functionName, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createAssignmentStatement(String variableName, Expression value, SourceLocation sourceLocation) {
-		return new Assignment(variableName, value, sourceLocation);
+		return new AssignmentStatement(variableName, value, sourceLocation);
 	}
 
 	@Override
 	public Statement createWhileStatement(Expression condition, Statement body, SourceLocation sourceLocation) {
-		return new While(condition, body, sourceLocation);
+		return new WhileStatement(condition, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createBreakStatement(SourceLocation sourceLocation) {
-		return new Break(sourceLocation);
+		return new BreakStatement(sourceLocation);
 	}
 
 	@Override
 	public Statement createReturnStatement(Expression value, SourceLocation sourceLocation) {
-		return new Return(value, sourceLocation);
+		return new ReturnStatement(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createIfStatement(Expression condition, Statement ifBody, Statement elseBody,
 			SourceLocation sourceLocation) {
-		return new IfThenElse(condition, ifBody, elseBody, sourceLocation);
+		return new IfThenElseStatement(condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
 	public Statement createPrintStatement(Expression value, SourceLocation sourceLocation) {
-		return new Print(value, sourceLocation);
+		return new PrintStatement(value, sourceLocation);
 	}
 
 	@Override
 	public Statement createSequenceStatement(List<Statement> statements, SourceLocation sourceLocation) {
-		return new Block(statements, sourceLocation);
+		return new BlockStatement(statements, sourceLocation);
 	}
 
 	@Override
@@ -187,27 +183,27 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Statement createThrustOnStatement(SourceLocation location) {
-		return new ThrustOn(location);
+		return new ThrustOnStatement(location);
 	}
 
 	@Override
 	public Statement createThrustOffStatement(SourceLocation location) {
-		return new ThrustOff(location);
+		return new ThrustOffStatement(location);
 	}
 
 	@Override
 	public Statement createFireStatement(SourceLocation location) {
-		return new Shoot(location);
+		return new ShootStatement(location);
 	}
 
 	@Override
 	public Statement createTurnStatement(Expression angle, SourceLocation location) {
-		return new Turn(angle, location);
+		return new TurnStatement(angle, location);
 	}
 
 	@Override
 	public Statement createSkipStatement(SourceLocation location) {
-		return new Skip(location);
+		return new SkipStatement(location);
 	}
 
 }
