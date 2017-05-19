@@ -825,6 +825,26 @@ public class Ship extends RoundEntity {
 			program.setShip(this);		
 	}
 	
+	@Override
+	public void resolveCollision(RoundEntity other){
+		if (!other.inSameSpace(this) || other == this)
+			throw new IllegalArgumentException();
+		else if (other instanceof Ship)
+			this.setVelocityAfterBounce(other);
+		else if (other instanceof Asteroid)
+			this.terminate();
+		else if (other instanceof Planetoid){
+			double x = this.getSpace().getWidth()*(new Random().nextDouble());
+			double y = this.getSpace().getHeight()*(new Random().nextDouble());
+			if (!this.canHaveAsPosition(x, y))
+				this.terminate();
+			else	
+				this.setPosition(x, y);
+			}
+		else
+			other.resolveCollision(this);
+	}
+	
 	public List<Object> executeProgram(Double duration){
 //		return this.program.execute(duration);
 	}

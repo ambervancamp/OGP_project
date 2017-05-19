@@ -3,6 +3,7 @@ package asteroids.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import asteroids.part2.CollisionListener;
@@ -329,43 +330,60 @@ public abstract class Space {
 		return collisionPoints;
 	}
 	
-	/**
-	 * A method that resolves collisions.
-	 * The method checks whether the given entity hits a wall or an other entity and
-	 * puts this in the collisionListener.
-	 * @param 	collisionListener
-	 * 			The given collisionListener
-	 * @throws 	IllegalArgumentException
-	 * 			if the given entity is terminated 
-	 * 	
-	 */
-	public void resolveCollision(CollisionListener collisionListener) throws IllegalArgumentException{
-		if (this.isTerminated())
-			throw new IllegalArgumentException();
-		if (this.getCollisions().isEmpty())
-			return;
-		for (Set<RoundEntity> collision : this.getCollisions()){
-			if (collision.size() == 1){
-				RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
-				if (entityThatHitWall instanceof Bullet){
-				collisionListener.boundaryCollision(entityThatHitWall, 
-													entityThatHitWall.getPositionOfHitWall()[0],
-													entityThatHitWall.getPositionOfHitWall()[1]);
-				}
-			entityThatHitWall.setVelocityAfterEntityHitWall();
-			}
-			else if (collision.size() == 2){
-				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
-				RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
-				if (firstEntity instanceof Bullet || secondEntity instanceof Bullet){
-				collisionListener.objectCollision(firstEntity,secondEntity,
-												  firstEntity.getCollisionPosition(secondEntity)[0],
-												  firstEntity.getCollisionPosition(secondEntity)[1]);
-				}
-			firstEntity.getVelocityAfterCollision(secondEntity);
-			}
-		}
-	}
+//	/**
+//	 * A method that resolves collisions.
+//	 * The method checks whether the given entity hits a wall or an other entity and
+//	 * puts this in the collisionListener.
+//	 * @param 	collisionListener
+//	 * 			The given collisionListener
+//	 * @throws 	IllegalArgumentException
+//	 * 			if the given entity is terminated 
+//	 * 	
+//	 */
+//	public void resolveCollision(CollisionListener collisionListener) throws IllegalArgumentException{
+//		if (this.isTerminated())
+//			throw new IllegalArgumentException();
+//		if (this.getCollisions().isEmpty())
+//			return;
+//		for (Set<RoundEntity> collision : this.getCollisions()){
+//			if (collision.size() == 1){
+//				RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
+//				if (entityThatHitWall instanceof Bullet){
+//				collisionListener.boundaryCollision(entityThatHitWall, 
+//													entityThatHitWall.getPositionOfHitWall()[0],
+//													entityThatHitWall.getPositionOfHitWall()[1]);
+//				}
+//			entityThatHitWall.setVelocityAfterEntityHitWall();
+//			}
+//			else if (collision.size() == 2){
+//				RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
+//				RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
+//				if (firstEntity instanceof Bullet || secondEntity instanceof Bullet){
+//				collisionListener.objectCollision(firstEntity,secondEntity,
+//												  firstEntity.getCollisionPosition(secondEntity)[0],
+//												  firstEntity.getCollisionPosition(secondEntity)[1]);
+//				}
+//				firstEntity.getVelocityAfterCollision(secondEntity);
+//				
+//				if (firstEntity instanceof Planetoid && firstEntity.getRadius() >= 30){
+//					double orientation = (-Math.PI/2+Math.random()*Math.PI);
+//					double[] spawnPosition = firstEntity.getPosition();
+//					double spawnRadius = firstEntity.getRadius()/2;
+//					double spawnSpeed = firstEntity.getSpeed()*1.5;
+//					double [] spawnVelocity = {Math.cos(orientation)*spawnSpeed,Math.sin(orientation)*spawnSpeed};
+//					Asteroid firstSpawn = new Asteroid(spawnPosition[0]+spawnRadius*Math.cos(orientation), 
+//														spawnPosition[1]+spawnRadius*Math.sin(orientation),
+//														spawnVelocity[0],spawnVelocity[1],spawnRadius);				
+//					Asteroid secondSpawn = new Asteroid(spawnPosition[0]-spawnRadius*Math.cos(orientation), 
+//														spawnPosition[1]-spawnRadius*Math.sin(orientation),
+//														-spawnVelocity[0],-spawnVelocity[1],spawnRadius);
+//					firstSpawn.setSpace(this); 
+//					secondSpawn.setSpace(this);
+//					firstEntity.terminate();
+//				}				
+//				}
+//			}
+//		}
 	
 	
 	/**
@@ -380,6 +398,7 @@ public abstract class Space {
 			throws IllegalArgumentException{
 		if (this.isTerminated())
 			throw new IllegalArgumentException();
+		
 		double timeToNextHit = getTimeNextCollision();
 		while (timeToNextHit <= duration){
 			for (RoundEntity entity : entities){
@@ -390,7 +409,12 @@ public abstract class Space {
 				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
 				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
 				// maar zou deze altijd 0 moeten zijn...
-			this.resolveCollision(collisionListener);
+			for (RoundEntity firstEntity: entities){
+				for (RoundEntity secondEntity: entities){
+					firstEntity.resolveCollision(secondEntity);
+					firstEntity.resolveCollision();
+				}
+			}
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
 			}

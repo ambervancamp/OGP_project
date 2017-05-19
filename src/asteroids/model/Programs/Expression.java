@@ -10,5 +10,6 @@ public interface Expression<T> {
 	//Statement statement = new Statement(new SourceLocation(0,0));	
 	
 	
-	public abstract void evaluate();
+	public abstract Object evaluate();
+
 }

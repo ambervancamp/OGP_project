@@ -84,4 +84,14 @@ abstract class MinorPlanet extends RoundEntity{
 	public boolean canHaveAsMass(double mass) {
 		return !Double.isNaN(mass);
 	}	
+	
+	@Override
+	public void resolveCollision(RoundEntity other){
+		if (!other.inSameSpace(this) || other == this)
+			throw new IllegalArgumentException();
+		else if (other instanceof MinorPlanet)
+			this.setVelocityAfterBounce(other);
+		else
+			other.resolveCollision(this);
+	}
 }

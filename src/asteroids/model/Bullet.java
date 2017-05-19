@@ -427,6 +427,22 @@ public class Bullet extends RoundEntity {
 	 * Variable registering the source of this bullet, the ship that fired this bullet.
 	 */
 	private Ship source = null;
+	
+	@Override
+	public void resolveCollision(RoundEntity other){
+		if (!other.inSameSpace(this) || other == this)
+			throw new IllegalArgumentException();
+		else if (other instanceof Ship){
+			if (((Ship) other).hasAsBullet(this)){
+				this.placeInShip((Ship) other);
+				this.setNbWallHits(0);
+				}
+			}
+		else{
+			this.terminate();
+			other.terminate();
+		}
+	}
 
 }
 
