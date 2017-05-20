@@ -10,6 +10,7 @@ public class Program{
 	private List<Function> functions;
 	private Statement body;
 	private Ship ship;
+	
 	private HashMap<String, Expression> variables = new HashMap<>();
 	private HashMap<String, Statement> fuctions = new HashMap<>(); 
 

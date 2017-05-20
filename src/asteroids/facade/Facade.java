@@ -23,6 +23,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship.getPosition();
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -35,6 +37,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship.getVelocity();
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -46,6 +50,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship.getRadius();
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -56,6 +62,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return ship.getOrientation();
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -69,6 +77,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 		ship.turn(angle);
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -86,6 +96,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship1.getDistanceBetween(ship2);
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -97,6 +109,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return ship1.overlap(ship2);
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -110,6 +124,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return ship1.getTimeToCollision(ship2);
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -127,6 +143,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return ship1.getCollisionPosition(ship2);
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -149,6 +167,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -161,6 +181,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}	
 	}
 
@@ -172,6 +194,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship.isTerminated();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -186,6 +210,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 	
@@ -198,6 +224,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -209,6 +237,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship.isThrusterOn();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -223,6 +253,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -234,6 +266,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ship.getAcceleration();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -256,6 +290,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 	
@@ -268,6 +304,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 	
@@ -279,6 +317,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return bullet.isTerminated();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -293,6 +333,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -306,6 +348,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -318,6 +362,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -329,6 +375,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return bullet.getMass();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -345,6 +393,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -359,6 +409,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -370,6 +422,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return bullet.getSource();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -388,6 +442,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -400,6 +456,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -411,6 +469,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return world.isTerminated();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -425,6 +485,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -433,12 +495,11 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	 */
 	public Set<? extends Ship> getWorldShips(World world) throws ModelException{
 		try {
-			Ship ship = new Ship(0,25,2,3,10,2,1);
-			Set<RoundEntity> ships = new HashSet<RoundEntity>(ship.getCertainEntities(world));
-			return (Set<? extends Ship>) ((Ship)ships);
-		} 
-		catch (Exception exc) {
-			throw new ModelException(exc.getMessage());
+			return (Set<? extends Ship>) world.getEntityOfClass(Ship.class);
+		} catch (Exception exc) {
+			throw new ModelException(exc);
+		} catch (AssertionError exc) {
+			throw new ModelException(exc);
 		}
 	}
 	// Alles naar sets omzetten
@@ -448,11 +509,11 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	 */
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException{
 		try {
-			Bullet bullet = new Bullet(1000, 800, 100, 200, 7);
-			Set<RoundEntity> bullets = new HashSet<RoundEntity>(bullet.getCertainEntities(world));
-			return (Set<? extends Bullet>) ((Bullet)bullets);
+			return (Set<? extends Bullet>) world.getEntityOfClass(Bullet.class);
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -467,6 +528,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -478,6 +541,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			ship.removeEntityFromWorld(world);
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -492,6 +558,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -503,6 +571,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			bullet.removeEntityFromWorld(world);
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -523,6 +593,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 	
@@ -535,6 +607,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -546,6 +620,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			bullet.placeInShip(ship);
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -561,6 +638,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -573,6 +652,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} 
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -584,6 +665,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			ship.fireBullet();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -602,6 +685,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		}
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
+		}catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
 		}
 	}
 
@@ -614,6 +699,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ((RoundEntity) object).getPositionOfHitWall();
 		}
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -629,6 +717,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 	
 	/**
@@ -640,6 +731,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return ((RoundEntity) entity1).getCollisionPosition((RoundEntity) entity2);
 		}
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -656,6 +750,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 	/**
 	 * Return the position of the first boundary collision or entity collision
@@ -667,6 +764,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return world.getPositionNextCollision();
 		}
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -687,6 +787,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 	/**
 	 * Return the entity at the given <code>position</code> in the given
@@ -697,6 +800,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return world.getEntityAt(x,y);
 		}
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -710,6 +816,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return entities;
 		}
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -734,6 +843,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -742,6 +854,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			asteroid.removeEntityFromWorld(world);
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -760,6 +875,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -768,6 +886,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			planetoid.removeEntityFromWorld(world);
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -781,6 +902,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -789,6 +913,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			asteroid.terminate();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -801,6 +928,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -808,6 +938,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return asteroid.getPosition();
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -819,6 +952,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -826,6 +962,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return asteroid.getRadius();
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -838,6 +977,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -848,13 +990,19 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public Planetoid createPlanetoid(double x, double y, double xVelocity, double yVelocity, double radius,
 			double totalTraveledDistance) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			return new Planetoid(x,y,xVelocity,yVelocity,radius,totalTraveledDistance);
+		}catch (Exception exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -863,6 +1011,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			planetoid.terminate();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -875,6 +1026,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -882,6 +1036,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return planetoid.getPosition();
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -893,6 +1050,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		} catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -900,6 +1060,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return planetoid.getRadius();
 		} catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -912,12 +1075,22 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
 	public double getPlanetoidTotalTraveledDistance(Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return planetoid.getTotalTraveledDistance();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -926,6 +1099,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 			return planetoid.getWorld();
 		} 
 		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}
+		catch (AssertionError exc){
 			throw new ModelException(exc.getMessage());
 		}
 	}
@@ -938,6 +1114,9 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}	
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
@@ -948,26 +1127,44 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());
 		}
+		catch (AssertionError exc){
+			throw new ModelException(exc.getMessage());
+		}
+	}
+
+//	@Override
+//	public List<Object> executeProgram(Ship ship, double dt) throws ModelException {
+//		try{
+//			return ship.executeProgram(dt);
+//		}
+//		catch (Exception exc) {
+//			throw new ModelException(exc.getMessage());
+//		}	
+//	}
+//
+//	@Override
+//	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
+//		try{
+//			return new ProgramFactory();
+//		}
+//		catch (Exception exc) {
+//			throw new ModelException(exc.getMessage());
+//		}	
+//	}
+
+	@Override
+	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
+		// TODO functies staan hierboven maar dit moest er effe bij om geen errors te geven
+		// mag weg als de functies hierboven werken
+		return null;
+	
 	}
 
 	@Override
 	public List<Object> executeProgram(Ship ship, double dt) throws ModelException {
-		try{
-			return ship.executeProgram(dt);
-		}
-		catch (Exception exc) {
-			throw new ModelException(exc.getMessage());
-		}	
-	}
-
-	@Override
-	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
-		try{
-			return new ProgramFactory();
-		}
-		catch (Exception exc) {
-			throw new ModelException(exc.getMessage());
-		}	
+		// TODO functies staan hierboven maar dit moest er effe bij om geen errors te geven
+		// mag weg als de functies hierboven werken
+		return null;
 	}
 
 }

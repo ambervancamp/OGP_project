@@ -826,6 +826,13 @@ public class Ship extends RoundEntity {
 	}
 	
 	@Override
+	public void move(double duration){
+		if (!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+	}
+	
+	@Override
 	public void resolveCollision(RoundEntity other){
 		if (!other.inSameSpace(this) || other == this)
 			throw new IllegalArgumentException();
@@ -845,9 +852,9 @@ public class Ship extends RoundEntity {
 			other.resolveCollision(this);
 	}
 	
-	public List<Object> executeProgram(Double duration){
+//	public List<Object> executeProgram(Double duration){
 //		return this.program.execute(duration);
-	}
+//	}
 	
 	private Program program;
 	

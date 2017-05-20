@@ -641,44 +641,44 @@ public abstract class RoundEntity {
 		}
 	}
 	// Be careful with the use of this function.
-
-	/**
-	 * @return	a list of all entities of this type placed in the given Space.
-	 */
-	public List<RoundEntity> getCertainEntities(Space space){
-		List<RoundEntity> certainEntities = new ArrayList<RoundEntity>();
-		if (space == null || space.isTerminated())
-			return certainEntities;
-		
-		if (this instanceof Ship){
-			for (RoundEntity entity : space.getEntities()){
-				if(entity instanceof Ship)
-					certainEntities.add((RoundEntity) entity);
-			}
-		}
-		else if (this instanceof Bullet){
-			for (RoundEntity entity : space.getEntities()){
-				if(entity instanceof Bullet)
-					certainEntities.add((RoundEntity) entity);
-			}
-		}
-		
-		else if (this instanceof Asteroid){
-			for (RoundEntity entity : space.getEntities()){
-				if(entity instanceof Asteroid)
-					certainEntities.add((RoundEntity) entity);
-			}
-		}
-		else if (this instanceof Planetoid){
-			for (RoundEntity entity : space.getEntities()){
-				if(entity instanceof Planetoid)
-					certainEntities.add((RoundEntity) entity);
-			}
-		}
-				
-		return certainEntities;
-	}	
-	
+//
+//	/**
+//	 * @return	a list of all entities of this type placed in the given Space.
+//	 */
+//	public List<RoundEntity> getCertainEntities(Space space){
+//		List<RoundEntity> certainEntities = new ArrayList<RoundEntity>();
+//		if (space == null || space.isTerminated())
+//			return certainEntities;
+//		
+//		if (this instanceof Ship){
+//			for (RoundEntity entity : space.getEntities()){
+//				if(entity instanceof Ship)
+//					certainEntities.add((RoundEntity) entity);
+//			}
+//		}
+//		else if (this instanceof Bullet){
+//			for (RoundEntity entity : space.getEntities()){
+//				if(entity instanceof Bullet)
+//					certainEntities.add((RoundEntity) entity);
+//			}
+//		}
+//		
+//		else if (this instanceof Asteroid){
+//			for (RoundEntity entity : space.getEntities()){
+//				if(entity instanceof Asteroid)
+//					certainEntities.add((RoundEntity) entity);
+//			}
+//		}
+//		else if (this instanceof Planetoid){
+//			for (RoundEntity entity : space.getEntities()){
+//				if(entity instanceof Planetoid)
+//					certainEntities.add((RoundEntity) entity);
+//			}
+//		}
+//				
+//		return certainEntities;
+//	}	
+//	
 	/**
 	 * Variable registering the space this round entity is placed in.
 	 */
@@ -723,27 +723,30 @@ public abstract class RoundEntity {
 			return new double[] {getPosition()[0]+getVelocity()[0]*duration,
 				getPosition()[1]+getVelocity()[1]*duration};	
 	}
-	/**
-	 * Change the position of the entity based on the current position, 
-	 * velocity, a given time duration and, if the entity is a ship, accelerator and thruster. 
-	 * 
-	 * @param 	duration
-	 * 			The duration of the movement.
-	 * 
-	 * @effect 	The position of the entity will be changed to the 
-	 * 			new position after the given time, speed and direction
-	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
-	 * 
-	 * @throws	IllegalArgumentException
-	 * 			Is the given duration is not valid.
-	 * 			| !canHaveAsDuration(duration)
-	 */
-	@Raw
-	public void move(double duration) throws IllegalArgumentException{
-		if (!canHaveAsDuration(duration))
-			throw new IllegalArgumentException();
-		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
-	}
+//	/**
+//	 * Change the position of the entity based on the current position, 
+//	 * velocity, a given time duration and, if the entity is a ship, accelerator and thruster. 
+//	 * 
+//	 * @param 	duration
+//	 * 			The duration of the movement.
+//	 * 
+//	 * @effect 	The position of the entity will be changed to the 
+//	 * 			new position after the given time, speed and direction
+//	 * 			| setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1])
+//	 * 
+//	 * @throws	IllegalArgumentException
+//	 * 			Is the given duration is not valid.
+//	 * 			| !canHaveAsDuration(duration)
+//	 */
+//	@Raw
+//	public void move(double duration) throws IllegalArgumentException{
+//		if (!canHaveAsDuration(duration))
+//			throw new IllegalArgumentException();
+//		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+//	}
+	
+	
+	public abstract void move(double duration);
 	
 	/**
 	 * Change the velocity of the ship based on the current velocity, a given time duration
@@ -1036,7 +1039,7 @@ public abstract class RoundEntity {
 	public double getTimeToCollision(RoundEntity other) 
 			throws IllegalArgumentException{
 		if (!this.canAsCollision(other) || !this.inSameSpace(other))
-			throw new IllegalArgumentException();
+			return Double.POSITIVE_INFINITY;
 		if (this.getDeltaDistanceVelocity(other) >= 0 || getD(other) <= 0)
 			return Double.POSITIVE_INFINITY;
 
@@ -1067,7 +1070,7 @@ public abstract class RoundEntity {
 		if (!canAsCollision(other) 
 				|| this.getTimeToCollision(other) == Double.POSITIVE_INFINITY 
 				|| this.getSpace().getTimeNextCollision() != this.getTimeToCollision(other))
-			throw new IllegalArgumentException();
+			return null;
 		try{
 		double dt = this.getTimeToCollision(other);
 		double [] newDeltaDistance = 	{other.getPositionAfterMoving(dt)[0]-this.getPositionAfterMoving(dt)[0],
@@ -1098,7 +1101,7 @@ public abstract class RoundEntity {
 	 * 			| @see implementation
 	 */	
 	public double getTimeToHitWall(){
-		if(this.isTerminated())
+		if(this.isTerminated() || this.getWorld() == null )
 			return Double.POSITIVE_INFINITY;
 		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
 			this.getxPosition() - this.getRadius() == 0 ||
@@ -1109,13 +1112,13 @@ public abstract class RoundEntity {
 		double timeToHitYWall=Double.POSITIVE_INFINITY;
 		double timeToHitXWall=Double.POSITIVE_INFINITY;
 		if (this.getyVelocity() > 0)
-			timeToHitYWall = (space.getHeight()-this.getyPosition()+this.getRadius())/this.getyVelocity();
+			timeToHitYWall = (space.getHeight()-(this.getyPosition()+this.getRadius()))/this.getyVelocity();
 		else if (this.getyVelocity() < 0)
 			timeToHitYWall = (-this.getyPosition()+this.getRadius())/this.getyVelocity();
 		else
 			timeToHitYWall = Double.POSITIVE_INFINITY;
 		if (this.getxVelocity() > 0)
-			timeToHitXWall = (space.getWidth()-this.getxPosition()+this.getRadius())/this.getxVelocity();
+			timeToHitXWall = (space.getWidth()-(this.getxPosition()+this.getRadius()))/this.getxVelocity();
 		else if (this.getxVelocity() < 0)
 			timeToHitXWall = (-this.getxPosition()+this.getRadius())/this.getxVelocity();
 		else
@@ -1140,7 +1143,8 @@ public abstract class RoundEntity {
 			double [] coordinates = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 			return coordinates;
 			}
-		if (this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
+		if (this.getTimeToHitWall() == Double.POSITIVE_INFINITY ||
+ 				this.getTimeToHitWall() != this.getSpace().getTimeNextCollision())
 			return null;	
 		if (this instanceof Bullet)
 			((Bullet)this).setNbWallHits( ((Bullet)this).getNbWallHits() + 1);
@@ -1258,5 +1262,7 @@ public abstract class RoundEntity {
 	}
 
 	protected abstract void resolveCollision(RoundEntity other);
+
+
 		
 }
