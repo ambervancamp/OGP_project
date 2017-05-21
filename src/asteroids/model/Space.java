@@ -79,8 +79,8 @@ public abstract class Space {
 	
 	private double width;
 	private double height;
-	private double maxWidth = Double.POSITIVE_INFINITY;
-	private double maxHeight = Double.POSITIVE_INFINITY;
+	private double maxWidth = Double.MAX_VALUE;
+	private double maxHeight = Double.MAX_VALUE;
 	
 	/**
 	 * 
@@ -93,7 +93,8 @@ public abstract class Space {
 	public void setWidth(double width){
 		if (!canHaveAsWidth(width))
 			this.width = maxWidth;
-		this.width = width;
+		else
+			this.width = width;
 	}
 	
 	/**
@@ -107,8 +108,9 @@ public abstract class Space {
 	 */
 	public void setHeight(double height){
 		if (!canHaveAsHeight(height))
-			this.height=maxHeight;
-		this.height = height;
+			this.height = maxHeight;
+		else
+			this.height = height;
 	}
 	
 	/**
@@ -137,8 +139,9 @@ public abstract class Space {
 	 */
 	@Raw
 	public boolean canHaveAsWidth(double width){
-		if (Double.isNaN(width)|| width < 0 || width>maxWidth);
+		if (Double.isNaN(width)|| width < 0 || width>maxWidth)
 			return false;
+		return true;
 	}
 	
 	/**
@@ -151,12 +154,13 @@ public abstract class Space {
 	 */
 	@Raw 
 	public boolean canHaveAsHeight(double height){
-		if (Double.isNaN(height) || height < 0 || height>maxHeight);
+		if (Double.isNaN(height) || height < 0 || height>maxHeight)
 			return false;
+		return true;
 	}
 	
 	
-	public List<RoundEntity> getEntities(){
+	public Set<RoundEntity> getEntities(){
 		return entities;
 	}
 	
@@ -273,12 +277,12 @@ public abstract class Space {
 			return smallestTime;
 		for (RoundEntity firstEntity : entities){
 			for(RoundEntity secondEntity : entities){
-				if (firstEntity != secondEntity)
+				if (firstEntity != secondEntity && firstEntity.getTimeToCollision(secondEntity)!=-0.0)
 					smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
 			}
 			smallestTime = Math.min(smallestTime, firstEntity.getTimeToHitWall());
 		}
-		return smallestTime;
+		return Math.abs(smallestTime);
 	}
 	
 	/**
@@ -291,15 +295,18 @@ public abstract class Space {
 	public double [] getPositionNextCollision() throws IllegalArgumentException{
 		if(this.isTerminated())
 			throw new IllegalArgumentException();
-		for (RoundEntity firstEntity : entities)
-			for (RoundEntity secondEntity : entities)
-				if (firstEntity != secondEntity)
-					if(this.getTimeNextCollision() == firstEntity.getTimeToCollision(secondEntity))
+		double timeNextCollision = this.getTimeNextCollision();
+		for (RoundEntity firstEntity : entities){
+			for (RoundEntity secondEntity : entities){
+				if (firstEntity != secondEntity){
+					if(timeNextCollision == firstEntity.getTimeToCollision(secondEntity))
 						return firstEntity.getCollisionPosition(secondEntity);
-					else if (firstEntity.getTimeToHitWall() == this.getTimeNextCollision())
-						return firstEntity.getPositionOfHitWall();
-					else
-						throw new IllegalArgumentException();
+				}
+			}
+			if (firstEntity.getTimeToHitWall() == timeNextCollision){
+				return firstEntity.getPositionOfHitWall();
+			}
+		}
 		return new double[] {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 	}
 	
@@ -396,7 +403,7 @@ public abstract class Space {
 	 */
 	public void evolve(double duration, CollisionListener collisionListener) 
 			throws IllegalArgumentException{
-		if (this.isTerminated())
+		if (this.isTerminated() || duration < 0 || Double.isNaN(duration))
 			throw new IllegalArgumentException();
 		
 		double timeToNextHit = getTimeNextCollision();
@@ -404,34 +411,57 @@ public abstract class Space {
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-				entity.move(timeToNextHit);
-				}}
+				entity.move(timeToNextHit);}
+				else
+					entity.move(timeToNextHit);
+				}
 				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
 				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
 				// maar zou deze altijd 0 moeten zijn...
 			for (RoundEntity firstEntity: entities){
 				for (RoundEntity secondEntity: entities){
-					firstEntity.resolveCollision(secondEntity);
-					firstEntity.resolveCollision();
+					if (firstEntity != secondEntity){
+						firstEntity.resolveCollision(secondEntity);
+						firstEntity.resolveCollision();
+					}
 				}
+			
 			}
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
+
+			
 			}
 		if (duration > 0){
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-				entity.move(duration);
+					entity.move(duration);
+					}
+				else
+					entity.move(duration);
 				}
 			}
 		}
+	
+	// the entities die in een wereld zitten passen beter in de klasse en kunnen gebruikt worden 
+	// zonder facade aan te passen of hun testfiles aan te passen, dus hier lijkt mij echt wel beter
+	public Set<? extends RoundEntity> getEntityOfClass(Class<?> cls) {
+		Set<RoundEntity> result = new HashSet<RoundEntity>();
+		Set<RoundEntity> entitiesInThisWorld = this.getEntities();
+		
+		for (RoundEntity entity : entitiesInThisWorld) {
+			if (entity.getClass().isAssignableFrom(cls)) {
+				result.add(entity);
+			}
+		}		
+		return result;
 	}
-
+	
 	/**
 	 * a list of all the entities that are located in this world
 	 */
-	List<RoundEntity> entities = new ArrayList<RoundEntity>();	
+	Set<RoundEntity> entities = new HashSet<RoundEntity>();	
 
 	double smallestTimeToCollision = Double.POSITIVE_INFINITY;
 } 

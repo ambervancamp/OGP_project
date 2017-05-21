@@ -51,4 +51,11 @@ public class Asteroid  extends MinorPlanet {
 	 * Variable registering the mass of this asteroid.
 	 */
 	private double mass;
+	
+	@Override
+	public void move(double duration){
+		if (!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+	}
 }
