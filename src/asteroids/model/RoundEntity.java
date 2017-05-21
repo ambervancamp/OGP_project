@@ -1176,11 +1176,9 @@ public abstract class RoundEntity {
 	 * 			
 	 */
 	public boolean hasHitWall(){
-		if (!this.isTerminated() && this.hasSpace() && this.getTimeToHitWall() != Double.POSITIVE_INFINITY)
+		if (!this.isTerminated() && this.hasWorld() &&
+				this.getTimeToHitWall() == this.getSpace().getTimeNextCollision())
 			return true;
-		for (RoundEntity other : space.getEntities())
-			if (this.getTimeToHitWall() <= this.getTimeToCollision(other))
-				return true;
 		return false;
 	}
 	
@@ -1233,8 +1231,8 @@ public abstract class RoundEntity {
 	public void setVelocityAfterBounce(RoundEntity other) throws IllegalArgumentException{
 		if (this.isTerminated() || other.isTerminated() || this.getSpace() != other.getSpace())
 			throw new IllegalArgumentException();
-		else if ( this instanceof Ship && other instanceof Ship ||
-			 this instanceof MinorPlanet && other instanceof MinorPlanet){
+		else if ( (this instanceof Ship && other instanceof Ship) ||
+			 (this instanceof MinorPlanet && other instanceof MinorPlanet)){
 			double J;
 			J = 2*other.getMass()*this.getMass()*this.getDeltaDistanceVelocity(other)/
 					( (this.getRadius()+other.getRadius())*(this.getMass()+other.getMass()));
@@ -1242,22 +1240,23 @@ public abstract class RoundEntity {
 			double JX = J*this.getDeltaDistance(other)[0]/(this.getRadius()+other.getRadius());
 			double JY = J*this.getDeltaDistance(other)[1]/(this.getRadius()+other.getRadius());
 			
-			double [] VelocityThis = {this.getVelocity()[0]+JX/this.getMass(),
-							this.getVelocity()[1]+JY/this.getMass()};
-			double [] VelocityOther = {other.getVelocity()[0]-JX/other.getMass(),
-					other.getVelocity()[1]-JY/other.getMass()};
+			double [] VelocityThis = {-(this.getVelocity()[0]+JX/this.getMass()),
+							-(this.getVelocity()[1]+JY/this.getMass())};
+			double [] VelocityOther = {-(other.getVelocity()[0]-JX/other.getMass()),
+					-(other.getVelocity()[1]-JY/other.getMass())};
 			this.setVelocity(VelocityThis[0], VelocityThis[1]);
 			other.setVelocity(VelocityOther[0], VelocityOther[1]);
 		}
 		else
 			throw new IllegalArgumentException();
+		System.out.print(this.getVelocity()[0]);
 	}
 
 	
 	protected void resolveCollision() throws IllegalArgumentException{
 		if (this.isTerminated() || this == null)
 			throw new IllegalArgumentException();
-		else if (this.hasHitWall())
+		else if (this.hasHitWall() == true)
 			this.setVelocityAfterEntityHitWall();
 	}
 

@@ -277,12 +277,12 @@ public abstract class Space {
 			return smallestTime;
 		for (RoundEntity firstEntity : entities){
 			for(RoundEntity secondEntity : entities){
-				if (firstEntity != secondEntity)
+				if (firstEntity != secondEntity && firstEntity.getTimeToCollision(secondEntity)!=-0.0)
 					smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
 			}
 			smallestTime = Math.min(smallestTime, firstEntity.getTimeToHitWall());
 		}
-		return smallestTime;
+		return Math.abs(smallestTime);
 	}
 	
 	/**
@@ -306,8 +306,6 @@ public abstract class Space {
 			if (firstEntity.getTimeToHitWall() == timeNextCollision){
 				return firstEntity.getPositionOfHitWall();
 			}
-			else
-				throw new IllegalArgumentException();
 		}
 		return new double[] {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
 	}
@@ -413,8 +411,10 @@ public abstract class Space {
 			for (RoundEntity entity : entities){
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-				entity.move(timeToNextHit);
-				}}
+				entity.move(timeToNextHit);}
+				else
+					entity.move(timeToNextHit);
+				}
 				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
 				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
 				// maar zou deze altijd 0 moeten zijn...
@@ -425,9 +425,12 @@ public abstract class Space {
 						firstEntity.resolveCollision();
 					}
 				}
+			
 			}
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
+
+			
 			}
 		if (duration > 0){
 			for (RoundEntity entity : entities){

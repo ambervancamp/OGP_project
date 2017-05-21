@@ -782,7 +782,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	 */
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException{
 		try{
-			world.evolve(dt, collisionListener);
+ 			world.evolve(dt, collisionListener);
 		}
 		catch (Exception exc) {
 			throw new ModelException(exc.getMessage());

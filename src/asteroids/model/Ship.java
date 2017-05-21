@@ -850,6 +850,7 @@ public class Ship extends RoundEntity {
 			}
 		else
 			other.resolveCollision(this);
+		
 	}
 	
 //	public List<Object> executeProgram(Double duration){
