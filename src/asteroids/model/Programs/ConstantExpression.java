@@ -2,10 +2,35 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class ConstantExpression extends Expression {
-
+public class ConstantExpression implements Expression<Double> {
+	
+	private double value;
+	private SourceLocation location;
+	
 	public ConstantExpression(double value, SourceLocation location) {
-		// TODO Auto-generated constructor stub
+		this.setLocation(location);
+		this.setValue(value);
+	}
+
+	@Override
+	public Double evaluate() {
+		return this.getValue();
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	public void setValue(double value) {
+		this.value = value;
+	}
+
+	public SourceLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(SourceLocation location) {
+		this.location = location;
 	}
 
 }

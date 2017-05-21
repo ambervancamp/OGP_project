@@ -6,7 +6,7 @@ import asteroids.model.Programs.*;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
-public class ProgramFactory implements IProgramFactory<Expression, Statement, Function, Program> {
+public class ProgramFactory implements IProgramFactory<Expression<? extends Type>, Statement, Function, Program> {
 		
 	@Override
 	public Program createProgram(List<Function> functions, Statement main) {
@@ -68,7 +68,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createFunctionCallExpression(String functionName, List<Expression> actualArgs,
 			SourceLocation sourceLocation) {
-		return new FunctionInvocation(functionName, actualArgs, sourceLocation);
+		return new FunctionInvocationExpression(functionName, actualArgs, sourceLocation);
 	}
 
 	@Override

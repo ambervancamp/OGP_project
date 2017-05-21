@@ -4,23 +4,23 @@ import asteroids.part3.programs.SourceLocation;
 
 public class TurnStatement extends ActionStatement{
 	
-	private Expression<Double> angle;
+	private ConstantExpression angle;
 	
-	public TurnStatement(Expression angle, SourceLocation location) {
+	public TurnStatement(ConstantExpression angle, SourceLocation location) {
 		super(location);
 		this.setAngle(angle);		
 	}
 
 	@Override
 	public void execute() {
-		this.getProgram().getShip().turn(this.getAngle());
+		this.getProgram().getShip().turn(this.getAngle().evaluate());
 	}
 
-	public Expression<Double> getAngle() {
+	public ConstantExpression getAngle() {
 		return angle;
 	}
 
-	public void setAngle(Expression<Double> angle) {
+	public void setAngle(ConstantExpression angle) {
 		this.angle = angle;
 	}
 
