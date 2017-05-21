@@ -815,16 +815,6 @@ public class Ship extends RoundEntity {
 		}
 	}
 	
-	public Program getProgram(){
-		return this.program;
-	}
-	
-	public void setProgram(Program program){
-		this.program = program;
-		if (program != null)
-			program.setShip(this);		
-	}
-	
 	@Override
 	public void move(double duration){
 		if (!canHaveAsDuration(duration))
@@ -853,9 +843,19 @@ public class Ship extends RoundEntity {
 		
 	}
 	
-//	public List<Object> executeProgram(Double duration){
-//		return this.program.execute(duration);
-//	}
+	public Program getProgram(){
+		return this.program;
+	}
+	
+	public void setProgram(Program program){
+		this.program = program;
+		if (program != null)
+			program.setShip(this);		
+	}
+	
+	public List<Object> executeProgram(Double duration){
+		return this.program.execute(duration);
+	}
 	
 	private Program program;
 	
