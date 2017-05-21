@@ -133,7 +133,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getxPosition(){
+	public double getxPosition(){
 		return this.xPosition;
 	}
 	//clone?
@@ -148,7 +148,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getyPosition(){
+	public double getyPosition(){
 		return this.yPosition;
 	}
 	//clone?
@@ -236,7 +236,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getxVelocity(){
+	public double getxVelocity(){
 		return this.xVelocity;
 	}
 	
@@ -250,7 +250,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getyVelocity(){
+	public double getyVelocity(){
 		return this.yVelocity;
 	}
 	

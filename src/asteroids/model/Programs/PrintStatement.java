@@ -4,24 +4,24 @@ import asteroids.part3.programs.SourceLocation;
 
 public class PrintStatement extends Statement {
 	
-	private Expression<Double> value;
+	private ConstantExpression value;
 	
-	public PrintStatement(Expression<Double> value, SourceLocation sourceLocation) {
+	public PrintStatement(ConstantExpression value, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.setValue(value);
 	}
 
 	@Override
 	public void execute() {
-		System.out.print(this.getValue().toString());	
+		System.out.println(this.getValue().evaluate().toString());	
 	}
-	// werkt deze to string zoals we het zouden willen?
+	// werkt deze tostring() zoals we het zouden willen?
 
-	public Expression<Double> getValue() {
+	public ConstantExpression getValue() {
 		return value;
 	}
 
-	public void setValue(Expression<Double> value) {
+	public void setValue(ConstantExpression value) {
 		this.value = value;
 	}
 

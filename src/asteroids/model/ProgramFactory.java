@@ -153,7 +153,7 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 
 	@Override
 	public Expression createLessThanExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new LessThenExpression(e1, e2, location);
+		return new LessThanExpression(e1, e2, location);
 	}
 
 	@Override

@@ -4,25 +4,25 @@ import asteroids.part3.programs.SourceLocation;
 
 public class ReturnStatement extends Statement{
 	
-	private Expression<Object> value;
-	// Deze value kan een aantal dingen zijn , maar ook niet eender wat,
-	// hoe checken?
+	private Expression value;
 	
-	public ReturnStatement(Expression<Object> value, SourceLocation sourceLocation) {
+	// Hoe het type definieren dat value moet zijn? Moet een expression zijn..
+	public ReturnStatement(Expression value, SourceLocation sourceLocation) {
 		super(sourceLocation);
 	}
 
 	@Override
-	public Expression<Object> execute() {
-		return this.getValue();
+	public Expression execute() {
+		return this.getValue().evaluate();
+		// Moet de expression gereturned worden, of moet de Value eerst
+		// geevalueerd worden en dan gereturned?
 	}
-	// Moet iets returnen, maar staat gedef als void
 
-	public Expression<Object> getValue() {
+	public Expression getValue() {
 		return value;
 	}
 
-	public void setValue(Expression<Object> value) {
+	public void setValue(Expression value) {
 		this.value = value;
 	}
 
