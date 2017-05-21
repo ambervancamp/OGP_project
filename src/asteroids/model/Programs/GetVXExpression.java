@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class GetRadius extends Expression {
+public class GetVXExpression implements Expression<Double> {
 
-	public GetRadius(Expression e, SourceLocation location) {
+	public GetVXExpression(Expression<Double> e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

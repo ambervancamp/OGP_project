@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class LogicalNegation extends Expression {
+public class PlanetExpression extends EntityExpression{
 
-	public LogicalNegation(Expression expression, SourceLocation sourceLocation) {
+	public PlanetExpression(SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

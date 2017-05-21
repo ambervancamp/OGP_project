@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class GetY extends Expression {
+public class GetYExpression extends Expression {
 
-	public GetY(Expression e, SourceLocation location) {
+	public GetYExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

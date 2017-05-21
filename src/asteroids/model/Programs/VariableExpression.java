@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Multiplication extends Expression {
+public class VariableExpression implements Expression<> {
 
-	public Multiplication(Expression e1, Expression e2, SourceLocation location) {
+	public VariableExpression(String variableName, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 	}
 

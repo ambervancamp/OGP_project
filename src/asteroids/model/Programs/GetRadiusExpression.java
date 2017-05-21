@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class EqualTo extends Comparison {
+public class GetRadiusExpression extends Expression {
 
-	public EqualTo(Expression e1, Expression e2, SourceLocation location) {
+	public GetRadiusExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

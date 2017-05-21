@@ -10,7 +10,7 @@ public class ShootStatement extends ActionStatement{
 
 	@Override
 	public void execute() {
-		this.getProgram().getShip().
+		this.getProgram().getShip().fireBullet();
 	}
 
 }

@@ -57,12 +57,12 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createReadVariableExpression(String variableName, SourceLocation sourceLocation) {
-		return new Variable(variableName, sourceLocation);
+		return new VariableExpression(variableName, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadParameterExpression(String parameterName, SourceLocation sourceLocation) {
-		return new Parameter(parameterName, sourceLocation);
+		return new ParameterExpression(parameterName, sourceLocation);
 	}
 
 	@Override
@@ -73,22 +73,22 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createChangeSignExpression(Expression expression, SourceLocation sourceLocation) {
-		return new ChangeSign(expression, sourceLocation);
+		return new ChangeSignExpression(expression, sourceLocation);
 	}
 
 	@Override
 	public Expression createNotExpression(Expression expression, SourceLocation sourceLocation) {
-		return new LogicalNegation(expression, sourceLocation);
+		return new LogicalNegationExpression(expression, sourceLocation);
 	}
 
 	@Override
 	public Expression createDoubleLiteralExpression(double value, SourceLocation location) {
-		return new Constant(value, location);
+		return new ConstantExpression(value, location);
 	}
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
-		return new Null(location);
+		return new NullExpression(location);
 	}
 
 	@Override
@@ -118,62 +118,62 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Expression createPlanetExpression(SourceLocation location) {
-		return new Planet(location);
+		return new PlanetExpression(location);
 	}
 
 	@Override
 	public Expression createAnyExpression(SourceLocation location) {
-		return new Any(location);
+		return new AnyExpression(location);
 	}
 
 	@Override
 	public Expression createGetXExpression(Expression e, SourceLocation location) {
-		return new GetX(e, location);
+		return new GetXExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetYExpression(Expression e, SourceLocation location) {
-		return new GetY(e, location);
+		return new GetYExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetVXExpression(Expression e, SourceLocation location) {
-		return new GetVX(e, location);
+		return new GetVXExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetVYExpression(Expression e, SourceLocation location) {
-		return new GetVY(e, location);
+		return new GetVYExpression(e, location);
 	}
 
 	@Override
 	public Expression createGetRadiusExpression(Expression e, SourceLocation location) {
-		return new GetRadius(e, location);
+		return new GetRadiusExpression(e, location);
 	}
 
 	@Override
 	public Expression createLessThanExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new LessThen(e1, e2, location);
+		return new LessThenExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createEqualityExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new EqualTo(e1, e2, location);
+		return new EqualToExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createAdditionExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new Addition(e1, e2, location);
+		return new AdditionExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createMultiplicationExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new Multiplication(e1, e2, location);
+		return new MultiplicationExpression(e1, e2, location);
 	}
 
 	@Override
 	public Expression createSqrtExpression(Expression e, SourceLocation location) {
-		return new Sqrt(e, location);
+		return new SqrtExpression(e, location);
 	}
 
 	@Override

@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class GetVX implements Expression<Double> {
+public class ParameterExpression extends Expression {
 
-	public GetVX(Expression<Double> e, SourceLocation location) {
+	public ParameterExpression(String parameterName, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 	}
 

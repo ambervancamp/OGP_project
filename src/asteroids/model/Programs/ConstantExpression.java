@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class ChangeSign extends Expression {
+public class ConstantExpression extends Expression {
 
-	public ChangeSign(Expression expression, SourceLocation sourceLocation) {
+	public ConstantExpression(double value, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

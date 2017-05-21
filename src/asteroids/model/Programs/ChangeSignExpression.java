@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Planet extends Entity{
+public class ChangeSignExpression extends Expression {
 
-	public Planet(SourceLocation location) {
+	public ChangeSignExpression(Expression expression, SourceLocation sourceLocation) {
 		// TODO Auto-generated constructor stub
 	}
 

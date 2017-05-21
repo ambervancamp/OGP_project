@@ -5,7 +5,12 @@ import asteroids.part3.programs.SourceLocation;
 public class ThrustOffStatement extends ActionStatement{
 
 	public ThrustOffStatement(SourceLocation location) {
-		// TODO Auto-generated constructor stub
+		super(location);
+	}
+
+	@Override
+	public void execute() {
+		this.getProgram().getShip().thrustOff();
 	}
 
 }

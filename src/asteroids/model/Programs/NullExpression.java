@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Variable implements Expression<> {
+public class NullExpression extends EntityExpression{
 
-	public Variable(String variableName, SourceLocation sourceLocation) {
+	public NullExpression(SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

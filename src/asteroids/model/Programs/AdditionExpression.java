@@ -2,13 +2,13 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Addition implements Expression<Double>{
+public class AdditionExpression implements Expression<Double>{
 
 	private SourceLocation location;
 	private Expression<Double> e1;
 	private Expression<Double> e2;
 
-	public Addition(Expression<Double> e1, Expression<Double> e2, SourceLocation location) {
+	public AdditionExpression(Expression<Double> e1, Expression<Double> e2, SourceLocation location) {
 		this.setLocation(location);
 		this.e1 = e1;
 		this.e2 = e2;

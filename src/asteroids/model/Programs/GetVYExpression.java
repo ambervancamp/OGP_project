@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class LessThen extends Comparison{
+public class GetVYExpression extends Expression {
 
-	public LessThen(Expression e1, Expression e2, SourceLocation location) {
+	public GetVYExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 

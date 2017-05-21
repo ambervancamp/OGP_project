@@ -2,9 +2,9 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public class Null extends Entity{
+public class SqrtExpression extends Expression {
 
-	public Null(SourceLocation location) {
+	public SqrtExpression(Expression e, SourceLocation location) {
 		// TODO Auto-generated constructor stub
 	}
 
