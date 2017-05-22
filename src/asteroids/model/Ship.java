@@ -776,7 +776,7 @@ public class Ship extends RoundEntity {
 	 * 			this ship doesn't have the given bullet as its bullet.
 	 */
 	public boolean withinBoundary(Bullet bullet) throws IllegalArgumentException{
-		if (this.isTerminated() || bullet.isTerminated() || bullet == null || !this.hasAsBullet(bullet))
+		if (this.isTerminated() || bullet.isTerminated() || bullet == null || this.hasAsBullet(bullet))
 			throw new IllegalArgumentException();
 		if (this.getxPosition()+this.getRadius()-bullet.getxPosition() >= 0.99*bullet.getRadius() &&
 			bullet.getxPosition()-(this.getxPosition()-this.getRadius()) >= 0.99*bullet.getRadius() &&
@@ -850,7 +850,6 @@ public class Ship extends RoundEntity {
 			}
 		else
 			other.resolveCollision(this);
-		
 	}
 	
 //	public List<Object> executeProgram(Double duration){

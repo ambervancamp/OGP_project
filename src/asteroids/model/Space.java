@@ -277,10 +277,13 @@ public abstract class Space {
 			return smallestTime;
 		for (RoundEntity firstEntity : entities){
 			for(RoundEntity secondEntity : entities){
-				if (firstEntity != secondEntity && firstEntity.getTimeToCollision(secondEntity)!=-0.0)
-					smallestTime =  Math.min(smallestTime, firstEntity.getTimeToCollision(secondEntity));
+				if (firstEntity != secondEntity && firstEntity.getTimeToCollision(secondEntity)!=-0.0){
+					if (firstEntity.getTimeToCollision(secondEntity) < smallestTime)
+					smallestTime =  firstEntity.getTimeToCollision(secondEntity);
+				}
 			}
-			smallestTime = Math.min(smallestTime, firstEntity.getTimeToHitWall());
+			if (firstEntity.getTimeToHitWall() < smallestTime)
+			smallestTime = firstEntity.getTimeToHitWall();
 		}
 		return Math.abs(smallestTime);
 	}
@@ -412,25 +415,32 @@ public abstract class Space {
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
 				entity.move(timeToNextHit);}
+				else if (entity instanceof Bullet && timeToNextHit == entity.getTimeToHitWall()){
+					((Bullet) entity).setNbWallHits(((Bullet) entity).getNbWallHits()+1);
+					entity.move(timeToNextHit);
+					}
 				else
 					entity.move(timeToNextHit);
+//				System.out.println(entity);
+//				System.out.println(entity.getxPosition());
 				}
 				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
 				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
 				// maar zou deze altijd 0 moeten zijn...
 			for (RoundEntity firstEntity: entities){
+				firstEntity.resolveCollision();
+//				System.out.println(firstEntity.getxVelocity());
+//				System.out.println(firstEntity.getyVelocity());
 				for (RoundEntity secondEntity: entities){
 					if (firstEntity != secondEntity){
 						firstEntity.resolveCollision(secondEntity);
-						firstEntity.resolveCollision();
+						
 					}
 				}
-			
 			}
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
-
-			
+//			System.out.println(this.getTimeNextCollision());
 			}
 		if (duration > 0){
 			for (RoundEntity entity : entities){
@@ -440,6 +450,9 @@ public abstract class Space {
 					}
 				else
 					entity.move(duration);
+//				System.out.println(entity);
+//				System.out.println(entity.getxVelocity());
+//				System.out.println(entity.getxPosition());
 				}
 			}
 		}

@@ -831,8 +831,13 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public Set<? extends Asteroid> getWorldAsteroids(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return (Set<? extends Asteroid>) world.getEntityOfClass(Asteroid.class);
+		} catch (Exception exc) {
+			throw new ModelException(exc);
+		} catch (AssertionError exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
@@ -863,8 +868,13 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public Set<? extends Planetoid> getWorldPlanetoids(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return (Set<? extends Planetoid>) world.getEntityOfClass(Planetoid.class);
+		} catch (Exception exc) {
+			throw new ModelException(exc);
+		} catch (AssertionError exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override

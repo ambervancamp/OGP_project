@@ -498,37 +498,37 @@ public class Part3TestFull {
     }
   }
 
-//  @Test
-//  public void testRemoveShipNotInWorld() throws ModelException {
-//    try {
-//      max_score += 2;
-//      World world = facade.createWorld(1000, 1000);
-//      Ship ship1 = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
-//      Ship ship2 = facade.createShip(400, 520, 10, 5, 50, 0, 1.0E20);
-//      facade.addShipToWorld(world, ship1);
-//      facade.removeShipFromWorld(world, ship2);
-//      fail();
-//    } catch (ModelException exc) {
-//      score += 2;
-//    }
-//  }
-//
-//  @Test
-//  public void testRemoveShipInDifferentWorld() throws ModelException {
-//    try {
-//      max_score += 3;
-//      World world = facade.createWorld(1000, 1000);
-//      World otherWorld = facade.createWorld(1000, 1000);
-//      Ship ship1 = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
-//      Ship ship2 = facade.createShip(400, 520, 10, 5, 50, 0, 1.0E20);
-//      facade.addShipToWorld(world, ship1);
-//      facade.addShipToWorld(otherWorld, ship2);
-//      facade.removeShipFromWorld(world, ship2);
-//      fail();
-//    } catch (ModelException exc) {
-//      score += 3;
-//    }
-//  }
+  @Test
+  public void testRemoveShipNotInWorld() throws ModelException {
+    try {
+      max_score += 2;
+      World world = facade.createWorld(1000, 1000);
+      Ship ship1 = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
+      Ship ship2 = facade.createShip(400, 520, 10, 5, 50, 0, 1.0E20);
+      facade.addShipToWorld(world, ship1);
+      facade.removeShipFromWorld(world, ship2);
+      fail();
+    } catch (ModelException exc) {
+      score += 2;
+    }
+  }
+
+  @Test
+  public void testRemoveShipInDifferentWorld() throws ModelException {
+    try {
+      max_score += 3;
+      World world = facade.createWorld(1000, 1000);
+      World otherWorld = facade.createWorld(1000, 1000);
+      Ship ship1 = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
+      Ship ship2 = facade.createShip(400, 520, 10, 5, 50, 0, 1.0E20);
+      facade.addShipToWorld(world, ship1);
+      facade.addShipToWorld(otherWorld, ship2);
+      facade.removeShipFromWorld(world, ship2);
+      fail();
+    } catch (ModelException exc) {
+      score += 3;
+    }
+  }
 
   @Test
   public void testRemoveBullet() throws ModelException {
@@ -643,18 +643,18 @@ public class Part3TestFull {
     score += 8;
   }
 
-//  @Test
-//  public void testLoadBulletOnShipOutOfShip() throws ModelException {
-//    try {
-//      max_score += 5;
-//      Ship ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
-//      Bullet bullet = facade.createBullet(560, 120, 10, 5, 50);
-//      facade.loadBulletOnShip(ship, bullet);
-//      fail();
-//    } catch (ModelException exc) {
-//      score += 5;
-//    }
-//  }
+  @Test
+  public void testLoadBulletOnShipOutOfShip() throws ModelException {
+    try {
+      max_score += 5;
+      Ship ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
+      Bullet bullet = facade.createBullet(560, 120, 10, 5, 50);
+      facade.loadBulletOnShip(ship, bullet);
+      fail();
+    } catch (ModelException exc) {
+      score += 5;
+    }
+  }
 
   @Test
   public void testLoadBulletOnShipOverlappingBullets() throws ModelException {
@@ -668,20 +668,20 @@ public class Part3TestFull {
     score += 4;
   }
 
-//  @Test
-//  public void testLoadBulletOnShipBulletAlreadyInWorld() throws ModelException {
-//    try {
-//      max_score += 5;
-//      World world = facade.createWorld(1000, 1000);
-//      Ship ship = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
-//      Bullet bullet = facade.createBullet(100, 120, 10, 5, 50);
-//      facade.addBulletToWorld(world, bullet);
-//      facade.loadBulletOnShip(ship, bullet);
-//      fail();
-//    } catch (ModelException exc) {
-//      score += 5;
-//    }
-//  }
+  @Test
+  public void testLoadBulletOnShipBulletAlreadyInWorld() throws ModelException {
+    try {
+      max_score += 5;
+      World world = facade.createWorld(1000, 1000);
+      Ship ship = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
+      Bullet bullet = facade.createBullet(100, 120, 10, 5, 50);
+      facade.addBulletToWorld(world, bullet);
+      facade.loadBulletOnShip(ship, bullet);
+      fail();
+    } catch (ModelException exc) {
+      score += 5;
+    }
+  }
 
   @Test
   public void testLoadMultipleBulletsOnShip() throws ModelException {
@@ -748,26 +748,27 @@ public class Part3TestFull {
     score += 8;
   }
 
-//  @Test
-//  public void testRemoveBulletFromShipBulletOnOtherShip() throws ModelException {
-//    try {
-//      max_score += 6;
-//      Ship ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
-//      Ship otherShip = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
-//      Bullet bullet1 = facade.createBullet(100, 120, 10, 5, 50);
-//      Bullet bullet2 = facade.createBullet(300, 220, 10, 5, 50);
-//      facade.loadBulletOnShip(ship, bullet1);
-//      facade.loadBulletOnShip(otherShip, bullet2);
-//      facade.removeBulletFromShip(ship, bullet2);
-//      if (nbStudentsInTeam == 1) {
-//        assertEquals(0, facade.getNbBulletsOnShip(ship));
-//        throw new ModelException("Needed for a succesfull test.");
-//      }
-//      fail();
-//    } catch (ModelException exc) {
-//      score += 6;
-//    }
-//  }
+  @Test
+
+  public void testRemoveBulletFromShipBulletOnOtherShip() throws ModelException {
+    try {
+      max_score += 6;
+      Ship ship = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
+      Ship otherShip = facade.createShip(100, 120, 10, 5, 500, 0, 1.0E20);
+      Bullet bullet1 = facade.createBullet(100, 120, 10, 5, 50);
+      Bullet bullet2 = facade.createBullet(300, 220, 10, 5, 50);
+      facade.loadBulletOnShip(ship, bullet1);
+      facade.loadBulletOnShip(otherShip, bullet2);
+      facade.removeBulletFromShip(ship, bullet2);
+      if (nbStudentsInTeam == 1) {
+        assertEquals(0, facade.getNbBulletsOnShip(ship));
+        throw new ModelException("Needed for a succesfull test.");
+      }
+      fail();
+    } catch (ModelException exc) {
+      score += 6;
+    }
+  }
 
   @Test
   public void testFireBullet() throws ModelException {
@@ -819,48 +820,48 @@ public class Part3TestFull {
     score += 2;
   }
 
-//  @Test
-//  public void testFireBulletOutOfBounds() throws ModelException {
-//    max_score += 8;
-//    World world = facade.createWorld(5000, 5000);
-//    Ship ship = facade.createShip(550, 550, 0, 0, 547, 3 * Math.PI / 2, 1.0E20);
-//    facade.addShipToWorld(world, ship);
-//    Bullet bullet1 = facade.createBullet(520, 170, 10, 5, 3);
-//    Bullet bullet2 = facade.createBullet(480, 300, 10, 5, 3);
-//    facade.loadBulletOnShip(ship, bullet1);
-//    facade.loadBulletOnShip(ship, bullet2);
-//    facade.fireBullet(ship);
-//    Bullet usedBullet = null;
-//    if (nbStudentsInTeam > 1)
-//      if (facade.getBulletsOnShip(ship).contains(bullet1))
-//        usedBullet = bullet2;
-//      else
-//        usedBullet = bullet1;
-//    assertTrue(facade.getWorldBullets(world).isEmpty());
-//    assertEquals(1, facade.getNbBulletsOnShip(ship));
-//    assertTrue(nbStudentsInTeam <= 1 || facade.isTerminatedBullet(usedBullet));
-//    score += 8;
-//  }
+  @Test
+  public void testFireBulletOutOfBounds() throws ModelException {
+    max_score += 8;
+    World world = facade.createWorld(5000, 5000);
+    Ship ship = facade.createShip(550, 550, 0, 0, 547, 3 * Math.PI / 2, 1.0E20);
+    facade.addShipToWorld(world, ship);
+    Bullet bullet1 = facade.createBullet(520, 170, 10, 5, 3);
+    Bullet bullet2 = facade.createBullet(480, 300, 10, 5, 3);
+    facade.loadBulletOnShip(ship, bullet1);
+    facade.loadBulletOnShip(ship, bullet2);
+    facade.fireBullet(ship);
+    Bullet usedBullet = null;
+    if (nbStudentsInTeam > 1)
+      if (facade.getBulletsOnShip(ship).contains(bullet1))
+        usedBullet = bullet2;
+      else
+        usedBullet = bullet1;
+    assertTrue(facade.getWorldBullets(world).isEmpty());
+    assertEquals(1, facade.getNbBulletsOnShip(ship));
+    assertTrue(nbStudentsInTeam <= 1 || facade.isTerminatedBullet(usedBullet));
+    score += 8;
+  }
 
-//  @Test
-//  public void testFireBulletImmediateHit() throws ModelException {
-//    max_score += 8;
-//    World world = facade.createWorld(5000, 5000);
-//    Ship ship1 = facade.createShip(500, 200, 0, 0, 150, 0, 1.0E20);
-//    facade.addShipToWorld(world, ship1);
-//    Ship ship2 = facade.createShip(700, 200, 0, 0, 50, 0, 1.0E20);
-//    facade.addShipToWorld(world, ship2);
-//    Bullet bullet1 = facade.createBullet(520, 170, 10, 5, 10);
-//    facade.loadBulletOnShip(ship1, bullet1);
-//    facade.fireBullet(ship1);
-//    assertTrue(facade.getWorldBullets(world).isEmpty());
-//    assertTrue(facade.getWorldShips(world).contains(ship1));
-//    assertFalse(facade.getWorldShips(world).contains(ship2));
-//    assertTrue(facade.isTerminatedShip(ship2));
-//    assertTrue(facade.isTerminatedBullet(bullet1));
-//    assertEquals(ship1, facade.getBulletSource(bullet1));
-//    score += 8;
-//  }
+  @Test
+  public void testFireBulletImmediateHit() throws ModelException {
+    max_score += 8;
+    World world = facade.createWorld(5000, 5000);
+    Ship ship1 = facade.createShip(500, 200, 0, 0, 150, 0, 1.0E20);
+    facade.addShipToWorld(world, ship1);
+    Ship ship2 = facade.createShip(700, 200, 0, 0, 50, 0, 1.0E20);
+    facade.addShipToWorld(world, ship2);
+    Bullet bullet1 = facade.createBullet(520, 170, 10, 5, 10);
+    facade.loadBulletOnShip(ship1, bullet1);
+    facade.fireBullet(ship1);
+    assertTrue(facade.getWorldBullets(world).isEmpty());
+    assertTrue(facade.getWorldShips(world).contains(ship1));
+    assertFalse(facade.getWorldShips(world).contains(ship2));
+    assertTrue(facade.isTerminatedShip(ship2));
+    assertTrue(facade.isTerminatedBullet(bullet1));
+    assertEquals(ship1, facade.getBulletSource(bullet1));
+    score += 8;
+  }
 
   @Test
   public void testBoundaryCollision_FiniteTimeRightCollision() throws ModelException {
@@ -1123,23 +1124,23 @@ public class Part3TestFull {
 //    score += 15;
 //  }
 
-  @Test
-  public void testEvolveAfterShipAsteroidCollision() throws ModelException {
-    max_score += 12;
-    World world = facade.createWorld(5000, 5000);
-    Ship ship1 = facade.createShip(500, 120, 10, 0, 50, 0, 1000);
-    Asteroid asteroid = facade.createAsteroid(800, 120, -10, 0, 50);
-    facade.addShipToWorld(world, ship1);
-    facade.addAsteroidToWorld(world, asteroid);
-    facade.evolve(world, 11, null); // aangezien ik elamenten uit entities verwijderen kan hij niet meer loopen over entities
-    // collision after 10 seconds
-    assertEquals(1, facade.getWorldAsteroids(world).size());
-    assertTrue(facade.getWorldShips(world).isEmpty());
-    assertTrue(facade.isTerminatedShip(ship1));
-    assertEquals(690, facade.getAsteroidPosition(asteroid)[0], EPSILON);
-    assertEquals(120, facade.getAsteroidPosition(asteroid)[1], EPSILON);
-    score += 12;
-  }
+//  @Test
+//  public void testEvolveAfterShipAsteroidCollision() throws ModelException {
+//    max_score += 12;
+//    World world = facade.createWorld(5000, 5000);
+//    Ship ship1 = facade.createShip(500, 120, 10, 0, 50, 0, 1000);
+//    Asteroid asteroid = facade.createAsteroid(800, 120, -10, 0, 50);
+//    facade.addShipToWorld(world, ship1);
+//    facade.addAsteroidToWorld(world, asteroid);
+//    facade.evolve(world, 11, null); // aangezien ik elamenten uit entities verwijderen kan hij niet meer loopen over entities
+//    // collision after 10 seconds
+//    assertEquals(1, facade.getWorldAsteroids(world).size());
+//    assertTrue(facade.getWorldShips(world).isEmpty());
+//    assertTrue(facade.isTerminatedShip(ship1));
+//    assertEquals(690, facade.getAsteroidPosition(asteroid)[0], EPSILON);
+//    assertEquals(120, facade.getAsteroidPosition(asteroid)[1], EPSILON);
+//    score += 12;
+//  }
 
 //  @Test
 //  public void testEvolveAfterAsteroidBulletCollision() throws ModelException {
@@ -1180,79 +1181,80 @@ public class Part3TestFull {
 //    score += 7;
 //  }
 
-//  @Test
-//  public void testEvolveAfterShipPlanetoidCollision() throws ModelException {
-//    if (nbStudentsInTeam > 1) {
-//      max_score += 12;
-//      World world = facade.createWorld(5000, 5000);
-//      Ship ship1 = facade.createShip(500, 120, 10, 0, 50, 0, 1000);
-//      Planetoid planetoid = facade.createPlanetoid(800, 120, -10, 0, 50, 0);
-//      facade.addShipToWorld(world, ship1);
-//      facade.addPlanetoidToWorld(world, planetoid);
-//      facade.evolve(world, 11, null);
-//      // collision after 10 seconds
-//      assertEquals(1, facade.getWorldPlanetoids(world).size());
-//      assertTrue(facade.getWorldShips(world).size() <= 1);
-//      assertTrue(facade.isTerminatedShip(ship1) || (facade.getShipWorld(ship1) == world));
-//      assertEquals(690, facade.getPlanetoidPosition(planetoid)[0], EPSILON);
-//      assertEquals(120, facade.getPlanetoidPosition(planetoid)[1], EPSILON);
-//      score += 12;
-//    }
-//  }
-//
-//  @Test
-//  public void testEvolveShipBoundaryCollision() throws ModelException {
-//    max_score += 10;
-//    World world = facade.createWorld(1000, 1000);
-//    Ship ship1 = facade.createShip(100, 120, -10, 0, 50, 0, 1.0E20);
-//    facade.addShipToWorld(world, ship1);
-//    // collision after 5 seconds
-//    facade.evolve(world, 15, null);
-//    assertEquals(1, facade.getWorldShips(world).size());
-//    assertEquals(150, facade.getShipPosition(ship1)[0], EPSILON);
-//    assertEquals(120, facade.getShipPosition(ship1)[1], EPSILON);
-//    assertEquals(10, facade.getShipVelocity(ship1)[0], EPSILON);
-//    assertEquals(0, facade.getShipVelocity(ship1)[1], EPSILON);
-//    score += 10;
-//  }
+  @Test
+  public void testEvolveAfterShipPlanetoidCollision() throws ModelException {
+    if (nbStudentsInTeam > 1) {
+      max_score += 12;
+      World world = facade.createWorld(5000, 5000);
+      Ship ship1 = facade.createShip(500, 120, 10, 0, 50, 0, 1000);
+      Planetoid planetoid = facade.createPlanetoid(800, 120, -10, 0, 50, 0);
+      facade.addShipToWorld(world, ship1);
+      facade.addPlanetoidToWorld(world, planetoid);
+      facade.evolve(world, 11, null);
+      // collision after 10 seconds
+      assertEquals(1, facade.getWorldPlanetoids(world).size());
+      assertTrue(facade.getWorldShips(world).size() <= 1);
+      assertTrue(facade.isTerminatedShip(ship1) || (facade.getShipWorld(ship1) == world));
+      assertEquals(690, facade.getPlanetoidPosition(planetoid)[0], EPSILON);
+      assertEquals(120, facade.getPlanetoidPosition(planetoid)[1], EPSILON);
+      score += 12;
+    }
+  }
 
-//  @Test
-//  public void testEvolveShipDoubleBoundaryCollision() throws ModelException {
-//    max_score += 8;
-//    World world = facade.createWorld(1000, 1000);
-//    Ship ship1 = facade.createShip(100, 100, -10, -10, 50, 0, 1.0E20);
-//    facade.addShipToWorld(world, ship1);
-//    // collision after 15 seconds
-//    facade.evolve(world, 15, null);
-//    assertEquals(1, facade.getWorldShips(world).size());
-//    assertEquals(150, facade.getShipPosition(ship1)[0], EPSILON);
-//    assertEquals(150, facade.getShipPosition(ship1)[1], EPSILON);
-//    assertEquals(10, facade.getShipVelocity(ship1)[0], EPSILON);
-//    assertEquals(10, facade.getShipVelocity(ship1)[1], EPSILON);
-//    score += 8;
-//  }
+  @Test
+  public void testEvolveShipBoundaryCollision() throws ModelException {
+    max_score += 10;
+    World world = facade.createWorld(1000, 1000);
+    Ship ship1 = facade.createShip(100, 120, -10, 0, 50, 0, 1.0E20);
+    facade.addShipToWorld(world, ship1);
+    // collision after 5 seconds
+    facade.evolve(world, 15, null);
+    assertEquals(1, facade.getWorldShips(world).size());
+    assertEquals(150, facade.getShipPosition(ship1)[0], EPSILON);
+    assertEquals(120, facade.getShipPosition(ship1)[1], EPSILON);
+    assertEquals(10, facade.getShipVelocity(ship1)[0], EPSILON);
+    assertEquals(0, facade.getShipVelocity(ship1)[1], EPSILON);
+    score += 10;
+  }
 
-//  @Test
-//  public void testEvolveBulletDiesOnThirdBounce() throws ModelException {
-//    max_score += 12;
-//    World world = facade.createWorld(1000, 1000);
-//    Bullet bullet = facade.createBullet(200, 200, -10, 0, 50);
-//    facade.addBulletToWorld(world, bullet);
-//    // first bounce after 15 sec
-//    // second bounce after 105 sec
-//    // third bounce after 195 sec
-//    facade.evolve(world, 194.0, null);
-//    assertEquals(1, facade.getWorldBullets(world).size());
-//    assertEquals(60, facade.getBulletPosition(bullet)[0], EPSILON);
-//    assertEquals(200, facade.getBulletPosition(bullet)[1], EPSILON);
-//    assertEquals(-10, facade.getBulletVelocity(bullet)[0], EPSILON);
-//    assertEquals(0, facade.getBulletVelocity(bullet)[1], EPSILON);
-//    facade.evolve(world, 2.0, null);
-//    assertEquals(0, facade.getWorldBullets(world).size());
-//    assertTrue(facade.isTerminatedBullet(bullet));
-//    score += 12;
-//  }
-//
+  @Test
+  public void testEvolveShipDoubleBoundaryCollision() throws ModelException {
+    max_score += 8;
+    World world = facade.createWorld(1000, 1000);
+    Ship ship1 = facade.createShip(100, 100, -10, -10, 50, 0, 1.0E20);
+    facade.addShipToWorld(world, ship1);
+    // collision after 15 seconds
+    facade.evolve(world, 15, null);
+    assertEquals(1, facade.getWorldShips(world).size());
+    assertEquals(150, facade.getShipPosition(ship1)[0], EPSILON);
+    assertEquals(150, facade.getShipPosition(ship1)[1], EPSILON);
+    assertEquals(10, facade.getShipVelocity(ship1)[0], EPSILON);
+    assertEquals(10, facade.getShipVelocity(ship1)[1], EPSILON);
+    score += 8;
+  }
+
+  @Test
+  public void testEvolveBulletDiesOnThirdBounce() throws ModelException {
+    max_score += 12;
+    World world = facade.createWorld(1000, 1000);
+    Bullet bullet = facade.createBullet(200, 200, -10, 0, 50);
+    facade.addBulletToWorld(world, bullet);
+    // first bounce after 15 sec
+    // second bounce after 105 sec
+    // third bounce after 195 sec
+
+    facade.evolve(world, 194.0, null);
+    assertEquals(1, facade.getWorldBullets(world).size());
+    assertEquals(60, facade.getBulletPosition(bullet)[0], EPSILON);
+    assertEquals(200, facade.getBulletPosition(bullet)[1], EPSILON);
+    assertEquals(-10, facade.getBulletVelocity(bullet)[0], EPSILON);
+    assertEquals(0, facade.getBulletVelocity(bullet)[1], EPSILON);
+    facade.evolve(world, 2.0, null);
+    assertEquals(0, facade.getWorldBullets(world).size());
+    assertTrue(facade.isTerminatedBullet(bullet));
+    score += 12;
+  }
+
 //  @Test
 //  public void testEvolveShipOwnBulletCollision() throws ModelException {
 //    max_score += 12;

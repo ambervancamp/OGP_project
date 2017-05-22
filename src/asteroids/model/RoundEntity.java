@@ -634,7 +634,9 @@ public abstract class RoundEntity {
 	 *       	| if (this.getWorld() == world)
 	 *       	|   then ! (new (this.getSpace())).hasEntity(this) 
 	 */
-	public void removeEntityFromWorld(World world){
+	public void removeEntityFromWorld(World world) throws IllegalArgumentException{
+		if (this.getSpace() != world)
+			throw new IllegalArgumentException();
 		if (this.canHaveAsSpace(world) && this.getWorld() == world){
 			UnboundSpace unboundspace = new UnboundSpace();
 			this.placeInSpace(unboundspace);
@@ -716,7 +718,7 @@ public abstract class RoundEntity {
 			throws IllegalArgumentException{
 		if (!canHaveAsDuration(duration) || this.isTerminated())
 			throw new IllegalArgumentException();
-		if (this instanceof Ship && ((Ship)this).isThrusterOn())
+		else if (this instanceof Ship && ((Ship)this).isThrusterOn())
 			return new double[] {this.getPosition()[0]+this.getVelocity()[0]*duration+((Ship)this).getAcceleration()*duration*duration/2,
 					       		this.getPosition()[1]+this.getVelocity()[1]*duration+((Ship)this).getAcceleration()*duration*duration/2};
 		else
@@ -1103,10 +1105,10 @@ public abstract class RoundEntity {
 	public double getTimeToHitWall(){
 		if(this.isTerminated() || this.getWorld() == null )
 			return Double.POSITIVE_INFINITY;
-		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() ||
-			this.getxPosition() - this.getRadius() == 0 ||
-			this.getyPosition() + this.getRadius() == this.getSpace().getHeight() ||
-			this.getyPosition() - this.getRadius() == 0)
+		if (this.getxPosition() + this.getRadius() == this.getSpace().getWidth() && this.getxVelocity() > 0||
+			this.getxPosition() - this.getRadius() == 0 && this.getxVelocity() < 0 ||
+			this.getyPosition() + this.getRadius() == this.getSpace().getHeight() && this.getyVelocity() > 0||
+			this.getyPosition() - this.getRadius() == 0 && this.getyVelocity() < 0)
 			return 0;
 		
 		double timeToHitYWall=Double.POSITIVE_INFINITY;
@@ -1198,16 +1200,17 @@ public abstract class RoundEntity {
 	 */
 	
 	public void setVelocityAfterEntityHitWall() throws IllegalArgumentException{
-		double[] positionOfHitWall = null;
 		if (this.isTerminated() || !this.hasWorld())
 			throw new IllegalArgumentException();
-		else if (this.hasHitWall() && this instanceof Bullet && ((Bullet)this).getNbWallHits() >= ((Bullet)this).getMaxNbWallHits())
+		
+		else if (this instanceof Bullet && ((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits())
 			this.terminate();
 		else
-			positionOfHitWall = this.getPositionOfHitWall();
-			if (positionOfHitWall[0] == 0 || positionOfHitWall[0] == this.getSpace().getWidth())
+			if (this.getxPosition()-this.getRadius() == 0 ||
+					this.getxPosition()+this.getRadius() == this.getSpace().getWidth())
 				this.setVelocity(-this.getxVelocity(), this.getyVelocity());
-			if (positionOfHitWall[1] == 0 || positionOfHitWall[1] == this.getSpace().getHeight()){
+			if (this.getyPosition()-this.getRadius() == 0 ||
+					this.getyPosition()+this.getRadius() == this.getSpace().getHeight()){
 				this.setVelocity(this.getxVelocity(), -this.getyVelocity());
 			if (this instanceof Bullet)
 				((Bullet)this).setNbWallHits(((Bullet)this).getNbWallHits()+1);
@@ -1240,22 +1243,25 @@ public abstract class RoundEntity {
 			double JX = J*this.getDeltaDistance(other)[0]/(this.getRadius()+other.getRadius());
 			double JY = J*this.getDeltaDistance(other)[1]/(this.getRadius()+other.getRadius());
 			
-			double [] VelocityThis = {-(this.getVelocity()[0]+JX/this.getMass()),
-							-(this.getVelocity()[1]+JY/this.getMass())};
+			double [] VelocityThis = {(this.getVelocity()[0]+JX/this.getMass()),
+							(this.getVelocity()[1]+JY/this.getMass())};
 			double [] VelocityOther = {-(other.getVelocity()[0]-JX/other.getMass()),
 					-(other.getVelocity()[1]-JY/other.getMass())};
 			this.setVelocity(VelocityThis[0], VelocityThis[1]);
 			other.setVelocity(VelocityOther[0], VelocityOther[1]);
+//			System.out.println(this);
+//			System.out.println(VelocityThis[0]);
 		}
 		else
 			throw new IllegalArgumentException();
-		System.out.print(this.getVelocity()[0]);
 	}
 
 	
 	protected void resolveCollision() throws IllegalArgumentException{
 		if (this.isTerminated() || this == null)
 			throw new IllegalArgumentException();
+		else if (this instanceof Bullet && ((Bullet)this).getNbWallHits() > ((Bullet)this).getMaxNbWallHits())
+			this.terminate();
 		else if (this.hasHitWall() == true)
 			this.setVelocityAfterEntityHitWall();
 	}

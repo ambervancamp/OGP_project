@@ -175,7 +175,12 @@ public class Bullet extends RoundEntity {
 	 * @return 	False if the given ship is not effective or null, or this bullet is terminated.
 	 */
 	public boolean canHaveAsShip(Ship ship){
-		return (ship != null || (!ship.isTerminated()) || (!this.isTerminated()));
+		if (ship == null || (ship.isTerminated()) || (this.isTerminated()))
+			return false;
+		else if (!ship.withinBoundary(this))
+			return false;
+		else 
+			return true;
 	}
 	
 	/**
@@ -223,8 +228,9 @@ public class Bullet extends RoundEntity {
 	 * 			If the space is not valid.
 	 */
 	public void placeInShip(Ship ship) throws IllegalArgumentException {
-		if ((!canHaveAsShip(ship)))
+		if (!canHaveAsShip(ship) || this.hasWorld()){
 			throw new IllegalArgumentException();
+		}
 		if (this.hasSpace()){
 			this.removeOutSpace();
 			this.setShip(ship);
@@ -285,6 +291,8 @@ public class Bullet extends RoundEntity {
 			UnboundSpace unboundspace = new UnboundSpace();
 			this.placeInSpace(unboundspace);
 		}
+		else
+			throw new IllegalArgumentException();
 	}
 		
 	/**
@@ -317,11 +325,14 @@ public class Bullet extends RoundEntity {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();	
 		for (RoundEntity entity: space.getEntities()){
-			if (this.overlap(entity))
-				throw new IllegalArgumentException();
+			if (this.overlap(entity)){
+				this.terminate();
+				entity.terminate();
+			}
+				
 		}
 		if (!space.fitBoundary(this))
-			throw new IllegalArgumentException();
+			this.terminate();
 		if (this.hasSpace()){
 			this.removeOutSpace();
 			this.setSpace(space);
