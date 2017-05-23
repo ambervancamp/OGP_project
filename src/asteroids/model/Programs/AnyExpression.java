@@ -1,6 +1,7 @@
 package asteroids.model.Programs;
 
 import asteroids.model.RoundEntity;
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class AnyExpression extends EntityExpression{
@@ -10,7 +11,7 @@ public class AnyExpression extends EntityExpression{
 	}
 
 	@Override
-	public RoundEntity evaluate() {
+	public RoundEntity evaluate(Ship ExecutingShip) {
 		return null;
 	}
 

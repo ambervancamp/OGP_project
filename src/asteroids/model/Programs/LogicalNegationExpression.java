@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class LogicalNegationExpression extends BooleanExpression {
@@ -13,8 +14,8 @@ public class LogicalNegationExpression extends BooleanExpression {
 	}
 
 	@Override
-	public Boolean evaluate() {
-		return !this.getExpression().evaluate();
+	public Boolean evaluate(Ship ExecutingShip) {
+		return !this.getExpression().evaluate(ExecutingShip);
 	}
 
 	public SourceLocation getSourceLocation() {

@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement{
@@ -31,7 +32,8 @@ public class WhileStatement extends Statement{
 	
 	@Override
 	public void execute() {
-		while(this.getCondition().evaluate())
+		Ship ExecutingShip = this.getProgram().getShip();
+		while(this.getCondition().evaluate(ExecutingShip))
 			this.getBody().execute();
 	}
 

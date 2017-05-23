@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetXExpression implements Expression<Double> {
@@ -12,8 +13,8 @@ public class GetXExpression implements Expression<Double> {
 		setLocation(location);	}
 
 	@Override
-	public Double evaluate() {
-		return this.getE().evaluate().getxPosition();
+	public Double evaluate(Ship ExecutingShip) {
+		return this.getE().evaluate(ExecutingShip).getxPosition();
 	}
 
 	public EntityExpression getE() {

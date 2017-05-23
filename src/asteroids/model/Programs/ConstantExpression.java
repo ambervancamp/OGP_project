@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class ConstantExpression implements Expression<Double> {
@@ -13,7 +14,7 @@ public class ConstantExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate() {
+	public Double evaluate(Ship ExecutingShip) {
 		return this.getValue();
 	}
 

@@ -1,11 +1,18 @@
 package asteroids.model.Programs;
 
+import asteroids.model.MinorPlanet;
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class PlanetExpression extends EntityExpression{
+public class PlanetExpression extends EntityExpression<MinorPlanet>{
 
 	public PlanetExpression(SourceLocation location) {
-		// TODO Auto-generated constructor stub
+		super(location);
+	}
+
+	@Override
+	public MinorPlanet evaluate(Ship ExecutingShip) {
+		return null;
 	}
 
 }

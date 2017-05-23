@@ -1,11 +1,19 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Bullet;
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class BulletExpression extends EntityExpression{
+public class BulletExpression extends EntityExpression<Bullet>{
 
 	public BulletExpression(SourceLocation location) {
-		// TODO Auto-generated constructor stub
+		super(location);
 	}
+	
+	@Override
+	public Bullet evaluate(Ship ExecutingShip) {
+		return ExecutingShip.getFiredBullet();
+	}
+	// Define function that returns one of the fired bullets
 
 }

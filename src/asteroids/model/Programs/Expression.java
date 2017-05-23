@@ -1,12 +1,10 @@
 package asteroids.model.Programs;
 
-import asteroids.part3.programs.SourceLocation;
+import asteroids.model.Ship;
 
-//interface met generische parameter T
 public interface Expression<T> {
 	// T = type = boolean/entity/variable
 	// enkel wijzer naar statement	
-	
-	public abstract T evaluate();
-
+		
+	public abstract T evaluate(Ship ExecutingShip);
 }

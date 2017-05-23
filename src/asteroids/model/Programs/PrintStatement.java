@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class PrintStatement extends Statement {
@@ -13,7 +14,8 @@ public class PrintStatement extends Statement {
 
 	@Override
 	public void execute() {
-		System.out.println(this.getValue().evaluate().toString());	
+		Ship ExecutingShip = this.getProgram().getShip();
+		System.out.println(this.getValue().evaluate(ExecutingShip).toString());	
 	}
 	// werkt deze tostring() zoals we het zouden willen?
 

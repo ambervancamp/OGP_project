@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class TurnStatement extends ActionStatement{
@@ -13,7 +14,8 @@ public class TurnStatement extends ActionStatement{
 
 	@Override
 	public void execute() {
-		this.getProgram().getShip().turn(this.getAngle().evaluate());
+		Ship ExecutingShip = this.getProgram().getShip();
+		this.getProgram().getShip().turn(this.getAngle().evaluate(ExecutingShip));
 	}
 
 	public ConstantExpression getAngle() {

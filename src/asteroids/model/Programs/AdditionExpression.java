@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class AdditionExpression implements Expression<Double>{
@@ -14,7 +15,7 @@ public class AdditionExpression implements Expression<Double>{
 		this.setE2(e2);
 	}
 	
-	public Double evaluate(){
+	public Double evaluate(Ship ExecutingShip){
 		// TODO evaluate moet nog argumenten krijgen
 //		Object value1 = e1.evaluate();
 //		Object value2 = e2.evaluate();
@@ -23,7 +24,7 @@ public class AdditionExpression implements Expression<Double>{
 //		}
 //		Double doubleValue1 = (Double) value1;
 //		Double doubleValue2 = (Double) value2;		
-		return this.getE2().evaluate() + this.getE1().evaluate();
+		return this.getE2().evaluate(ExecutingShip) + this.getE1().evaluate(ExecutingShip);
 	}
 
 	public SourceLocation getLocation() {

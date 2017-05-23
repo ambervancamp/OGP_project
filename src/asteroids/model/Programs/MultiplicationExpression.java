@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class MultiplicationExpression implements Expression<Double> {
@@ -15,8 +16,8 @@ public class MultiplicationExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate() {
-		return this.getE2().evaluate() * this.getE1().evaluate();
+	public Double evaluate(Ship ExecutingShip) {
+		return this.getE2().evaluate(ExecutingShip) * this.getE1().evaluate(ExecutingShip);
 	}
 
 	public SourceLocation getSourceLocation() {

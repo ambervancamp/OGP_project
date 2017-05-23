@@ -1,19 +1,20 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetYExpression implements Expression<Double> {
 
-	private EntityExpression e;
+	private EntityExpression<?> e;
 	private SourceLocation location;
 	
-	public GetYExpression(EntityExpression e, SourceLocation location) {
+	public GetYExpression(EntityExpression<?> e, SourceLocation location) {
 		setE(e);
 		setLocation(location);	}
 
 	@Override
-	public Double evaluate() {
-		return this.getE().evaluate().getyPosition();
+	public Double evaluate(Ship ExecutingShip) {
+		return this.getE().evaluate(ExecutingShip).getyPosition();
 	}
 
 	public EntityExpression getE() {

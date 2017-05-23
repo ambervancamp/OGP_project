@@ -11,7 +11,9 @@ public class Program{
 	private Statement body;
 	private Ship ship;
 	
-	private HashMap<String, Expression> variables = new HashMap<>();
+	private HashMap<String, Expression<?>> variables = new HashMap<>();
+	// Variables can be of any type
+	// How to keep the type of a variable when first assigned?
 	private HashMap<String, Statement> fuctions = new HashMap<>(); 
 
 	public Program(List<Function> functions, Statement body) {
@@ -24,6 +26,7 @@ public class Program{
 	public List<Object> execute(Double duration){
 		body.execute();
 	}
+	// Function met tijd uitvoeren
 
 	public List<Function> getFunctions(){
 		return this.functions;
@@ -49,11 +52,11 @@ public class Program{
 		this.ship = ship;
 	}
 
-	public HashMap<String, Expression> getVariables() {
+	public HashMap<String, Expression<?>> getVariables() {
 		return variables;
 	}
 
-	public void setVariables(HashMap<String, Expression> variables) {
+	public void setVariables(HashMap<String, Expression<?>> variables) {
 		this.variables = variables;
 	}
 

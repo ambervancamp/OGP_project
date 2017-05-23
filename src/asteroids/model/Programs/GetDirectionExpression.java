@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetDirectionExpression implements Expression<Double>  {
@@ -12,7 +13,7 @@ public class GetDirectionExpression implements Expression<Double>  {
 	}
 
 	@Override
-	public Double evaluate() {
+	public Double evaluate(Ship ExecutingShip) {
 		//return this..evaluate().getOrientation();
 	}
 

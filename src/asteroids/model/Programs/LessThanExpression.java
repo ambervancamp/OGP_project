@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class LessThanExpression extends BooleanExpression{
@@ -15,8 +16,8 @@ public class LessThanExpression extends BooleanExpression{
 	}
 
 	@Override
-	public Boolean evaluate() {
-		return (this.getE1().evaluate() < this.getE2().evaluate());
+	public Boolean evaluate(Ship ExecutingShip) {
+		return (this.getE1().evaluate(ExecutingShip) < this.getE2().evaluate(ExecutingShip));
 	}
 
 	public ConstantExpression getE1() {

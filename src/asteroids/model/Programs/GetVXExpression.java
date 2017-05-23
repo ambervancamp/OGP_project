@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetVXExpression implements Expression<Double> {
@@ -13,8 +14,8 @@ public class GetVXExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate() {
-		return this.getE().evaluate().getxVelocity();
+	public Double evaluate(Ship ExecutingShip) {
+		return this.getE().evaluate(ExecutingShip).getxVelocity();
 	}
 
 	public EntityExpression getE() {

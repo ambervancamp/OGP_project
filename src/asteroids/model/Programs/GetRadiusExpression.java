@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetRadiusExpression implements Expression<Double> {
@@ -12,8 +13,8 @@ public class GetRadiusExpression implements Expression<Double> {
 		setLocation(location);	}
 
 	@Override
-	public Double evaluate() {
-		return this.getE().evaluate().getRadius();
+	public Double evaluate(Ship ExecutingShip) {
+		return this.getE().evaluate(ExecutingShip).getRadius();
 	}
 
 	public EntityExpression getE() {
