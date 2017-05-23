@@ -14,8 +14,8 @@ public class Program{
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	// Variables can be of any type
 	// How to keep the type of a variable when first assigned?
-	private HashMap<String, Statement> fuctions = new HashMap<>(); 
-
+	private HashMap<String, Statement> fuctions = new HashMap<>();
+	
 	public Program(List<Function> functions, Statement body) {
 		setFunctions(functions);
 		setBody(body);

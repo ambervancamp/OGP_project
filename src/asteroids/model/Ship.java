@@ -858,7 +858,7 @@ public class Ship extends RoundEntity {
 	}
 	
 	
-	public RoundEntity getClosestEntityOfClass(String cls) throws ClassNotFoundException{
+	public RoundEntity getClosestEntityOfClass(Class<?> cls) throws ClassNotFoundException{
 		if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)
 			return null;
 		double maxDistance = Double.MAX_VALUE;

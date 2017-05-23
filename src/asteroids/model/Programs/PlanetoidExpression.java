@@ -12,7 +12,7 @@ public class PlanetoidExpression extends EntityExpression<Planetoid>{
 
 	@Override
 	public Planetoid evaluate(Ship ExecutingShip) throws ClassNotFoundException {
-		return (Planetoid) ExecutingShip.getClosestEntityOfClass("Planetoid");
+		return (Planetoid) ExecutingShip.getClosestEntityOfClass(Planetoid.class);
 	}
 
 }

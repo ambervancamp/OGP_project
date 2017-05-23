@@ -12,7 +12,7 @@ public class AsteroidExpression extends EntityExpression<Asteroid>{
 
 	@Override
 	public Asteroid evaluate(Ship ExecutingShip) throws ClassNotFoundException {
-		return (Asteroid) ExecutingShip.getClosestEntityOfClass("Asteroid");
+		return (Asteroid) ExecutingShip.getClosestEntityOfClass(Asteroid.class);
 	}
 
 }
