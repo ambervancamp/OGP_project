@@ -5,10 +5,10 @@ import asteroids.part3.programs.SourceLocation;
 
 public class GetXExpression implements Expression<Double> {
 
-	private EntityExpression e;
+	private EntityExpression<?> e;
 	private SourceLocation location;
 	
-	public GetXExpression(EntityExpression e, SourceLocation location) {
+	public GetXExpression(EntityExpression<?> e, SourceLocation location) {
 		setE(e);
 		setLocation(location);	}
 
@@ -17,11 +17,11 @@ public class GetXExpression implements Expression<Double> {
 		return this.getE().evaluate(ExecutingShip).getxPosition();
 	}
 
-	public EntityExpression getE() {
+	public EntityExpression<?> getE() {
 		return e;
 	}
 
-	public void setE(EntityExpression e) {
+	public void setE(EntityExpression<?> e) {
 		this.e = e;
 	}
 

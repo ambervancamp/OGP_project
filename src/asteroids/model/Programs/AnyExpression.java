@@ -4,7 +4,7 @@ import asteroids.model.RoundEntity;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class AnyExpression extends EntityExpression{
+public class AnyExpression extends EntityExpression<RoundEntity>{
 
 	public AnyExpression(SourceLocation location) {
 		super(location);
@@ -12,7 +12,7 @@ public class AnyExpression extends EntityExpression{
 
 	@Override
 	public RoundEntity evaluate(Ship ExecutingShip) {
-		return null;
+		return ExecutingShip.getAnyEntity();
 	}
 
 }

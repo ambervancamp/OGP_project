@@ -17,11 +17,11 @@ public class GetYExpression implements Expression<Double> {
 		return this.getE().evaluate(ExecutingShip).getyPosition();
 	}
 
-	public EntityExpression getE() {
+	public EntityExpression<?> getE() {
 		return e;
 	}
 
-	public void setE(EntityExpression e) {
+	public void setE(EntityExpression<?> e) {
 		this.e = e;
 	}
 

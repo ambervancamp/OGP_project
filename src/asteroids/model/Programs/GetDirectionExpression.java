@@ -3,8 +3,7 @@ package asteroids.model.Programs;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class GetDirectionExpression implements Expression<Double>  {
-	// How to get acces to program running Ship
+public class GetDirectionExpression implements Expression<Double> {
 	
 	private SourceLocation location;
 	
@@ -14,7 +13,7 @@ public class GetDirectionExpression implements Expression<Double>  {
 
 	@Override
 	public Double evaluate(Ship ExecutingShip) {
-		//return this..evaluate().getOrientation();
+		return ExecutingShip.getOrientation();
 	}
 
 	public SourceLocation getLocation() {

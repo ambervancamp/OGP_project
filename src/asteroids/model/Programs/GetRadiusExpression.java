@@ -5,10 +5,10 @@ import asteroids.part3.programs.SourceLocation;
 
 public class GetRadiusExpression implements Expression<Double> {
 
-	private EntityExpression e;
+	private EntityExpression<?> e;
 	private SourceLocation location;
 	
-	public GetRadiusExpression(EntityExpression e, SourceLocation location) {
+	public GetRadiusExpression(EntityExpression<?> e, SourceLocation location) {
 		setE(e);
 		setLocation(location);	}
 
@@ -17,11 +17,11 @@ public class GetRadiusExpression implements Expression<Double> {
 		return this.getE().evaluate(ExecutingShip).getRadius();
 	}
 
-	public EntityExpression getE() {
+	public EntityExpression<?> getE() {
 		return e;
 	}
 
-	public void setE(EntityExpression e) {
+	public void setE(EntityExpression<?> e) {
 		this.e = e;
 	}
 

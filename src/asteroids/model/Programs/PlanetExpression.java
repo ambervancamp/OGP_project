@@ -12,7 +12,7 @@ public class PlanetExpression extends EntityExpression<MinorPlanet>{
 
 	@Override
 	public MinorPlanet evaluate(Ship ExecutingShip) {
-		return null;
+		return ExecutingShip.getClosestEntityOfClass(MinorPlanet);
 	}
 
 }
