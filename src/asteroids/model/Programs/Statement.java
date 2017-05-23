@@ -3,7 +3,6 @@ package asteroids.model.Programs;
 import asteroids.part3.programs.SourceLocation;
 
 public abstract class Statement {
-	//enkele wijzer naar program
 	
 	private SourceLocation sourceLocation;
 	private Program program;

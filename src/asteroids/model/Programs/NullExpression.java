@@ -1,18 +1,18 @@
 package asteroids.model.Programs;
 
+import asteroids.model.RoundEntity;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class NullExpression extends EntityExpression<Null>{
-	// How to get return type null?
+public class NullExpression extends EntityExpression<RoundEntity>{
+	// Return type null solved with RoundEntity
 	
 	public NullExpression(SourceLocation location) {
 		super(location);
 	}
 
 	@Override
-	public Object evaluate(Ship ExecutingShip) {
+	public RoundEntity evaluate(Ship ExecutingShip) {
 		return null;
 	}
-
 }

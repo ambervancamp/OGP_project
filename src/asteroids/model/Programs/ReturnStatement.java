@@ -7,18 +7,16 @@ public class ReturnStatement extends Statement{
 	
 	private Expression<?> value;
 	
-	// Hoe het type definieren dat value moet zijn? Moet een expression zijn..
 	public ReturnStatement(Expression<?> value, SourceLocation sourceLocation) {
 		super(sourceLocation);
 	}
 	
-	// Returned een van de volgende types: double, boolean, entity -> enum maken
 	@Override
-	public Object execute() {
+	public Type execute() {
+		// Hoe kan je van void over gaan naar return type
 		Ship ExecutingShip = this.getProgram().getShip();
-		return this.getValue().evaluate(ExecutingShip);
-		// Moet de expression gereturned worden, of moet de Value eerst
-		// geevalueerd worden en dan gereturned?
+		return (Type) this.getValue().evaluate(ExecutingShip);
+		// Gewerkt met enum, oke zo met casting?
 	}
 
 	public Expression<?> getValue() {

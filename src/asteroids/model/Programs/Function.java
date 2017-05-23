@@ -2,10 +2,12 @@ package asteroids.model.Programs;
 
 import asteroids.part3.programs.SourceLocation;
 
-public abstract class Function{
+public class Function{
 	
 	private SourceLocation sourceLocation;
 	private Program program;
+	private String functionname;
+	private Statement body;
 	
 	public Function(String functionName, Statement body, SourceLocation sourceLocation) {
 		this.setSourceLocation(sourceLocation);
@@ -27,5 +29,23 @@ public abstract class Function{
 		this.sourceLocation = sourceLocation;
 	}
 	
-	public abstract void execute();
+	public void execute(){
+		
+	}
+
+	public Statement getBody() {
+		return body;
+	}
+
+	public void setBody(Statement body) {
+		this.body = body;
+	}
+
+	public String getFunctionname() {
+		return functionname;
+	}
+
+	public void setFunctionname(String functionname) {
+		this.functionname = functionname;
+	}
 }

@@ -128,22 +128,22 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Expression<?> createGetXExpression(Expression<?> e, SourceLocation location) {
-		return new GetXExpression(e, location);
+		return new GetXExpression((EntityExpression<?>)e, location);
 	}
 
 	@Override
 	public Expression<?> createGetVXExpression(Expression<?> e, SourceLocation location) {
-		return new GetVXExpression(e, location);
+		return new GetVXExpression((EntityExpression<?>) e, location);
 	}
 
 	@Override
 	public Expression<?> createGetVYExpression(Expression<?> e, SourceLocation location) {
-		return new GetVYExpression(e, location);
+		return new GetVYExpression((EntityExpression<?>) e, location);
 	}
 
 	@Override
 	public Expression<?> createGetRadiusExpression(Expression<?> e, SourceLocation location) {
-		return new GetRadiusExpression(e, location);
+		return new GetRadiusExpression((EntityExpression<?>) e, location);
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Expression<?> createGetYExpression(Expression<?> e, SourceLocation location) {
-		return new GetYExpression((EntityExpression) e, location);
+		return new GetYExpression((EntityExpression<?>) e, location);
 	}
 
 	@Override

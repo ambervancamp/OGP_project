@@ -5,7 +5,7 @@ import java.util.HashMap;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class VariableExpression implements Expression<Expression<?>> {
+public class VariableExpression implements Expression<Type> {
 	
 	private String variableName;
 	private SourceLocation location;
@@ -16,13 +16,11 @@ public class VariableExpression implements Expression<Expression<?>> {
 	}
 	
 	@Override
-	public Expression<?> evaluate(Ship ExecutingShip) {
+	public Type evaluate(Ship ExecutingShip) {
 		HashMap<String, Expression<?>> variables = ExecutingShip.getProgram().getVariables();
-		return variables.get(this.getVariableName());
-		// De constantExpression nog executen of niet? 
-		// Moet deze functie de expression returnen, of de waarde achter de expression?
-		// Let op, expression<?> kan nog steeds eender welk type zijn, dus na execute
-		// staat type niet vast
+		return (Type) variables.get(this.getVariableName()).evaluate(ExecutingShip);
+		// Gewerkt met enumeratie
+		// Oke zo met casting?
 	}
 
 	public SourceLocation getLocation() {

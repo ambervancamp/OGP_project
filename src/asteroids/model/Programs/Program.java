@@ -24,6 +24,7 @@ public class Program{
 	}
 	
 	public List<Object> execute(Double duration){
+		
 		body.execute();
 	}
 	// Function met tijd uitvoeren

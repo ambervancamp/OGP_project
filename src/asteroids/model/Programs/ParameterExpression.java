@@ -3,7 +3,7 @@ package asteroids.model.Programs;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class ParameterExpression implements Expression<String> {
+public class ParameterExpression implements Expression<Type> {
 	
 	private String parameterName;
 	private SourceLocation sourceLocation;
@@ -14,8 +14,8 @@ public class ParameterExpression implements Expression<String> {
 	}
 
 	@Override
-	public String evaluate(Ship ExecutingShip) {
-		return this.getParameterName();
+	public Type evaluate(Ship ExecutingShip) {
+		return (Type) this.getParameterName();
 	}
 	// return the value of the parameter??
 
