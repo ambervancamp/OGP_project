@@ -22,8 +22,7 @@ public class Program{
 	}
 	
 	public List<Object> execute(Double duration){
-		// TODO
-		return null;
+		body.execute();
 	}
 
 	public List<Function> getFunctions(){

@@ -10,3 +10,4 @@ public class BreakStatement extends Statement{
 
 }
 //ALS GENESTE KLASSE IN WHILE, ENKEL DAAR GEBRUIKT
+// hoe kan je dan een nieuwe Break aanmaken in programfactory?

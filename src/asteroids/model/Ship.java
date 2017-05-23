@@ -115,8 +115,9 @@ public class Ship extends RoundEntity {
 	@Override
 	public void terminate() {
 		if (!this.isTerminated()){
-			if (this.hasSpace())
+			if (this.hasSpace()){
 				this.removeOutSpace();
+			}		
 			
 			if (getNbBullets()!=0){
 				for (Bullet bullet: bullets){
@@ -815,22 +816,13 @@ public class Ship extends RoundEntity {
 		}
 	}
 	
-	public Program getProgram(){
-		return this.program;
-	}
-	
-	public void setProgram(Program program){
-		this.program = program;
-		if (program != null)
-			program.setShip(this);		
-	}
-	
 	@Override
 	public void move(double duration){
 		if (!canHaveAsDuration(duration))
 			throw new IllegalArgumentException();
 		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
 	}
+	
 	
 	@Override
 	public void resolveCollision(RoundEntity other){
@@ -845,16 +837,29 @@ public class Ship extends RoundEntity {
 			double y = this.getSpace().getHeight()*(new Random().nextDouble());
 			if (!this.canHaveAsPosition(x, y))
 				this.terminate();
-			else	
-				this.setPosition(x, y);
-			}
+			this.setPosition(x, y);
+			for (RoundEntity possibleEntityToHit : this.getSpace().getEntities()){
+				if (this.overlap(possibleEntityToHit))
+					this.terminate();
+			}				
+		}
 		else
 			other.resolveCollision(this);
 	}
 	
-//	public List<Object> executeProgram(Double duration){
-//		return this.program.execute(duration);
-//	}
+	public Program getProgram(){
+		return this.program;
+	}
+	
+	public void setProgram(Program program){
+		this.program = program;
+		if (program != null)
+			program.setShip(this);		
+	}
+	
+	public List<Object> executeProgram(Double duration){
+		return this.program.execute(duration);
+	}
 	
 	private Program program;
 	

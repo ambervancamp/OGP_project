@@ -133,7 +133,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getxPosition(){
+	public double getxPosition(){
 		return this.xPosition;
 	}
 	//clone?
@@ -148,7 +148,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getyPosition(){
+	public double getyPosition(){
 		return this.yPosition;
 	}
 	//clone?
@@ -236,7 +236,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getxVelocity(){
+	public double getxVelocity(){
 		return this.xVelocity;
 	}
 	
@@ -250,7 +250,7 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	@Immutable
-	protected double getyVelocity(){
+	public double getyVelocity(){
 		return this.yVelocity;
 	}
 	
@@ -460,7 +460,9 @@ public abstract class RoundEntity {
 	@Basic
 	@Raw
 	public World getWorld(){ 
-		if (this.getSpace() instanceof World)
+		if (this.isTerminated())
+			return null;
+		else if (this.getSpace() instanceof World)
 			return (World) this.getSpace();
 		return null;
 	}
@@ -491,7 +493,12 @@ public abstract class RoundEntity {
 	 *       	| result == (space != null && (!space.isTerminated()) && (!this.isTerminated()))
 	 */
 	public boolean canHaveAsSpace(Space space){
-		return (space != null && (!space.isTerminated()) && (!this.isTerminated()));
+		if (space.isTerminated() == true)
+			return false;
+		else if (this.isTerminated() == true)
+			return false;
+		return true;
+//		return (!space.isTerminated() && !this.isTerminated());
 	}
 	
 	/**
@@ -611,8 +618,8 @@ public abstract class RoundEntity {
 	protected void removeOutSpace(){
 		if (this.hasSpace()){
 			Space space = this.getSpace();
-			this.space = null;
 			space.deleteEntity(this);
+			this.space = null;
 			// Can not use 'setSpace' because it does not allow to set a space to null.	
 		}		
 	}
@@ -1245,12 +1252,11 @@ public abstract class RoundEntity {
 			
 			double [] VelocityThis = {(this.getVelocity()[0]+JX/this.getMass()),
 							(this.getVelocity()[1]+JY/this.getMass())};
-			double [] VelocityOther = {-(other.getVelocity()[0]-JX/other.getMass()),
-					-(other.getVelocity()[1]-JY/other.getMass())};
+			double [] VelocityOther = {(other.getVelocity()[0]-JX/other.getMass()),
+					(other.getVelocity()[1]-JY/other.getMass())};
 			this.setVelocity(VelocityThis[0], VelocityThis[1]);
 			other.setVelocity(VelocityOther[0], VelocityOther[1]);
-//			System.out.println(this);
-//			System.out.println(VelocityThis[0]);
+			
 		}
 		else
 			throw new IllegalArgumentException();

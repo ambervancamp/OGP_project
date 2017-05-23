@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.antlr.v4.codegen.model.chunk.ThisRulePropertyRef_start;
+
 import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
@@ -72,8 +74,15 @@ public abstract class Space {
 	 * 		
 	 */
 	public void terminate(){
-		for (RoundEntity entity : entities)
-			this.deleteEntity(entity);
+		Set<RoundEntity> entitiesToDelete = new HashSet<RoundEntity> ();
+		UnboundSpace unboundSpace = null;
+		for (RoundEntity entity : entities){
+			entitiesToDelete.add(entity);
+		}
+		for (RoundEntity entityToDelete : entitiesToDelete){
+			this.deleteEntity(entityToDelete);
+			entityToDelete.isTerminated = true;
+		}
 		this.isTerminated = true;
 	}
 	
@@ -243,9 +252,10 @@ public abstract class Space {
 	 */
 	public void deleteEntity(RoundEntity entity) throws IllegalArgumentException{
 		// This function expects that the given entity does not reference this world.
-		if (!canHaveAsEntity(entity) || entity.getSpace() != null || !this.hasAsEntity(entity))
+		if (!canHaveAsEntity(entity) || entity.getSpace() == null || !this.hasAsEntity(entity))
 			throw new IllegalArgumentException();
 		entities.remove(entity);
+//		entity.terminate();
 	}
 	
 	/**
@@ -408,57 +418,62 @@ public abstract class Space {
 			throws IllegalArgumentException{
 		if (this.isTerminated() || duration < 0 || Double.isNaN(duration))
 			throw new IllegalArgumentException();
-		
+		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (entities);
+
 		double timeToNextHit = getTimeNextCollision();
 		while (timeToNextHit <= duration){
-			for (RoundEntity entity : entities){
+			Set<Set<RoundEntity>> getCollisions = this.getCollisions();
+			for (RoundEntity entity : possibleEntities){
 				if (entity instanceof Ship){
 					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
 				entity.move(timeToNextHit);}
-				else if (entity instanceof Bullet && timeToNextHit == entity.getTimeToHitWall()){
-					((Bullet) entity).setNbWallHits(((Bullet) entity).getNbWallHits()+1);
-					entity.move(timeToNextHit);
-					}
 				else
 					entity.move(timeToNextHit);
-//				System.out.println(entity);
-//				System.out.println(entity.getxPosition());
 				}
 				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
 				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
 				// maar zou deze altijd 0 moeten zijn...
-			for (RoundEntity firstEntity: entities){
-				firstEntity.resolveCollision();
-//				System.out.println(firstEntity.getxVelocity());
-//				System.out.println(firstEntity.getyVelocity());
-				for (RoundEntity secondEntity: entities){
-					if (firstEntity != secondEntity){
-						firstEntity.resolveCollision(secondEntity);
-						
+			for (Set<RoundEntity> collision : getCollisions){
+				if (collision.size() == 1){
+					RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
+					if (entityThatHitWall instanceof Bullet){
+//						collisionListener.boundaryCollision(entityThatHitWall, 
+//															entityThatHitWall.getPositionOfHitWall()[0],
+//															entityThatHitWall.getPositionOfHitWall()[1]);
+						((Bullet) entityThatHitWall).setNbWallHits(((Bullet) entityThatHitWall).getNbWallHits()+1);
 					}
-				}
+					entityThatHitWall.resolveCollision();
+					}
+				
+				else if (collision.size() == 2){
+					RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
+					RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
+					if(firstEntity instanceof Bullet || secondEntity instanceof Bullet){
+//						collisionListener.objectCollision(firstEntity,secondEntity,
+//														  firstEntity.getCollisionPosition(secondEntity)[0],
+//														  firstEntity.getCollisionPosition(secondEntity)[1]);
+					}
+					firstEntity.resolveCollision(secondEntity);
+					}
 			}
 			duration = duration-timeToNextHit;
 			timeToNextHit = this.getTimeNextCollision();
-//			System.out.println(this.getTimeNextCollision());
 			}
 		if (duration > 0){
 			for (RoundEntity entity : entities){
-				if (entity instanceof Ship){
-					((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
-					entity.move(duration);
-					}
-				else
-					entity.move(duration);
-//				System.out.println(entity);
-//				System.out.println(entity.getxVelocity());
-//				System.out.println(entity.getxPosition());
+				if (!entity.isTerminated){
+					if (entity instanceof Ship){
+						((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
+						entity.move(duration);
+						}
+					else
+						entity.move(duration);
+				}
 				}
 			}
 		}
+
 	
-	// the entities die in een wereld zitten passen beter in de klasse en kunnen gebruikt worden 
-	// zonder facade aan te passen of hun testfiles aan te passen, dus hier lijkt mij echt wel beter
 	public Set<? extends RoundEntity> getEntityOfClass(Class<?> cls) {
 		Set<RoundEntity> result = new HashSet<RoundEntity>();
 		Set<RoundEntity> entitiesInThisWorld = this.getEntities();

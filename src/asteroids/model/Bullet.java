@@ -1,5 +1,8 @@
 package asteroids.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -164,6 +167,7 @@ public class Bullet extends RoundEntity {
 		if (!canHaveAsShip(ship))
 			throw new IllegalArgumentException();
 		this.ship = ship;
+		this.originalShip = ship;
 	}
 	
 	/**
@@ -258,7 +262,7 @@ public class Bullet extends RoundEntity {
 	 * @post	The former ship of this bullet, if any, is no longer
 	 *		   	its ship.
 	 */
-	void removeOutShip(){
+	public void removeOutShip(){
 		if (this.hasShip()){
 			Ship ship = this.getShip();
 			this.ship = null;
@@ -324,13 +328,19 @@ public class Bullet extends RoundEntity {
 	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();	
+		Set<RoundEntity> entitiesToTerminate = new HashSet<RoundEntity>();
 		for (RoundEntity entity: space.getEntities()){
 			if (this.overlap(entity)){
-				this.terminate();
-				entity.terminate();
+				entitiesToTerminate.add(entity);
 			}
-				
 		}
+		if (entitiesToTerminate.size() != 0){
+			for (RoundEntity entityToTerminate : entitiesToTerminate){
+				entityToTerminate.terminate();
+			}
+			this.terminate();
+		}
+				
 		if (!space.fitBoundary(this))
 			this.terminate();
 		if (this.hasSpace()){
@@ -354,6 +364,8 @@ public class Bullet extends RoundEntity {
 	 * Variable registering the ship this round entity is placed in.
 	 */
 	private Ship ship = null;
+	
+	private Ship originalShip = null;
 
 	/**
 	 * Return the number of times a bullet has hit the wall.
@@ -452,17 +464,24 @@ public class Bullet extends RoundEntity {
 		if (!other.inSameSpace(this) || other == this)
 			throw new IllegalArgumentException();
 		else if (other instanceof Ship){
-			if (((Ship) other).hasAsBullet(this)){
-				this.placeInShip((Ship) other);
+			if (originalShip == other){
+				this.removeOutSpace();
+				this.ship = originalShip;
+				ship.addBullet(this);
 				this.setNbWallHits(0);
+				this.setPosition(this.getShip().getxPosition(),this.getShip().getyPosition());
+				this.setVelocity(this.getShip().getxVelocity(), this.getShip().getyVelocity());
 				}
+			else{
+				this.terminate();
+				other.terminate();
+			}
 			}
 		else{
 			this.terminate();
 			other.terminate();
 		}
 	}
-
 }
 
 

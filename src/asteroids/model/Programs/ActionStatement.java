@@ -1,5 +1,10 @@
 package asteroids.model.Programs;
 
-public class ActionStatement extends Statement{
+import asteroids.part3.programs.SourceLocation;
 
+public abstract class ActionStatement extends Statement{
+
+	public ActionStatement(SourceLocation sourceLocation) {
+		super(sourceLocation);
+	}
 }
