@@ -2,6 +2,7 @@ package asteroids.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
+@Value
 /**
  * A class to represent minor planets as a special kind of round entities.
  * 
