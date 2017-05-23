@@ -7,8 +7,6 @@ import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import asteroids.facade.Facade;
-import asteroids.part2.facade.IFacade;
 import asteroids.util.ModelException;
 
 public class TestsPart1 {

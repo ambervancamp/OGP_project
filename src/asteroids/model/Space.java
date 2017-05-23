@@ -3,10 +3,7 @@ package asteroids.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-
-import org.antlr.v4.codegen.model.chunk.ThisRulePropertyRef_start;
 
 import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.Basic;
@@ -75,7 +72,6 @@ public abstract class Space {
 	 */
 	public void terminate(){
 		Set<RoundEntity> entitiesToDelete = new HashSet<RoundEntity> ();
-		UnboundSpace unboundSpace = null;
 		for (RoundEntity entity : entities){
 			entitiesToDelete.add(entity);
 		}
