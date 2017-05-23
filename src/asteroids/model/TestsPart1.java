@@ -82,13 +82,13 @@ public class TestsPart1 {
 		Ship ship2 = new Ship(4,5,2,3,15,2,6*Math.pow(10,16));
 		assertEquals(6*Math.pow(10,16), ship2.getMass(),EPSILON);
 		
-		Bullet bullet1 = new Bullet(1000, 800, 100, 200, 7);
+		Bullet bullet1 = new Bullet(5, 5, 100, 200, 7);
 		bullet1.placeInShip(ship2);
 		assertEquals(7.1206689313885504*Math.pow(10, 16), ship2.getMass(),EPSILON);
 		
 		Ship ship3 = new Ship(4,5,2,3,15,2,6*Math.pow(10,16));
-		Bullet bullet2 = new Bullet(1000, 800, 100, 200, 7);
-		Bullet bullet3 = new Bullet(100, 800, 101, 20, 7);
+		Bullet bullet2 = new Bullet(2.5, 6, 100, 200, 7);
+		Bullet bullet3 = new Bullet(5, 4, 101, 20, 7);
 		List<Bullet> bullets1 = new ArrayList<Bullet>();
 		bullets1.add(bullet2);
 		bullets1.add(bullet3);
@@ -107,8 +107,8 @@ public class TestsPart1 {
 		firstShip.placeInSpace(world); 
 		secondShip.placeInSpace(world);
 		thirdShip.placeInSpace(world);
-		assertEquals(3, firstShip.getCertainEntities(world).size());
-		assertEquals(0, firstBullet.getCertainEntities(world).size());
+		assertEquals(3, world.getEntityOfClass(firstShip.getClass()).size());
+		assertEquals(0, world.getEntityOfClass(firstBullet.getClass()).size());
 	}
 	
 
@@ -122,7 +122,7 @@ public class TestsPart1 {
 		World world = new World(8000, 8000);
 		Bullet firstBullet = new Bullet(1000, 800, 100, 200, 7);
 		firstBullet.placeInSpace(world);
-		assertEquals(1,firstBullet.getCertainEntities(world).size());
+		assertEquals(1,world.getEntityOfClass(firstBullet.getClass()).size());
 		assertEquals(world,firstBullet.getWorld());
 	}
 	
@@ -240,8 +240,8 @@ public class TestsPart1 {
 		assertEquals(800, world.getSpaceSize()[1], EPSILON);
 		RoundEntity ship = new Ship(10,10,10,10,10,Math.PI, 10);
 		RoundEntity bullet = new Bullet(10,10,10,10,10);
-		assertTrue(ship.getCertainEntities(world).isEmpty());
-		assertTrue(bullet.getCertainEntities(world).isEmpty());
+		assertTrue(world.getEntityOfClass(ship.getClass()).isEmpty());
+		assertTrue(world.getEntityOfClass(bullet.getClass()).isEmpty());
 		assertFalse(world.isTerminated());
 		world.terminate();
 		assertTrue(world.isTerminated());
@@ -253,11 +253,12 @@ public class TestsPart1 {
 		RoundEntity entity = new Bullet(400, 20, -7, 3, 5);
 		assertTrue(world.fitBoundary(entity));
 		entity.placeInSpace(world);
-		assertEquals(1,entity.getCertainEntities(world).size());
+		assertEquals(1,world.getEntityOfClass(entity.getClass()).size());
 		assertEquals(entity, world.getEntityAt((double)400, (double)20));
 		UnboundSpace unboundspace = new UnboundSpace();
 		entity.placeInSpace(unboundspace);
-		assertEquals(0,entity.getCertainEntities(world).size());
+		assertEquals(0,world.getEntityOfClass(entity.getClass())
+				.size());
 		assertEquals(0,world.getEntities().size() );
 	}
 	
@@ -284,18 +285,24 @@ public class TestsPart1 {
 		RoundEntity firstShip = new Ship(90, 100, -10, 0, 10, Math.PI, 10);
 		RoundEntity secondShip =new Ship(230, 100, -50, 0, 10, Math.PI/3, 10);
 		RoundEntity thirdShip = new Ship(60,100,-25,0,10,Math.PI,10);
-		firstShip.placeInSpace(world);
-		secondShip.placeInSpace(world);
-		thirdShip.placeInSpace(world);
+		firstShip.placeInSpace(world);secondShip.placeInSpace(world);thirdShip.placeInSpace(world);
+		
 		assertFalse(thirdShip.isTerminated());
 		assertEquals(thirdShip.getTimeToHitWall(),2,EPSILON);
 		assertEquals(thirdShip.getPositionOfHitWall()[0],0,EPSILON);
 		assertEquals(thirdShip.getPositionOfHitWall()[1],100,EPSILON);
 		assertTrue(thirdShip.hasHitWall());
 		world.evolve(3, null);
+		// collision with wall after 2 seconds (thirdShip)
+		// collision between 2 entities after 3 seconds
+		assertEquals(firstShip.getVelocity()[0],-50,EPSILON);
+		assertEquals(firstShip.getVelocity()[1],0,EPSILON);
+		assertEquals(secondShip.getVelocity()[0],-10,EPSILON);
+		assertEquals(secondShip.getVelocity()[1],0,EPSILON);
 		assertEquals(thirdShip.getVelocity()[0],25,EPSILON);
 		assertEquals(thirdShip.getVelocity()[1],0,EPSILON);
-		assertEquals(secondShip.getVelocity()[0],-20,EPSILON);
+		
+	
 	}
 	
 	@Test public void testGetTimeNextCollision() throws ModelException {
@@ -334,7 +341,9 @@ public class TestsPart1 {
 		assertFalse(world.fitBoundary(thirdShip));
 		assertEquals(firstShip.getSpace(),world);
 		List<RoundEntity> entity = new ArrayList<>(Arrays.asList(firstShip, secondShip));
-		assertEquals(world.getEntities(),entity);
+		assertTrue(entity.containsAll(world.getEntities()));
 		bullet.placeInSpace(world);
 	}
+	
+	
 }

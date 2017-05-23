@@ -787,6 +787,15 @@ public class Ship extends RoundEntity {
 		return false;
 	}
 		
+	public Set<Bullet> firedBullets = new HashSet<Bullet> ();
+	
+	public Bullet getFiredBullet(){
+		if (firedBullets.size() == 0)
+			return null;
+		else
+			return (Bullet) firedBullets.toArray()[0];
+	}
+		
 	public void fireBullet(){
 		if (this.hasWorld() && this.getNbBullets() != 0){
 			Bullet bullet = this.getBulletAt(this.getNbBullets());
@@ -802,6 +811,7 @@ public class Ship extends RoundEntity {
 			
 			try{
 				bullet.placeInSpace(this.getWorld());
+				firedBullets.add(bullet);
 			}
 			catch (IllegalArgumentException exc){
 				if (bullet.hasHitWall())
@@ -845,6 +855,29 @@ public class Ship extends RoundEntity {
 		}
 		else
 			other.resolveCollision(this);
+	}
+	
+	
+	public RoundEntity getClosestEntityOfClass(Class <?> cls){
+		if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)
+			return null;
+		double maxDistance = Double.MAX_VALUE;
+		RoundEntity shipClosest = null;
+		for (RoundEntity entity : this.getSpace().getEntityOfClass(cls)){
+			double distanceBetween = this.getDistanceBetween(entity);
+			if (distanceBetween < maxDistance){
+				maxDistance = distanceBetween;
+				shipClosest = entity;
+			}
+		}
+		return shipClosest;
+	}
+	
+	public RoundEntity getAnyEntity(Class <?> cls) throws IllegalArgumentException{
+		if (this.isTerminated || this.canHaveAsSpace(this.getWorld()))
+			throw new IllegalArgumentException();
+		else
+			return (RoundEntity) this.getSpace().getEntities().toArray()[0];
 	}
 	
 	public Program getProgram(){
