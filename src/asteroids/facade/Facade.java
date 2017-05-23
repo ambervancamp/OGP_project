@@ -1142,39 +1142,23 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		}
 	}
 
-//	@Override
-//	public List<Object> executeProgram(Ship ship, double dt) throws ModelException {
-//		try{
-//			return ship.executeProgram(dt);
-//		}
-//		catch (Exception exc) {
-//			throw new ModelException(exc.getMessage());
-//		}	
-//	}
-//
-//	@Override
-//	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
-//		try{
-//			return new ProgramFactory();
-//		}
-//		catch (Exception exc) {
-//			throw new ModelException(exc.getMessage());
-//		}	
-//	}
-
-	@Override
-	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException {
-		// TODO functies staan hierboven maar dit moest er effe bij om geen errors te geven
-		// mag weg als de functies hierboven werken
-		return null;
-	
-	}
-
 	@Override
 	public List<Object> executeProgram(Ship ship, double dt) throws ModelException {
-		// TODO functies staan hierboven maar dit moest er effe bij om geen errors te geven
-		// mag weg als de functies hierboven werken
-		return null;
+		try{
+			return ship.executeProgram(dt);
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}	
 	}
 
+	@Override
+	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException {
+		try{
+			return new ProgramFactory();
+		}
+		catch (Exception exc) {
+			throw new ModelException(exc.getMessage());
+		}	
+	}
 }

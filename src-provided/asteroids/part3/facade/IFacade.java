@@ -263,5 +263,5 @@ public interface IFacade extends asteroids.part2.facade.IFacade {
 	/**
 	 * Creates a new program factory.
 	 */
-	public IProgramFactory<?, ?, ?, ? extends ProgramFactory> createProgramFactory() throws ModelException;
+	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException;
 }
