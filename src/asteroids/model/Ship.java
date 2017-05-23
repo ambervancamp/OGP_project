@@ -858,12 +858,12 @@ public class Ship extends RoundEntity {
 	}
 	
 	
-	public RoundEntity getClosestEntityOfClass(Class <?> cls){
-		if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)
+	public RoundEntity getClosestEntityOfClass(String cls) throws ClassNotFoundException{
+		if (this.isTerminated() || this.getSpace().getEntityOfClass(Class.forName(cls)).size() == 0)
 			return null;
 		double maxDistance = Double.MAX_VALUE;
 		RoundEntity shipClosest = null;
-		for (RoundEntity entity : this.getSpace().getEntityOfClass(cls)){
+		for (RoundEntity entity : this.getSpace().getEntityOfClass(Class.forName(cls))){
 			double distanceBetween = this.getDistanceBetween(entity);
 			if (distanceBetween < maxDistance){
 				maxDistance = distanceBetween;
