@@ -16,7 +16,7 @@ public class EqualToExpression extends BooleanExpression{
 	}
 
 	@Override
-	public Boolean evaluate(Ship ExecutingShip) {
+	public Boolean evaluate(Ship ExecutingShip) throws ClassNotFoundException {
 		if (this.getE1().getClass() != this.getE2().getClass())
 			return false;
 		return (this.getE1().evaluate(ExecutingShip) == this.getE2().evaluate(ExecutingShip));

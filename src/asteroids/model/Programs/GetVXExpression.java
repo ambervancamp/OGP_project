@@ -14,7 +14,7 @@ public class GetVXExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) {
+	public Double evaluate(Ship ExecutingShip) throws ClassNotFoundException {
 		return this.getE().evaluate(ExecutingShip).getxVelocity();
 	}
 

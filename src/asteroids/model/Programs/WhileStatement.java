@@ -31,7 +31,7 @@ public class WhileStatement extends Statement{
 	}
 	
 	@Override
-	public void execute() {
+	public void execute() throws ClassNotFoundException {
 		Ship ExecutingShip = this.getProgram().getShip();
 		while(this.getCondition().evaluate(ExecutingShip))
 			this.getBody().execute();

@@ -474,12 +474,12 @@ public abstract class Space {
 		}
 
 	
-	public Set<? extends RoundEntity> getEntityOfClass(Class<?> cls) {
+	public Set<? extends RoundEntity> getEntityOfClass(String cls) throws ClassNotFoundException {
 		Set<RoundEntity> result = new HashSet<RoundEntity>();
 		Set<RoundEntity> entitiesInThisWorld = this.getEntities();
 		
 		for (RoundEntity entity : entitiesInThisWorld) {
-			if (entity.getClass().isAssignableFrom(cls)) {
+			if (entity.getClass().isAssignableFrom(Class.forName(cls))) {
 				result.add(entity);
 			}
 		}		

@@ -17,7 +17,7 @@ public class IfThenElseStatement extends Statement{
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws ClassNotFoundException {
 		Ship ExecutingShip = this.getProgram().getShip();
 		if (this.getCondition().evaluate(ExecutingShip))
 			this.ifBody.execute();

@@ -27,5 +27,5 @@ public abstract class Statement {
 		this.sourceLocation = sourceLocation;
 	}
 	
-	public abstract void execute();
+	public abstract void execute() throws ClassNotFoundException;
 }

@@ -16,7 +16,7 @@ public class VariableExpression implements Expression<Type> {
 	}
 	
 	@Override
-	public Type evaluate(Ship ExecutingShip) {
+	public Type evaluate(Ship ExecutingShip) throws ClassNotFoundException {
 		HashMap<String, Expression<?>> variables = ExecutingShip.getProgram().getVariables();
 		return (Type) variables.get(this.getVariableName()).evaluate(ExecutingShip);
 		// Gewerkt met enumeratie

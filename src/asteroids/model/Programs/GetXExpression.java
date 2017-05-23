@@ -13,7 +13,7 @@ public class GetXExpression implements Expression<Double> {
 		setLocation(location);	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) {
+	public Double evaluate(Ship ExecutingShip) throws ClassNotFoundException {
 		return this.getE().evaluate(ExecutingShip).getxPosition();
 	}
 

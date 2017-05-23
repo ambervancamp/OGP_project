@@ -859,11 +859,11 @@ public class Ship extends RoundEntity {
 	
 	
 	public RoundEntity getClosestEntityOfClass(String cls) throws ClassNotFoundException{
-		if (this.isTerminated() || this.getSpace().getEntityOfClass(Class.forName(cls)).size() == 0)
+		if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)
 			return null;
 		double maxDistance = Double.MAX_VALUE;
 		RoundEntity shipClosest = null;
-		for (RoundEntity entity : this.getSpace().getEntityOfClass(Class.forName(cls))){
+		for (RoundEntity entity : this.getSpace().getEntityOfClass(cls)){
 			double distanceBetween = this.getDistanceBetween(entity);
 			if (distanceBetween < maxDistance){
 				maxDistance = distanceBetween;
@@ -873,7 +873,7 @@ public class Ship extends RoundEntity {
 		return shipClosest;
 	}
 	
-	public RoundEntity getAnyEntity(Class <?> cls) throws IllegalArgumentException{
+	public RoundEntity getAnyEntity() throws IllegalArgumentException{
 		if (this.isTerminated || this.canHaveAsSpace(this.getWorld()))
 			throw new IllegalArgumentException();
 		else

@@ -14,7 +14,7 @@ public class LogicalNegationExpression extends BooleanExpression {
 	}
 
 	@Override
-	public Boolean evaluate(Ship ExecutingShip) {
+	public Boolean evaluate(Ship ExecutingShip) throws ClassNotFoundException {
 		return !this.getExpression().evaluate(ExecutingShip);
 	}
 
