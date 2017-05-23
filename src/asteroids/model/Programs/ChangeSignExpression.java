@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class ChangeSignExpression implements Expression<Double> {
@@ -14,8 +15,8 @@ public class ChangeSignExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate() {
-		return -1*(this.getExpression().evaluate());
+	public Double evaluate(Ship ExecutingShip) {
+		return -1*(this.getExpression().evaluate(ExecutingShip));
 	}
 
 	public ConstantExpression getExpression() {

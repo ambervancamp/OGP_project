@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class IfThenElseStatement extends Statement{
@@ -17,7 +18,8 @@ public class IfThenElseStatement extends Statement{
 
 	@Override
 	public void execute() {
-		if (this.getCondition().evaluate())
+		Ship ExecutingShip = this.getProgram().getShip();
+		if (this.getCondition().evaluate(ExecutingShip))
 			this.ifBody.execute();
 
 		else

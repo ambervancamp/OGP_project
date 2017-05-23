@@ -1,5 +1,6 @@
 package asteroids.model.Programs;
 
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class SqrtExpression implements Expression<Double> {
@@ -13,8 +14,8 @@ public class SqrtExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate() {
-		return Math.sqrt(this.getE().evaluate());
+	public Double evaluate(Ship ExecutingShip) {
+		return Math.sqrt(this.getE().evaluate(ExecutingShip));
 	}
 
 	public ConstantExpression getE() {

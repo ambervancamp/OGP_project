@@ -1,8 +1,11 @@
 package asteroids.model.Programs;
 
+import java.util.HashMap;
+
+import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class VariableExpression implements Expression<String> {
+public class VariableExpression implements Expression<Expression<?>> {
 	
 	private String variableName;
 	private SourceLocation location;
@@ -13,8 +16,13 @@ public class VariableExpression implements Expression<String> {
 	}
 	
 	@Override
-	public String evaluate() {
-		return this.getVariableName();
+	public Expression<?> evaluate(Ship ExecutingShip) {
+		HashMap<String, Expression<?>> variables = ExecutingShip.getProgram().getVariables();
+		return variables.get(this.getVariableName());
+		// De constantExpression nog executen of niet? 
+		// Moet deze functie de expression returnen, of de waarde achter de expression?
+		// Let op, expression<?> kan nog steeds eender welk type zijn, dus na execute
+		// staat type niet vast
 	}
 
 	public SourceLocation getLocation() {

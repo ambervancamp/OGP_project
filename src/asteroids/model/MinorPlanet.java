@@ -18,7 +18,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author amber_000
  *
  */
-abstract class MinorPlanet extends RoundEntity{
+public abstract class MinorPlanet extends RoundEntity{
 	/**
 	 * Initialize this new round entity with given parameters.
 	 *
