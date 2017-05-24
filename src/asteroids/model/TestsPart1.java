@@ -30,6 +30,7 @@ public class TestsPart1 {
 		assertFalse(ship.hasSpace());
 		assertTrue(ship.isTerminated());
 		assertEquals(ship.getNbBullets(),0, EPSILON);
+		assertEquals(null,this.getClass(),EPSILON);
 	}
 		
 	@Test
@@ -48,9 +49,9 @@ public class TestsPart1 {
 		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4,1);
 		assertNotNull(ship.getVelocity()[0]);
 		assertNotNull(ship.getVelocity()[1]);
-		assertEquals(-0.937050937046366,ship.getVelocity()[0],EPSILON);
+		assertEquals(-3.1235*ship.getMaxSpeed()/ship.getSpeed(),ship.getVelocity()[0],EPSILON);
 		assertNotEquals(456158,ship.getVelocity()[0],EPSILON);
-		assertEquals(300000,ship.getVelocity()[1],EPSILON);
+		assertEquals(30000,ship.getVelocity()[1],EPSILON);
 		assertNotEquals(7,ship.getVelocity()[1],EPSILON);	
 	}
 
@@ -96,7 +97,7 @@ public class TestsPart1 {
 	}
 	
 	@Test
-	public void testPlaceShipInWorld(){
+	public void testPlaceShipInWorld() throws ClassNotFoundException{
 		World world = new World(8000, 8000);
 		RoundEntity firstShip = new Ship(100, 100, -10, 20, 10, Math.PI, 10E12);
 		RoundEntity secondShip = new Ship(200, 100, -5, 20, 15, Math.PI/3, 20E12);
@@ -113,10 +114,11 @@ public class TestsPart1 {
 	
 	/**
 	 * BULLET
+	 * @throws ClassNotFoundException 
 	 */
 
 	@Test
-	public void testPlaceBulletInWorld(){
+	public void testPlaceBulletInWorld() throws ClassNotFoundException{
 		World world = new World(8000, 8000);
 		Bullet firstBullet = new Bullet(1000, 800, 100, 200, 7);
 		firstBullet.placeInSpace(world);
@@ -232,7 +234,7 @@ public class TestsPart1 {
 	
 
 	@Test
-	public void testCreateWorld() throws ModelException {
+	public void testCreateWorld() throws ModelException, ClassNotFoundException {
 		World world = new World(1000, 800);
 		assertEquals(1000, world.getSpaceSize()[0], EPSILON);
 		assertEquals(800, world.getSpaceSize()[1], EPSILON);
@@ -246,7 +248,7 @@ public class TestsPart1 {
 	}
 	
 	@Test
-	public void testEntity() throws ModelException {
+	public void testEntity() throws ModelException, ClassNotFoundException {
 		World world = new World(1000, 800);
 		RoundEntity entity = new Bullet(400, 20, -7, 3, 5);
 		assertTrue(world.fitBoundary(entity));

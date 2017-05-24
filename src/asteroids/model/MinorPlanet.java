@@ -3,6 +3,7 @@ package asteroids.model;
 import be.kuleuven.cs.som.annotate.*;
 
 @Value
+
 /**
  * A class to represent minor planets as a special kind of round entities.
  * 
@@ -12,11 +13,6 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  * @invar  	Each minor planet can have its density as density .
  *       	| canHaveAsDensity(this.getDensity())
- *       
- * @invar  	Each minor planet must have a proper space.
- *       	| hasProperSpace()
- * 
- * @author amber_000
  *
  */
 public abstract class MinorPlanet extends RoundEntity{
@@ -44,6 +40,9 @@ public abstract class MinorPlanet extends RoundEntity{
 		super(x, y, xVelocity, yVelocity, radius);
 	}
 
+	
+// 	All methods handling the termination of a minor planet.
+	
 	@Override
 	public void terminate() {
 		if (!this.isTerminated()){
@@ -53,6 +52,8 @@ public abstract class MinorPlanet extends RoundEntity{
 			}
 		}
 	}
+
+//	All methods related to the radius of a minor planet.
 	
 	/**
 	 * Returns the absolute minimum radius of all minor planets.
@@ -61,6 +62,8 @@ public abstract class MinorPlanet extends RoundEntity{
 	public double getMinRadius() {
 		return 5;
 	}
+	
+//	All methods related to the denssity of a 
 	
 	/**
 	 * Check whether this minor planet can have the given density as its density.
@@ -75,6 +78,8 @@ public abstract class MinorPlanet extends RoundEntity{
 		return !Double.isNaN(density);
 	}
 	
+//	All methods related to the mass of aa minor planet.
+	
 	/**
 	 * Check whether the given mass is a valid mass for any minor planet.
 	 * 
@@ -86,6 +91,22 @@ public abstract class MinorPlanet extends RoundEntity{
 	public boolean canHaveAsMass(double mass) {
 		return !Double.isNaN(mass);
 	}	
+	
+//	All methods related to the moving and solving of collisions.
+
+	@Override
+	public void move(double duration){
+		if (!canHaveAsDuration(duration))
+			throw new IllegalArgumentException();
+		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+	}
+
+	/**
+	 * @effect	if the other entity is a minor planet too, their velocity will be changed
+	 * 
+	 * @effect	if the other entity is none of the above, we resolve the collision in that class
+	 * 			| other.resolveCollision(this)
+	 */
 	
 	@Override
 	public void resolveCollision(RoundEntity other){
