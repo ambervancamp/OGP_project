@@ -869,6 +869,7 @@ public class Ship extends RoundEntity {
 				if (bullet.hasHitWall())
 					bullet.terminate();
 				for (RoundEntity entity : this.getSpace().getEntities()){
+					//TODO map eh
 					if (entity.currentlyCollide(bullet)){
 						entity.terminate();
 						bullet.terminate();
@@ -919,7 +920,8 @@ public class Ship extends RoundEntity {
 			if (!this.canHaveAsPosition(x, y))
 				this.terminate();
 			this.setPosition(x, y);
-			for (RoundEntity possibleEntityToHit : this.getSpace().getEntities()){
+			for (RoundEntity possibleEntityToHit : this.getSpace().getEntities()){	
+				//TODO map eh
 				if (this.overlap(possibleEntityToHit))
 					this.terminate();
 			}				
@@ -981,6 +983,7 @@ public class Ship extends RoundEntity {
 		else{
 			double index = this.getSpace().getEntities().size()*Math.random();
 			return (RoundEntity) this.getSpace().getEntities().toArray()[(int) index];
+			//TODO map eh
 		}
 	}
 	
@@ -1008,9 +1011,6 @@ public class Ship extends RoundEntity {
 			program.setShip(this);		
 	}
 	
-<<<<<<< HEAD
-	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
-=======
 	/**
 	 * 
 	 * A method that returns the program of this ship.
@@ -1026,11 +1026,10 @@ public class Ship extends RoundEntity {
 	 * a method that execute the program of this ship
 	 * @param 	duration
 	 * 			the duration we want the program to be executed.
-	 * @return	the exucting process
+	 * @return	the executing process
 	 * 			| this.program.execute(duration)
 	 */
-	public List<Object> executeProgram(Double duration){
->>>>>>> branch 'master' of git@github.com:ambervancamp/OGP_project.git
+	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
 		return this.program.execute(duration);
 	}
 	

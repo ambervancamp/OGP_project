@@ -391,6 +391,7 @@ public class Bullet extends RoundEntity {
 			throw new IllegalArgumentException();	
 		Set<RoundEntity> entitiesToTerminate = new HashSet<RoundEntity>();
 		for (RoundEntity entity: space.getEntities()){
+			//TODO map eh
 			if (this.overlap(entity)){
 				entitiesToTerminate.add(entity);
 			}

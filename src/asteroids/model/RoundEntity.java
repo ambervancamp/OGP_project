@@ -524,6 +524,7 @@ public abstract class RoundEntity {
 	 */
 	public boolean hasProperSpace() {
 		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasAsEntity(this));
+		//TODO map eh
 	}
 	
 	/**
@@ -594,6 +595,7 @@ public abstract class RoundEntity {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();
 		for (RoundEntity entity: space.getEntities()){
+			// TODO map eh
 			if (this.overlap(entity))
 				throw new IllegalArgumentException();
 		}
