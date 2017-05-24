@@ -11,7 +11,7 @@ public class AnyExpression extends EntityExpression<RoundEntity>{
 	}
 
 	@Override
-	public RoundEntity evaluate(Ship ExecutingShip) {
+	public RoundEntity evaluate(Ship ExecutingShip, Function ExecutingFunction) {
 		return ExecutingShip.getAnyEntity();
 	}
 

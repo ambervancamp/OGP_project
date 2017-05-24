@@ -12,7 +12,7 @@ public class GetDirectionExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) {
+	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction) {
 		return ExecutingShip.getOrientation();
 	}
 

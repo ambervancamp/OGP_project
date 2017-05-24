@@ -14,10 +14,9 @@ public class ParameterExpression implements Expression<Type> {
 	}
 
 	@Override
-	public Type evaluate(Ship ExecutingShip) {
-		return (Type) this.getParameterName();
+	public Type evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+		return (Type) ExecutingFunction.getParameters().get(parameterName).evaluate(ExecutingShip,ExecutingFunction);
 	}
-	// return the value of the parameter??
 
 	public String getParameterName() {
 		return parameterName;
@@ -34,5 +33,4 @@ public class ParameterExpression implements Expression<Type> {
 	public void setSourceLocation(SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
 	}
-
 }

@@ -10,7 +10,7 @@ public class SelfExpression extends EntityExpression<Ship>{
 	}
 
 	@Override
-	public Ship evaluate(Ship ExecutingShip) {
+	public Ship evaluate(Ship ExecutingShip, Function ExecutingFunction) {
 		return ExecutingShip;
 	}
 

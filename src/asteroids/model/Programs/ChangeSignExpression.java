@@ -15,9 +15,10 @@ public class ChangeSignExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) {
-		return -1*(this.getExpression().evaluate(ExecutingShip));
+	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction) {
+		return -1*(this.getExpression().evaluate(ExecutingShip,ExecutingFunction));
 	}
+	// Evaluate to the expression???
 
 	public ConstantExpression getExpression() {
 		return expression;

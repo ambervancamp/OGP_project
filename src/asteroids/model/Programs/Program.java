@@ -14,17 +14,17 @@ public class Program{
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	// Variables can be of any type
 	// How to keep the type of a variable when first assigned?
-	private HashMap<String, Statement> functionsMap = new HashMap<>();
-	private HashMap <String, Expression<?>> parameters = new HashMap<>();
-	// extra map met parameters
+	//private HashMap<String, Statement> functionsMap = new HashMap<>();
+
 	
 	public Program(List<Function> functions, Statement body) {
 		setFunctions(functions);
 		setBody(body);
 		body.setProgram(this);
+		// Verwijzen nu alle statements in deze body ook naar deze program? -> in blockstatement ook verwijzingen
 		for(Function function: functions) {
 			function.setProgram(this);
-			functionsMap.put(function.getFunctionname(), function.getBody());
+			//functionsMap.put(function.getFunctionname(), function.getBody());
 		}
 	}
 	
@@ -66,20 +66,12 @@ public class Program{
 		this.variables = variables;
 	}
 
-	public HashMap<String, Statement> getFunctionsMap() {
-		return functionsMap;
-	}
-
-	public void setFunctionsMap(HashMap<String, Statement> fuctions) {
-		this.functionsMap = fuctions;
-	}
-
-	public HashMap <String, Expression<?>> getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(HashMap <String, Expression<?>> parameters) {
-		this.parameters = parameters;
-	}
+//	public HashMap<String, Statement> getFunctionsMap() {
+//		return functionsMap;
+//	}
+//
+//	public void setFunctionsMap(HashMap<String, Statement> fuctions) {
+//		this.functionsMap = fuctions;
+//	}
 	
 }

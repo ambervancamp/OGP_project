@@ -14,8 +14,9 @@ public class PrintStatement extends Statement {
 
 	@Override
 	public void execute() {
+		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();
-		System.out.println(this.getValue().evaluate(ExecutingShip).toString());	
+		System.out.println(this.getValue().evaluate(ExecutingShip, ExecutingFunction).toString());	
 	}
 	// werkt deze tostring() zoals we het zouden willen?
 

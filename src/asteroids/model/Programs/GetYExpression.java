@@ -13,8 +13,8 @@ public class GetYExpression implements Expression<Double> {
 		setLocation(location);	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) throws ClassNotFoundException {
-		return this.getE().evaluate(ExecutingShip).getyPosition();
+	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+		return this.getE().evaluate(ExecutingShip, ExecutingFunction).getyPosition();
 	}
 
 	public EntityExpression<?> getE() {
