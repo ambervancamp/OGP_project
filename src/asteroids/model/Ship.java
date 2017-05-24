@@ -890,7 +890,7 @@ public class Ship extends RoundEntity {
 			program.setShip(this);		
 	}
 	
-	public List<Object> executeProgram(Double duration){
+	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
 		return this.program.execute(duration);
 	}
 	

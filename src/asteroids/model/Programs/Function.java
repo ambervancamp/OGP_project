@@ -12,7 +12,11 @@ public class Function{
 	public Function(String functionName, Statement body, SourceLocation sourceLocation) {
 		this.setSourceLocation(sourceLocation);
 	}
-
+	
+	public void execute() throws ClassNotFoundException{
+		this.getBody().execute();
+	}
+	
 	public Program getProgram() {
 		return this.program;
 	}
@@ -27,10 +31,6 @@ public class Function{
 
 	public void setSourceLocation(SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
-	}
-	
-	public void execute(){
-		
 	}
 
 	public Statement getBody() {

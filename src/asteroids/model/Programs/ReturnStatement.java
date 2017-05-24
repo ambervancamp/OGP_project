@@ -4,6 +4,7 @@ import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class ReturnStatement extends Statement{
+	// Kan alleen maar plaatsvinden in een functionbody
 	
 	private Expression<?> value;
 	
@@ -18,6 +19,7 @@ public class ReturnStatement extends Statement{
 		return (Type) this.getValue().evaluate(ExecutingShip);
 		// Gewerkt met enum, oke zo met casting?
 	}
+	// Werken met klasse Optional?
 
 	public Expression<?> getValue() {
 		return value;
