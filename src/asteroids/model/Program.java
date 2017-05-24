@@ -1,9 +1,12 @@
-package asteroids.model.Programs;
+package asteroids.model;
 
 import java.util.HashMap;
 import java.util.List;
 
 import asteroids.model.*;
+import asteroids.model.Programs.Expression;
+import asteroids.model.Programs.Function;
+import asteroids.model.Programs.Statement;
 
 public class Program{
 
