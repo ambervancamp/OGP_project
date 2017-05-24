@@ -10,6 +10,7 @@ public class Program{
 	private List<Function> functions;
 	private Statement body;
 	private Ship ship;
+	private Double executeTime = 0.0;
 	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	// Variables can be of any type
@@ -29,7 +30,9 @@ public class Program{
 	}
 	
 	public List<Object> execute(Double duration) throws ClassNotFoundException{
-		body.execute();
+		Double executeTime = this.getExecuteTime() + duration;
+		while(executeTime >= 2.0)
+			body.execute();
 		// functions moeten pas uitgevoerd worden wanneer deze worden opgeroepen
 	}
 	// Met tijd uitvoeren
@@ -64,6 +67,14 @@ public class Program{
 
 	public void setVariables(HashMap<String, Expression<?>> variables) {
 		this.variables = variables;
+	}
+
+	public Double getExecuteTime() {
+		return executeTime;
+	}
+
+	public void setExecuteTime(Double executeTime) {
+		this.executeTime = executeTime;
 	}
 
 //	public HashMap<String, Statement> getFunctionsMap() {
