@@ -869,6 +869,7 @@ public class Ship extends RoundEntity {
 				if (bullet.hasHitWall())
 					bullet.terminate();
 				for (RoundEntity entity : this.getSpace().getEntities()){
+					//TODO map eh
 					if (entity.currentlyCollide(bullet)){
 						entity.terminate();
 						bullet.terminate();
@@ -919,7 +920,8 @@ public class Ship extends RoundEntity {
 			if (!this.canHaveAsPosition(x, y))
 				this.terminate();
 			this.setPosition(x, y);
-			for (RoundEntity possibleEntityToHit : this.getSpace().getEntities()){
+			for (RoundEntity possibleEntityToHit : this.getSpace().getEntities()){	
+				//TODO map eh
 				if (this.overlap(possibleEntityToHit))
 					this.terminate();
 			}				
@@ -981,6 +983,7 @@ public class Ship extends RoundEntity {
 		else{
 			double index = this.getSpace().getEntities().size()*Math.random();
 			return (RoundEntity) this.getSpace().getEntities().toArray()[(int) index];
+			//TODO map eh
 		}
 	}
 	

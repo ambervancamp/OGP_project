@@ -1,8 +1,10 @@
 package asteroids.model;
  
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import asteroids.part2.CollisionListener;
@@ -63,7 +65,8 @@ public abstract class Space {
 	 */
 	public void terminate(){
 		Set<RoundEntity> entitiesToDelete = new HashSet<RoundEntity> ();
-		for (RoundEntity entity : entities){
+		for (RoundEntity entity : getEntities()){
+			// TODO map eh
 			entitiesToDelete.add(entity);
 		}
 		for (RoundEntity entityToDelete : entitiesToDelete){
@@ -187,13 +190,22 @@ public abstract class Space {
 	 */
 	Set<RoundEntity> entities = new HashSet<RoundEntity>();	
 	
+//	/**
+//	 * A map of all the entities that are located in this world
+//	 */
+//	Map<double[],RoundEntity> entities2 = new HashMap<double[],RoundEntity> ();
+	
+	//TODO mapdink eh
+	
 	/**
 	 * A method that gives the entities of this space.
 	 * @return the entities of this space.
 	 */
 	public Set<RoundEntity> getEntities(){
-		return entities;
+		return this.entities;
+//		return (Set<RoundEntity>) this.entities2.values();
 	}
+	//TODO mapdink eh
 	
 	/**
 	 * A method to check whether this space has the given entity as one of its entities.
@@ -204,8 +216,10 @@ public abstract class Space {
 	 * @return 	True if and only if the given space contains this entity.
 	 */
 	public boolean hasAsEntity(@Raw RoundEntity entity) {
-		return this.entities.contains(entity);
+//		return this.entities.contains(entity);s
+		return this.getEntities().contains(entity);
 	}
+	//TODO mapdink eh
 	
 	/** A method to check whether this space can have the given entity as one of its entities.
 	 * 
@@ -260,10 +274,12 @@ public abstract class Space {
 	 * @post	The entity will be added to the list of entities of this world.
 	 */
 	public void addEntity(RoundEntity entity) throws IllegalArgumentException{
-		// This function expects that the entity is already pointing to this world.		
+		// This function expects that the entity is already pointing to this world.	
 		if (!canHaveAsEntity(entity) || (entity.getSpace() != this) || this.hasAsEntity(entity))
 			throw new IllegalArgumentException();					
 		this.entities.add(entity);
+//		this.entities2.put(entity.getPosition(),entity);
+//		TODO map eh
 	}
 	
 	/**
@@ -282,6 +298,8 @@ public abstract class Space {
 		if (!canHaveAsEntity(entity) || entity.getSpace() == null || !this.hasAsEntity(entity))
 			throw new IllegalArgumentException();
 		entities.remove(entity);
+//		entities2.remove(entity.getPosition(),entity);
+		//TODO map eh
 	}
 	
 	/**
@@ -298,7 +316,9 @@ public abstract class Space {
 	public RoundEntity getEntityAt(Double xPosition, Double yPosition){
 		if (this.isTerminated())
 			return null;
-		for (RoundEntity entity : entities){
+//		for (RoundEntity entity : entities){
+		for (RoundEntity entity : getEntities()){
+			//TODO map eh
 			if (entity.xPosition == xPosition && entity.yPosition == yPosition)
 				return entity;
 		}
@@ -318,8 +338,11 @@ public abstract class Space {
 		double smallestTime = Double.POSITIVE_INFINITY;
 		if (this.isTerminated() || this instanceof UnboundSpace)
 			return smallestTime;
-		for (RoundEntity firstEntity : entities){
-			for(RoundEntity secondEntity : entities){
+//		for (RoundEntity firstEntity : entities){
+		for (RoundEntity firstEntity : getEntities()){
+//			for(RoundEntity secondEntity : entities){
+			for(RoundEntity secondEntity : getEntities()){
+				//TODO map eh
 				if (firstEntity != secondEntity && firstEntity.getTimeToCollision(secondEntity)!=-0.0){
 					if (firstEntity.getTimeToCollision(secondEntity) < smallestTime)
 					smallestTime =  firstEntity.getTimeToCollision(secondEntity);
@@ -343,8 +366,12 @@ public abstract class Space {
 		if(this.isTerminated() || this instanceof UnboundSpace)
 			throw new IllegalArgumentException();
 		double timeNextCollision = this.getTimeNextCollision();
-		for (RoundEntity firstEntity : entities){
-			for (RoundEntity secondEntity : entities){
+//		for (RoundEntity firstEntity : entities){
+		for (RoundEntity firstEntity : getEntities()){
+			//TODO map eh
+//			for (RoundEntity secondEntity : entities){
+			for (RoundEntity secondEntity : getEntities()){
+				//TODO map eh
 				if (firstEntity != secondEntity){
 					if(timeNextCollision == firstEntity.getTimeToCollision(secondEntity))
 						return firstEntity.getCollisionPosition(secondEntity);
@@ -371,13 +398,17 @@ public abstract class Space {
 		if (this.isTerminated() || this instanceof UnboundSpace)
 			throw new IllegalArgumentException();
 		Set<Set<RoundEntity>> collisionPosition = new HashSet<>();
-		for (RoundEntity entity : entities){
+//		for (RoundEntity entity : entities){
+		for (RoundEntity entity : getEntities()){
+			// TODO map eh
 			if (entity.hasHitWall() && this.getTimeNextCollision() == entity.getTimeToHitWall()){
 				Set<RoundEntity> coll = new HashSet<>();
 				coll.add(entity);
 				collisionPosition.add(coll);
 			}
-			for (RoundEntity other : entities){
+//			for (RoundEntity other : entities){
+			for (RoundEntity other : getEntities()){
+				//TODO map eh
 				if (other != entity && entity.canAsCollision(other) &&
 						this.getTimeNextCollision() == entity.getTimeToCollision(other)){
 					Set<RoundEntity> coll = new HashSet<>();
@@ -404,7 +435,9 @@ public abstract class Space {
 			throws IllegalArgumentException{
 		if (this.isTerminated() || duration < 0 || Double.isNaN(duration))
 			throw new IllegalArgumentException();
-		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (entities);
+//		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (entities);
+		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (getEntities());
+		//TODO map eh
 
 		double timeToNextHit = getTimeNextCollision();
 		while (timeToNextHit <= duration){
@@ -450,7 +483,9 @@ public abstract class Space {
 			timeToNextHit = this.getTimeNextCollision();
 			}
 		if (duration > 0){
-			for (RoundEntity entity : entities){
+//			for (RoundEntity entity : entities){
+			for (RoundEntity entity : getEntities()){
+			//TODO map eh
 				if (!entity.isTerminated){
 					if (entity instanceof Ship){
 						((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
@@ -472,7 +507,9 @@ public abstract class Space {
 	 */
 	public Set<? extends RoundEntity> getEntityOfClass(Class<?> cls) throws ClassNotFoundException {
 		Set<RoundEntity> result = new HashSet<RoundEntity>();
-		Set<RoundEntity> entitiesInThisWorld = this.getEntities();
+//		Set<RoundEntity> entitiesInThisWorld = this.getEntities();
+		Set<RoundEntity> entitiesInThisWorld = (Set<RoundEntity>) this.getEntities();
+		//TODO map 
 		
 		for (RoundEntity entity : entitiesInThisWorld) {
 			if (entity.getClass().isAssignableFrom(cls)) {
