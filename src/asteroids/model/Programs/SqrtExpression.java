@@ -14,8 +14,8 @@ public class SqrtExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) {
-		return Math.sqrt(this.getE().evaluate(ExecutingShip));
+	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+		return Math.sqrt(this.getE().evaluate(ExecutingShip, ExecutingFunction));
 	}
 
 	public ConstantExpression getE() {

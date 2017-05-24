@@ -16,8 +16,8 @@ public class MultiplicationExpression implements Expression<Double> {
 	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip) {
-		return this.getE2().evaluate(ExecutingShip) * this.getE1().evaluate(ExecutingShip);
+	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+		return this.getE2().evaluate(ExecutingShip, ExecutingFunction) * this.getE1().evaluate(ExecutingShip, ExecutingFunction);
 	}
 
 	public SourceLocation getSourceLocation() {

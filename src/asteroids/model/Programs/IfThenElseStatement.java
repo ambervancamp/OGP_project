@@ -18,8 +18,9 @@ public class IfThenElseStatement extends Statement{
 
 	@Override
 	public void execute() throws ClassNotFoundException {
+		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();
-		if (this.getCondition().evaluate(ExecutingShip))
+		if (this.getCondition().evaluate(ExecutingShip, ExecutingFunction))
 			this.ifBody.execute();
 
 		else

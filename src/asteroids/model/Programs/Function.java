@@ -1,18 +1,36 @@
 package asteroids.model.Programs;
 
+import java.util.HashMap;
+import java.util.List;
+
 import asteroids.part3.programs.SourceLocation;
 
 public class Function{
 	
 	private SourceLocation sourceLocation;
-	private Program program;
 	private String functionname;
 	private Statement body;
 	
+	private Program program;
+	private HashMap <String, Expression<?>> parameters = new HashMap<>();
+	// extra map met parameters
+	
 	public Function(String functionName, Statement body, SourceLocation sourceLocation) {
-		this.setSourceLocation(sourceLocation);
+		setSourceLocation(sourceLocation);
+		setFunctionname(functionName);
+		setBody(body);
+		body.setFunction(this);
+		// Verwijzen nu alle statements in body ook naar deze functie? -> in blockstatement ook verwijzingen
 	}
-
+	
+	public Type execute(List<Expression<?>> actualArgs) throws ClassNotFoundException{	
+		for(int i = 1; i <= actualArgs.size(); i++){
+			this.getParameters().put("$" + Integer.toString(i), (Expression<?>)actualArgs.toArray()[i-1]);
+		}
+		this.getBody().execute();
+	}
+	// must return a Type
+	
 	public Program getProgram() {
 		return this.program;
 	}
@@ -27,10 +45,6 @@ public class Function{
 
 	public void setSourceLocation(SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
-	}
-	
-	public void execute(){
-		
 	}
 
 	public Statement getBody() {
@@ -47,5 +61,13 @@ public class Function{
 
 	public void setFunctionname(String functionname) {
 		this.functionname = functionname;
+	}
+	
+	public HashMap <String, Expression<?>> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(HashMap <String, Expression<?>> parameters) {
+		this.parameters = parameters;
 	}
 }

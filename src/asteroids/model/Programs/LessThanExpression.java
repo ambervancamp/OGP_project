@@ -16,8 +16,8 @@ public class LessThanExpression extends BooleanExpression{
 	}
 
 	@Override
-	public Boolean evaluate(Ship ExecutingShip) {
-		return (this.getE1().evaluate(ExecutingShip) < this.getE2().evaluate(ExecutingShip));
+	public Boolean evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+		return (this.getE1().evaluate(ExecutingShip, ExecutingFunction) < this.getE2().evaluate(ExecutingShip, ExecutingFunction));
 	}
 
 	public ConstantExpression getE1() {

@@ -13,7 +13,33 @@ public class WhileStatement extends Statement{
 		setCondition(condition);
 		setBody(body);
 	}
+	
+	@Override
+	public void execute() throws ClassNotFoundException {
+		Function ExecutingFunction = this.getFunction();
+		Ship ExecutingShip = this.getProgram().getShip();
 
+		while(this.getCondition().evaluate(ExecutingShip, ExecutingFunction))
+			this.getBody().execute();
+	}
+	
+//	new BreakStatement(sourceLocation){
+//		
+//	};
+	
+	// Inner class. Breakstatement can only occur in a while loop.
+	public class BreakStatement extends Statement{
+
+		public BreakStatement(SourceLocation sourceLocation) {
+			super(sourceLocation);
+		}
+
+		@Override
+		public void execute() throws ClassNotFoundException {
+			break;		
+		}
+	}
+	
 	public BooleanExpression getCondition() {
 		return condition;
 	}
@@ -28,13 +54,6 @@ public class WhileStatement extends Statement{
 
 	public void setBody(Statement body) {
 		this.body = body;
-	}
-	
-	@Override
-	public void execute() throws ClassNotFoundException {
-		Ship ExecutingShip = this.getProgram().getShip();
-		while(this.getCondition().evaluate(ExecutingShip))
-			this.getBody().execute();
 	}
 
 }

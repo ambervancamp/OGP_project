@@ -10,24 +10,32 @@ public class Program{
 	private List<Function> functions;
 	private Statement body;
 	private Ship ship;
+	private Double executeTime = 0.0;
 	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	// Variables can be of any type
 	// How to keep the type of a variable when first assigned?
-	private HashMap<String, Statement> fuctions = new HashMap<>();
+	//private HashMap<String, Statement> functionsMap = new HashMap<>();
+
 	
 	public Program(List<Function> functions, Statement body) {
 		setFunctions(functions);
 		setBody(body);
 		body.setProgram(this);
-		for(Function function: functions) function.setProgram(this);
+		// Verwijzen nu alle statements in deze body ook naar deze program? -> in blockstatement ook verwijzingen
+		for(Function function: functions) {
+			function.setProgram(this);
+			//functionsMap.put(function.getFunctionname(), function.getBody());
+		}
 	}
 	
-	public List<Object> execute(Double duration){
-		
-		body.execute();
+	public List<Object> execute(Double duration) throws ClassNotFoundException{
+		Double executeTime = this.getExecuteTime() + duration;
+		while(executeTime >= 2.0)
+			body.execute();
+		// functions moeten pas uitgevoerd worden wanneer deze worden opgeroepen
 	}
-	// Function met tijd uitvoeren
+	// Met tijd uitvoeren
 
 	public List<Function> getFunctions(){
 		return this.functions;
@@ -61,12 +69,20 @@ public class Program{
 		this.variables = variables;
 	}
 
-	public HashMap<String, Statement> getFuctions() {
-		return fuctions;
+	public Double getExecuteTime() {
+		return executeTime;
 	}
 
-	public void setFuctions(HashMap<String, Statement> fuctions) {
-		this.fuctions = fuctions;
+	public void setExecuteTime(Double executeTime) {
+		this.executeTime = executeTime;
 	}
+
+//	public HashMap<String, Statement> getFunctionsMap() {
+//		return functionsMap;
+//	}
+//
+//	public void setFunctionsMap(HashMap<String, Statement> fuctions) {
+//		this.functionsMap = fuctions;
+//	}
 	
 }

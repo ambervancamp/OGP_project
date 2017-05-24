@@ -10,7 +10,11 @@ public class BlockStatement extends Statement{
 	
 	public BlockStatement(List<Statement> statements, SourceLocation sourceLocation) {
 		super(sourceLocation);
-		this.setStatements(statements);
+		setStatements(statements);
+		for(Statement statement: statements){
+			statement.setProgram(this.getProgram());
+			statement.setFunction(this.getFunction());
+		}
 	}
 
 	@Override

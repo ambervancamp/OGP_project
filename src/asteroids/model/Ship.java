@@ -1026,10 +1026,10 @@ public class Ship extends RoundEntity {
 	 * a method that execute the program of this ship
 	 * @param 	duration
 	 * 			the duration we want the program to be executed.
-	 * @return	the exucting process
+	 * @return	the executing process
 	 * 			| this.program.execute(duration)
 	 */
-	public List<Object> executeProgram(Double duration){
+	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
 		return this.program.execute(duration);
 	}
 	

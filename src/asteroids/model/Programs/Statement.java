@@ -6,6 +6,7 @@ public abstract class Statement {
 	
 	private SourceLocation sourceLocation;
 	private Program program;
+	private Function function = null;
 	
 	public Statement(SourceLocation sourceLocation){
 		this.setSourceLocation(sourceLocation);
@@ -28,4 +29,12 @@ public abstract class Statement {
 	}
 	
 	public abstract void execute() throws ClassNotFoundException;
+
+	public Function getFunction() {
+		return function;
+	}
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
 }

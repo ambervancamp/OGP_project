@@ -11,7 +11,7 @@ public class PlanetExpression extends EntityExpression<MinorPlanet>{
 	}
 
 	@Override
-	public MinorPlanet evaluate(Ship ExecutingShip) throws ClassNotFoundException {
+	public MinorPlanet evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
 		return (MinorPlanet) ExecutingShip.getClosestEntityOfClass(MinorPlanet.class);
 	}
 

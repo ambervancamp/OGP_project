@@ -66,7 +66,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 	}
 
 	@Override
-	public Expression<?> createFunctionCallExpression(String functionName, List<Expression> actualArgs,
+	public Expression<?> createFunctionCallExpression(String functionName, List<Expression<?>> actualArgs,
 			SourceLocation sourceLocation) {
 		return new FunctionInvocationExpression(functionName, actualArgs, sourceLocation);
 	}

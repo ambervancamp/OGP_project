@@ -10,7 +10,7 @@ public class ShipExpression extends EntityExpression<Ship>{
 	}
 
 	@Override
-	public Ship evaluate(Ship ExecutingShip) throws ClassNotFoundException {
+	public Ship evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
 		return (Ship) ExecutingShip.getClosestEntityOfClass(Ship.class);
 	}
 }
