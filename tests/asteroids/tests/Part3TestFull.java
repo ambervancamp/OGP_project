@@ -50,7 +50,11 @@ public class Part3TestFull {
   @Before
   public void setUp() throws ModelException {
     facade = new asteroids.facade.Facade();
+<<<<<<< HEAD
     programFactory = (IProgramFactory<?, ?, ?, Program>) facade.createProgramFactory();
+=======
+//    programFactory = (IProgramFactory<?, ?, ?, ProgramFactory>) facade.createProgramFactory();
+>>>>>>> branch 'master' of git@github.com:ambervancamp/OGP_project.git
     nbStudentsInTeam = facade.getNbStudentsInTeam();
     filledWorld = facade.createWorld(2000, 2000);
     ship1 = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);

@@ -22,8 +22,6 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar  	The source of each bullet must be a valid source for any
  *        	 bullet.
  *       	| isValidSource(getSource())
- *        
- * @author amber_000
  *
  */
 public class Bullet extends RoundEntity {
@@ -55,14 +53,15 @@ public class Bullet extends RoundEntity {
 		// No setter for density or mass because final variables.
 	}
 	
+// All methods handling the termination of an entity.
+	
 	/**
 	 * Terminate this bullet.
 	 *
 	 * @post   	If this bullet isn't already terminated, it is terminated.
 	 *       
-	 * @effect	If this bullet is in a space, it is removed.
+	 * @effect	If this bullet is in a space or a space, it is removed.
 	 * 
-	 * @effect	If this bullet is in a ship, it is removed.
 	 */
 	@Override
 	public void terminate() {
@@ -73,16 +72,40 @@ public class Bullet extends RoundEntity {
 		}
 	}
 	
+//	All methods related to the radius of a ship
+	
 	/**
+	 * 
 	 * Return the lowest possible value for the radius of all bullets, in km.
 	 * 
-	 * @return	Returns the minimum radius, which equals to 1
+	 * @return	Returns the minimum radius, which equals 1 momentarely.
+	 * 
 	 */
 	@Override
 	@Basic
 	@Raw
 	public double getMinRadius() {
 		return 1.0;
+	}
+	
+//	All methods related to the density of this bullet
+	
+	/**
+	 * Variable registering the density of this bullet.
+	 */
+	private final double density;		
+	
+	/**
+	 * Check whether this bullet can have the given density as its density.
+	 *  
+	 * @param  	density
+	 *         	The density to check.
+	 *         
+	 * @return 	The density must be a positive number.
+	*/
+	@Raw
+	public boolean canHaveAsDensity(double density) {
+		return (!Double.isNaN(density) && density >= 0);
 	}
 	
 	/**
@@ -98,33 +121,12 @@ public class Bullet extends RoundEntity {
 		return this.density;
 	}
 	
+//	All methods related to the mass of this bullet.
+
 	/**
-	 * Check whether this bullet can have the given density as its density.
-	 *  
-	 * @param  	density
-	 *         	The density to check.
-	 *         
-	 * @return 	The density must be a number.
-	*/
-	@Raw
-	public boolean canHaveAsDensity(double density) {
-		return !Double.isNaN(density);
-	}
-	
-	/**
-	 * Variable registering the density of this bullet.
+	 * Variable registering the mass of this bullet.
 	 */
-	private final double density;		
-	
-	/**
-	 * Return the mass of this bullet computed by its radius and density.
-	 * 
-	 * @return	Returns the mass of this bullet.
-	 */
-	@Override
-	public double getMass() {
-		return this.mass;
-	}
+	private double mass;
 	
 	/**
 	 * Check whether the given mass is a valid mass for any bullet.
@@ -137,39 +139,74 @@ public class Bullet extends RoundEntity {
 	public boolean canHaveAsMass(double mass) {
 		return !Double.isNaN(mass);
 	}
-		
+	
 	/**
-	 * Variable registering the mass of this bullet.
-	 */
-	private double mass;
-
-	/**
-	 * Return the ship where this bullet is placed in.
+	 * Return the mass of this bullet computed by its radius and density.
 	 * 
-	 * @return	Returns the ship this round entity is placed in.
+	 * @return	Returns the mass of this bullet.
 	 */
-	@Basic
-	@Raw
-	public Ship getShip(){
-		return this.ship;
+	@Override
+	public double getMass() {
+		return this.mass;
+	}
+	
+//	All methods related to the original Ship this source is.
+	
+	
+	/**
+	 * Variable registering the source of this bullet, the ship that fired this bullet.
+	 */
+	private Ship source = null;
+	
+	/**
+	 * Check whether the given source is a valid source for any bullet.
+	 *  
+	 * @param  	source
+	 *         	The source to check.
+	 *         
+	 * @return 	The source must be a Ship, that is not yet terminated.
+	 *       	
+	*/
+	public static boolean isValidSource(Ship source) {
+		return source!=null && (source instanceof Ship) && !source.isTerminated();
 	}
 	
 	/**
-	 * Register the given ship as the ship where this bullet is placed in.
+	 * Set the source of this bullet to the given source.
 	 * 
-	 * @param 	ship
-	 * 			The given ship to set the bullet in.
-	 * 		
+	 * @param  	source
+	 *         	The new source for this bullet.
+	 *         
+	 * @post   	The source of this new bullet is equal to the given source.
+	 *       
 	 * @throws 	IllegalArgumentException
-	 * 			The given ship is not valid.
+	 *         	The given source is not a valid source for any bullet.
 	 */
-	void setShip(Ship ship) throws IllegalArgumentException{
-		if (!canHaveAsShip(ship))
+	@Raw
+	public void setSource(Ship source) 
+			throws IllegalArgumentException {
+		if (! isValidSource(source))
 			throw new IllegalArgumentException();
-		this.ship = ship;
-		this.originalShip = ship;
-	}
+		this.source = source;
+	}	
 	
+	/**
+	 * Return the source of this bullet.
+	 */
+	@Basic 
+	@Raw
+	public Ship getSource() {
+		return this.source;
+	}
+
+
+//	All methods related to the cooperation between this bullet and its ship.
+	
+	/**
+	 * Variable registering the ship this bullet is placed in.
+	 */
+	private Ship ship = null;
+
 	/**
 	 * Checks whether the given ship is a valid ship for any bullet.
 	 * 
@@ -185,6 +222,33 @@ public class Bullet extends RoundEntity {
 			return false;
 		else 
 			return true;
+	}
+	
+	/**
+	 * Register the given ship as the ship where this bullet is placed in.
+	 * 
+	 * @param 	ship
+	 * 			The given ship to set the bullet in.
+	 * 		
+	 * @throws 	IllegalArgumentException
+	 * 			The given ship is not valid.
+	 */
+	void setShip(Ship ship) throws IllegalArgumentException{
+		if (!canHaveAsShip(ship))
+			throw new IllegalArgumentException();
+		this.ship = ship;
+		this.setSource(ship);
+	}
+	
+	/**
+	 * Return the ship where this bullet is placed in.
+	 * 
+	 * @return	Returns the ship this round entity is placed in.
+	 */
+	@Basic
+	@Raw
+	public Ship getShip(){
+		return this.ship;
 	}
 	
 	/**
@@ -251,7 +315,6 @@ public class Bullet extends RoundEntity {
 			// Else statement used in constructor
 		}
 	}
-	//BULLETS MOETEN BINNEN GRENZEN VAN SHIP BEWEGEN!!!!
 	
 	/**
 	 * Remove the ship from this bullet, if any. It is not placed into a new ship.
@@ -272,9 +335,7 @@ public class Bullet extends RoundEntity {
 	}
 	// If statement not necessary, because RemoveOutSpace() is only used when
 	// sure the round entity has a space (no boundary case).	
-	
-	//BULLETS BEWOGEN MEE MET SHIP, GEEF TERUG EIGEN SNELHEID
-	
+
 	/**
 	 * Remove this bullet from given ship, if it's placed in that ship. 
 	 * The bullet is then replaced to a new unbound space.
@@ -321,7 +382,7 @@ public class Bullet extends RoundEntity {
 	 * @throws	IllegalArgumentException.
 	 * 			If this entity overlaps with any entity already in the space.
 	 *
-	 *@throws	IllegalArgumentException.
+	 * @throws	IllegalArgumentException.
 	 *			If this entity overlaps the boundaries of the given space.
 	 */
 	@Override
@@ -360,31 +421,7 @@ public class Bullet extends RoundEntity {
 		}
 	}
 	
-	/**
-	 * Variable registering the ship this round entity is placed in.
-	 */
-	private Ship ship = null;
-	
-	private Ship originalShip = null;
-
-	/**
-	 * Return the number of times a bullet has hit the wall.
-	 * 
-	 * @return	The number of times a bullet has hit the wall.
-	 */
-	public double getNbWallHits(){
-		return this.nbWallHits;
-	}
-	
-	/**
-	 * Sets the number of wall hits at the given value.
-	 * 
-	 * @param 	value
-	 * 			The given number of times a bullet has hit the wall.
-	 */
-	public void setNbWallHits(double value){
-		 this.nbWallHits = value;
-	}
+//	All methods related to the nb of times a bullet hit the wall.
 	
 	/**
 	 * Return the maximum number of times a bullet can  hit the wall.
@@ -400,57 +437,26 @@ public class Bullet extends RoundEntity {
 	 */
 	double nbWallHits = 0;	
 	
-	
 	/**
-	 * Return the source of this bullet.
-	 */
-	@Basic @Raw
-	public Ship getSource() {
-		return this.source;
-	}
-	
-	/**
-	 * Check whether the given source is a valid source for
-	 * any bullet.
-	 *  
-	 * @param  	source
-	 *         	The source to check.
-	 *         
-	 * @return 	The source must be a Ship, that is not yet terminated.
-	 *       	| result == source!=null && (source instanceof Ship) && !source.isTerminated()
-	*/
-	public static boolean isValidSource(Ship source) {
-		return source!=null && (source instanceof Ship) && !source.isTerminated();
-	}
-	
-	/**
-	 * Set the source of this bullet to the given source.
+	 * Sets the number of wall hits at the given value.
 	 * 
-	 * @param  	source
-	 *         	The new source for this bullet.
-	 *         
-	 * @post   	The source of this new bullet is equal to
-	 *         	the given source.
-	 *       	| new.getSource() == source
-	 *       
-	 * @throws 	IllegalArgumentException
-	 *         	The given source is not a valid source for any
-	 *         	bullet.
-	 *       	| ! isValidSource(getSource())
+	 * @param 	value
+	 * 			The given number of times a bullet has hit the wall.
 	 */
-	@Raw
-	public void setSource(Ship source) 
-			throws IllegalArgumentException {
-		if (! isValidSource(source))
-			throw new IllegalArgumentException();
-		this.source = source;
+	public void setNbWallHits(double value){
+		 this.nbWallHits = value;
 	}
 	
 	/**
-	 * Variable registering the source of this bullet, the ship that fired this bullet.
+	 * Return the number of times a bullet has hit the wall.
+	 * 
+	 * @return	The number of times a bullet has hit the wall.
 	 */
-	private Ship source = null;
-	
+	public double getNbWallHits(){
+		return this.nbWallHits;
+	}
+
+//	All methods related to the moving and solving of collisions.
 	
 	@Override
 	public void move(double duration){
@@ -459,16 +465,30 @@ public class Bullet extends RoundEntity {
 		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
 	}
 	
+	/**
+	 * A method for resolving a collision with a ship.
+	 * 
+	 * @effect 	if the other entity is a ship and this entity is fired by this ship, 
+	 * 			we remove the bullet of the world, put the bullet at the center of this ship 
+	 * 			and set his number of wall hits to 0
+	 * 
+	 * @effect 	if the other entity is a ship, but the entity doesn't belong to the ship,
+	 * 			both entity and ship are terminated
+	 * 
+	 * @effect	if a bullet hits any other entity, both bullet and other entity 
+	 */
+	
 	@Override
 	public void resolveCollision(RoundEntity other){
 		if (!other.inSameSpace(this) || other == this)
 			throw new IllegalArgumentException();
 		else if (other instanceof Ship){
-			if (originalShip == other){
+			if (this.getSource() == other){
 				this.removeOutSpace();
-				this.ship = originalShip;
+				this.ship = this.getSource();
 				ship.addBullet(this);
 				this.setNbWallHits(0);
+				((Ship) other).firedBullets.remove(this);
 				this.setPosition(this.getShip().getxPosition(),this.getShip().getyPosition());
 				this.setVelocity(this.getShip().getxVelocity(), this.getShip().getyVelocity());
 				}

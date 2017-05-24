@@ -30,6 +30,7 @@ public class TestsPart1 {
 		assertFalse(ship.hasSpace());
 		assertTrue(ship.isTerminated());
 		assertEquals(ship.getNbBullets(),0, EPSILON);
+		assertEquals(null,this.getClass(),EPSILON);
 	}
 		
 	@Test
@@ -48,9 +49,9 @@ public class TestsPart1 {
 		Ship ship = new Ship(5,7,-3.1235,999999,12,5*Math.PI/4,1);
 		assertNotNull(ship.getVelocity()[0]);
 		assertNotNull(ship.getVelocity()[1]);
-		assertEquals(-0.937050937046366,ship.getVelocity()[0],EPSILON);
+		assertEquals(-3.1235*ship.getMaxSpeed()/ship.getSpeed(),ship.getVelocity()[0],EPSILON);
 		assertNotEquals(456158,ship.getVelocity()[0],EPSILON);
-		assertEquals(300000,ship.getVelocity()[1],EPSILON);
+		assertEquals(30000,ship.getVelocity()[1],EPSILON);
 		assertNotEquals(7,ship.getVelocity()[1],EPSILON);	
 	}
 
