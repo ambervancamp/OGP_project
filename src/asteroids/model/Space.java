@@ -190,10 +190,10 @@ public abstract class Space {
 	 */
 	Set<RoundEntity> entities = new HashSet<RoundEntity>();	
 	
-//	/**
-//	 * A map of all the entities that are located in this world
-//	 */
-//	Map<double[],RoundEntity> entities2 = new HashMap<double[],RoundEntity> ();
+	/**
+	 * A map of all the entities that are located in this world
+	 */
+	Map<double[],RoundEntity> entities2 = new HashMap<double[],RoundEntity> ();
 	
 	//TODO mapdink eh
 	
@@ -202,8 +202,8 @@ public abstract class Space {
 	 * @return the entities of this space.
 	 */
 	public Set<RoundEntity> getEntities(){
-		return this.entities;
-//		return (Set<RoundEntity>) this.entities2.values();
+//		return this.entities;
+		return this.entities2.;
 	}
 	//TODO mapdink eh
 	
@@ -216,7 +216,7 @@ public abstract class Space {
 	 * @return 	True if and only if the given space contains this entity.
 	 */
 	public boolean hasAsEntity(@Raw RoundEntity entity) {
-//		return this.entities.contains(entity);s
+//		return this.entities.contains(entity);
 		return this.getEntities().contains(entity);
 	}
 	//TODO mapdink eh
