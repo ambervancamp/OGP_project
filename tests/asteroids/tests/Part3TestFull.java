@@ -553,7 +553,6 @@ public class Part3TestFull {
     facade.addShipToWorld(world, ship);
     Object result = facade.getEntityAt(world, 100, 120);
     assertEquals(ship, result);
-    //TODO let it work
     score += 2;
   }
 
@@ -1092,8 +1091,7 @@ public class Part3TestFull {
     assertEquals(110, facade.getShipPosition(ship1)[0], EPSILON);
     assertEquals(125, facade.getShipPosition(ship1)[1], EPSILON);
     // Checking whether the information in the world's map has also been changed.
-//    assertEquals(ship1, facade.getEntityAt(world, 110, 125));
-    //TODO let it work
+    assertEquals(ship1, facade.getEntityAt(world, 110, 125));
     assertEquals(10, facade.getShipVelocity(ship1)[0], EPSILON);
     assertEquals(5, facade.getShipVelocity(ship1)[1], EPSILON);
     assertEquals(400, facade.getShipPosition(ship2)[0], EPSILON);

@@ -302,12 +302,9 @@ public abstract class Space {
 			return null;
 		this.evolve(0, null);
 		double [] position = {xPosition,yPosition};
-		System.out.println(this.mapOfEntities);
-		System.out.println(position);
-		if (this.mapOfEntities.containsKey(position))
-			return this.mapOfEntities.get(position);
-		return null;
-		//TODO doc
+		return this.mapOfEntities.get(position);
+		// The function doesn't work, becaues the given position and the position of the mapped entity,
+		// doens't refer to the same adress.
 	}
 	
 //	All methods related to the collisions of this space.
@@ -459,7 +456,6 @@ public abstract class Space {
 						}
 					else
 						entity.move(duration);
-					
 					this.setMapOfEntities(entity);
 				}
 				}
@@ -468,9 +464,7 @@ public abstract class Space {
 			this.mapOfEntities.clear();
 			for (RoundEntity entity : entities){
 				this.setMapOfEntities(entity);
-				System.out.println(mapOfEntities);
-			}
-			
+			}			
 		}
 		}
 
@@ -493,17 +487,33 @@ public abstract class Space {
 		return result;
 	}
 	
-
+	/**
+	 * A map for the entities in this world, with their coordinate
+	 */
 	Map<double[], RoundEntity> mapOfEntities = new HashMap<double[], RoundEntity>();
 	
+	/**
+	 * A method to add an entity to the given map
+	 * @param 	entity
+	 * 			the entity we want to add to the map
+	 */
 	public void setMapOfEntities(RoundEntity entity){
 		this.mapOfEntities.put(entity.getPosition(), entity);
 	}
 	
+	/**
+	 * A method to remove an entity of the given map
+	 * @param 	entity
+	 * 			the entity we want to remove
+	 */
 	public void unsetMapOfEntities(RoundEntity entity){
 		this.mapOfEntities.remove(entity.getPosition(), entity);
 	}
 	
+	/**
+	 * A methhod that gives a map of entities and their position.
+	 * @return	a map of the entities of this world.
+	 */
 	public Map<double[], RoundEntity> getMapOfEntities(){
 		return this.mapOfEntities;
 	}
