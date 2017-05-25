@@ -302,7 +302,11 @@ public abstract class Space {
 			return null;
 		this.evolve(0, null);
 		double [] position = {xPosition,yPosition};
-		return this.mapOfEntities.get(position);
+		System.out.println(this.mapOfEntities);
+		System.out.println(position);
+		if (this.mapOfEntities.containsKey(position))
+			return this.mapOfEntities.get(position);
+		return null;
 		//TODO doc
 	}
 	
@@ -455,6 +459,7 @@ public abstract class Space {
 						}
 					else
 						entity.move(duration);
+					
 					this.setMapOfEntities(entity);
 				}
 				}
@@ -463,6 +468,7 @@ public abstract class Space {
 			this.mapOfEntities.clear();
 			for (RoundEntity entity : entities){
 				this.setMapOfEntities(entity);
+				System.out.println(mapOfEntities);
 			}
 			
 		}
@@ -487,6 +493,7 @@ public abstract class Space {
 		return result;
 	}
 	
+
 	Map<double[], RoundEntity> mapOfEntities = new HashMap<double[], RoundEntity>();
 	
 	public void setMapOfEntities(RoundEntity entity){
@@ -500,4 +507,5 @@ public abstract class Space {
 	public Map<double[], RoundEntity> getMapOfEntities(){
 		return this.mapOfEntities;
 	}
+	
 } 

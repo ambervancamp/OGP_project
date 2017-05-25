@@ -3,6 +3,7 @@ package asteroids.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
 
@@ -228,14 +229,8 @@ public abstract class RoundEntity {
 			throw new IllegalArgumentException();
 		this.xPosition = x;
 		this.yPosition = y;	
-//		if (this.hasProperSpace()){
-//			if (this.getSpace().entities2.containsValue(this))
-//				this.getSpace().deleteEntity(this);
-//			this.getSpace().addEntity(this);
-//		}
 	}
-		
-	
+			
 //	All methods related to the velocity of a round entity.
 	
 	/**

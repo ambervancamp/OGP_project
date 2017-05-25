@@ -22,7 +22,7 @@ import asteroids.model.Planetoid;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.facade.IFacade;
-import asteroids.model.Programs.Program;
+import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.internal.ProgramParser;
 import asteroids.util.ModelException;
@@ -552,7 +552,7 @@ public class Part3TestFull {
     Ship ship = facade.createShip(100, 120, 10, 5, 50, 0, 1.0E20);
     facade.addShipToWorld(world, ship);
     Object result = facade.getEntityAt(world, 100, 120);
-//    assertEquals(ship, result);
+    assertEquals(ship, result);
     //TODO let it work
     score += 2;
   }
