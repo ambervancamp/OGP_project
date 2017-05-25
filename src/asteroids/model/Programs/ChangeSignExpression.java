@@ -3,22 +3,23 @@ package asteroids.model.Programs;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class ChangeSignExpression implements Expression<Double> {
-	// Can meegegeven expression alles zijn of enkel double?
+public class ChangeSignExpression implements Expression<ConstantExpression> {
 	
 	private ConstantExpression expression;
 	private SourceLocation sourceLocation;
 	
+	// Assumed that it can only be a constantExpression.
 	public ChangeSignExpression(ConstantExpression expression, SourceLocation sourceLocation) {
 		this.setExpression(expression);
 		this.setSourceLocation(sourceLocation);
 	}
 
 	@Override
-	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction) {
-		return -1*(this.getExpression().evaluate(ExecutingShip,ExecutingFunction));
+	public ConstantExpression evaluate(Ship ExecutingShip, Function ExecutingFunction) {
+		this.getExpression().setValue(-1*(this.getExpression().evaluate(ExecutingShip,ExecutingFunction)));
+		return this.getExpression();
 	}
-	// Evaluate to the expression???
+	// Evaluate to the expression, not the value. But it is the value that is negated.
 
 	public ConstantExpression getExpression() {
 		return expression;

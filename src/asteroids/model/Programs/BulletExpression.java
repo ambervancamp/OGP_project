@@ -14,5 +14,4 @@ public class BulletExpression extends EntityExpression<Bullet>{
 	public Bullet evaluate(Ship ExecutingShip, Function ExecutingFunction) {
 		return ExecutingShip.getFiredBullet();
 	}
-	// Define function that returns one of the fired bullets
 }

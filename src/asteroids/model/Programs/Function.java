@@ -13,7 +13,7 @@ public class Function{
 	private Statement body;
 	
 	private Boolean returnReached = false;
-	private Type ReturnValue;	
+	private Expression<?> ReturnValue;	
 	private Program program;
 	private HashMap <String, Expression<?>> parameters = new HashMap<>();
 	// Map with parameters belonging to this function.
@@ -25,7 +25,7 @@ public class Function{
 		body.setFunction(this);
 	}
 	
-	public Type execute(List<Expression<?>> actualArgs) throws ClassNotFoundException{	
+	public Expression<?> execute(List<Expression<?>> actualArgs) throws ClassNotFoundException{	
 		for(int i = 1; i <= actualArgs.size(); i++){
 			this.getParameters().put("$" + Integer.toString(i), (Expression<?>)actualArgs.toArray()[i-1]);
 		}
@@ -84,11 +84,11 @@ public class Function{
 		this.returnReached = returnReached;
 	}
 
-	public Type getReturnValue() {
+	public Expression<?> getReturnValue() {
 		return ReturnValue;
 	}
 
-	public void setReturnValue(Type returnValue) {
+	public void setReturnValue(Expression<?> returnValue) {
 		ReturnValue = returnValue;
 	}
 }

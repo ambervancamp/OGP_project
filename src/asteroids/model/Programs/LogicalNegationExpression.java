@@ -17,6 +17,7 @@ public class LogicalNegationExpression extends BooleanExpression {
 	public Boolean evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
 		return !this.getExpression().evaluate(ExecutingShip, ExecutingFunction);
 	}
+	// Evaluates to boolean.
 
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;

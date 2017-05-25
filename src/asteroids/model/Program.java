@@ -14,6 +14,7 @@ public class Program{
 	private Double executeTime = 0.0;
 	private List<Type> printResults;	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
+	private Boolean isBreaking = false;
 	// Variables can be of any type
 	// How to keep the type of a variable when first assigned?
 	// How to define global/local variables, gets difficult when invoking functions and their
@@ -89,6 +90,14 @@ public class Program{
 
 	public void setPrintResults(List<Type> printResults) {
 		this.printResults = printResults;
+	}
+
+	public Boolean getIsBreaking() {
+		return isBreaking;
+	}
+
+	public void setIsBreaking(Boolean isBreaking) {
+		this.isBreaking = isBreaking;
 	}
 
 //	public HashMap<String, Statement> getFunctionsMap() {

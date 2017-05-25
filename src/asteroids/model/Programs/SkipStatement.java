@@ -10,7 +10,7 @@ public class SkipStatement extends ActionStatement{
 
 	@Override
 	public void execute() {
-		
+		;
 	}
 	// Zal dit zoals we willen effectief niets doen?
 

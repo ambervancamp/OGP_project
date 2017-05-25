@@ -5,9 +5,9 @@ import asteroids.part3.programs.SourceLocation;
 public class AssignmentStatement extends Statement{
 	
 	private String variableName;
-	private ConstantExpression value;
+	private Expression<?> value;
 	
-	public AssignmentStatement(String variableName, ConstantExpression value, SourceLocation sourceLocation){
+	public AssignmentStatement(String variableName, Expression<?> value, SourceLocation sourceLocation){
 		super(sourceLocation);
 		setVariableName(variableName);
 		setValue(value);
@@ -19,10 +19,10 @@ public class AssignmentStatement extends Statement{
 	public void setVariableName(String variableName) {
 		this.variableName = variableName;
 	}
-	public ConstantExpression getValue() {
+	public Expression<?> getValue() {
 		return value;
 	}
-	public void setValue(ConstantExpression value) {
+	public void setValue(Expression<?> value) {
 		this.value = value;
 	}
 	

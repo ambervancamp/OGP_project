@@ -21,12 +21,12 @@ public class IfThenElseStatement extends Statement{
 		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();
 		if (this.getCondition().evaluate(ExecutingShip, ExecutingFunction))
-			this.ifBody.execute();
+			this.getIfBody().execute();
 
 		else
 			// Else body optional
-			if (this.elseBody != null)
-				this.elseBody.execute();			
+			if (this.getElseBody() != null)
+				this.getElseBody().execute();			
 	}
 
 	public Statement getElseBody() {

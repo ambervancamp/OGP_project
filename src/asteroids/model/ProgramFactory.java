@@ -21,7 +21,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Statement createAssignmentStatement(String variableName, Expression<?> value, SourceLocation sourceLocation) {
-		return new AssignmentStatement(variableName, (ConstantExpression)value, sourceLocation);
+		return new AssignmentStatement(variableName, value, sourceLocation);
 	}
 
 	@Override
@@ -30,13 +30,13 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 	}
 
 	@Override
-	public Statement createBreakStatement(SourceLocation sourceLocation) {
+	public Statement createBreakStatement(SourceLocation sourceLocation) {	
 		return new BreakStatement(sourceLocation);
 	}
 
 	@Override
 	public Statement createReturnStatement(Expression<?> value, SourceLocation sourceLocation) {
-		return new ReturnStatement((Expression<Type>) value, sourceLocation);
+		return new ReturnStatement(value, sourceLocation);
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Expression<?> createGetDirectionExpression(SourceLocation location) {
-		return null;
+		return new GetDirectionExpression(location);
 	}
 
 	@Override
