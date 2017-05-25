@@ -5,7 +5,7 @@ import java.util.HashMap;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class VariableExpression implements Expression<Type> {
+public class VariableExpression implements Expression<Expression<?>> {
 	
 	private String variableName;
 	private SourceLocation location;
@@ -16,11 +16,11 @@ public class VariableExpression implements Expression<Type> {
 	}
 	
 	@Override
-	public Type evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+	public Expression<?> evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
 		HashMap<String, Expression<?>> variables = ExecutingShip.getProgram().getVariables();
-		return (Type) variables.get(this.getVariableName()).evaluate(ExecutingShip, ExecutingFunction);
-		// Gewerkt met enumeratie
-		// Oke zo met casting?
+		return variables.get(this.getVariableName());
+		// Verwachten ze de return van de eigenlijke value of van de expression? .evaluate(ExecutingShip, ExecutingFunction) of niet?
+		// Indien toch value: werk met enumeratie Type, en casting
 	}
 
 	public SourceLocation getLocation() {

@@ -15,15 +15,7 @@ public class AdditionExpression implements Expression<Double>{
 		this.setE2(e2);
 	}
 	
-	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction){
-		// TODO evaluate moet nog argumenten krijgen
-//		Object value1 = e1.evaluate();
-//		Object value2 = e2.evaluate();
-//		if (!(value1 instanceof Double) || !(value2 instanceof Double)){
-//			throw new IllegalArgumentException();
-//		}
-//		Double doubleValue1 = (Double) value1;
-//		Double doubleValue2 = (Double) value2;		
+	public Double evaluate(Ship ExecutingShip, Function ExecutingFunction){		
 		return this.getE2().evaluate(ExecutingShip, ExecutingFunction) + this.getE1().evaluate(ExecutingShip, ExecutingFunction);
 	}
 

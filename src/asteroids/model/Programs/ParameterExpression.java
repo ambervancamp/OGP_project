@@ -3,7 +3,7 @@ package asteroids.model.Programs;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class ParameterExpression implements Expression<Type> {
+public class ParameterExpression implements Expression<Expression<?>> {
 	
 	private String parameterName;
 	private SourceLocation sourceLocation;
@@ -14,8 +14,10 @@ public class ParameterExpression implements Expression<Type> {
 	}
 
 	@Override
-	public Type evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
-		return (Type) ExecutingFunction.getParameters().get(parameterName).evaluate(ExecutingShip,ExecutingFunction);
+	public Expression<?> evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+		return ExecutingFunction.getParameters().get(parameterName);
+		// Verwachten ze de return van de eigenlijke value of van de expression? .evaluate(ExecutingShip, ExecutingFunction) of niet?
+		// Indien toch value: werk met enumeratie Type, en casting
 	}
 
 	public String getParameterName() {

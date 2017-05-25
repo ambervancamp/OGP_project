@@ -5,7 +5,7 @@ import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class NullExpression extends EntityExpression<RoundEntity>{
-	// Return type null solved with RoundEntity, okey like this?
+	// Return type null solved with RoundEntity.
 	
 	public NullExpression(SourceLocation location) {
 		super(location);

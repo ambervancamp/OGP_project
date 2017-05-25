@@ -5,7 +5,7 @@ import java.util.List;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
-public class FunctionInvocationExpression implements Expression<Type> {
+public class FunctionInvocationExpression implements Expression<Expression<?>> {
 	// Type T voor expression, wat de evaluate effectief returned.
 	
 	private SourceLocation sourceLocation;
@@ -20,16 +20,18 @@ public class FunctionInvocationExpression implements Expression<Type> {
 	// Wat kan actual arguments allemaal zijn?
 
 	@Override
-	public Type evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
+	public Expression<?> evaluate(Ship ExecutingShip, Function ExecutingFunction) throws ClassNotFoundException {
 //		Statement functionBody = ExecutingShip.getProgram().getFunctionsMap().get(functionName);
 //		return functionBody.execute();
 		List<Function> AllFunctions = ExecutingShip.getProgram().getFunctions();
 		for(Function function: AllFunctions){
 			if (function.getFunctionname() == this.getFunctionName())
 				return function.execute(this.getActualArgs());
+				// Moet hier effectief return staan?				
 		}
 		return null;
-		// Null waarde goed? Is om error te vermijden dat er sowieso een Type wordt gereturned.
+		// Will never happen normally.
+		// Null value to guarentee always Expression<?> is returned.
 	}
 
 	public SourceLocation getSourceLocation() {

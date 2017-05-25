@@ -6,9 +6,9 @@ import asteroids.part3.programs.SourceLocation;
 public class ReturnStatement extends Statement{
 	// Can only take place in a function body.
 	
-	private Expression<Type> value;
+	private Expression<?> value;
 	
-	public ReturnStatement(Expression<Type> value, SourceLocation sourceLocation) {
+	public ReturnStatement(Expression<?> value, SourceLocation sourceLocation) {
 		super(sourceLocation);
 	}
 	
@@ -17,16 +17,17 @@ public class ReturnStatement extends Statement{
 		// Effective return happens in Function.
 		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();		
-		ExecutingFunction.setReturnValue(this.getValue().evaluate(ExecutingShip, ExecutingFunction));
+		ExecutingFunction.setReturnValue(this.getValue());
+		// .evaluate(ExecutingShip, ExecutingFunction)
 		ExecutingFunction.setReturnReached(true);
 	}
 	// Werken met klasse Optional?
 
-	public Expression<Type> getValue() {
+	public Expression<?> getValue() {
 		return value;
 	}
 
-	public void setValue(Expression<Type> value) {
+	public void setValue(Expression<?> value) {
 		this.value = value;
 	}
 
