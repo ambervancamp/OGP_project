@@ -129,4 +129,14 @@ public class Planetoid extends MinorPlanet {
 		this.setTotalTraveledDistance(totalTraveledDistance+this.getSpeed()*duration);
 	}
 	
+	/**
+	 * Return the string value of this Planetoid.
+	 * 
+	 * @return 	The string value of this Planetoid.
+	 * 			| result == "Planetoid"
+	 */
+	@Override
+	public String toString(){
+		return "Planetoid";
+	}	
 }
