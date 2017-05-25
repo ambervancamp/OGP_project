@@ -228,8 +228,14 @@ public abstract class RoundEntity {
 			throw new IllegalArgumentException();
 		this.xPosition = x;
 		this.yPosition = y;	
+//		if (this.hasProperSpace()){
+//			if (this.getSpace().entities2.containsValue(this))
+//				this.getSpace().deleteEntity(this);
+//			this.getSpace().addEntity(this);
+//		}
 	}
-
+		
+	
 //	All methods related to the velocity of a round entity.
 	
 	/**
@@ -464,8 +470,6 @@ public abstract class RoundEntity {
 		if (space.isTerminated() || this.isTerminated() )
 			return false;
 		return true;
-//		return (!space.isTerminated() && !this.isTerminated());
-		//TODO mag dees effectief weg?
 	}
 	
 	/**
@@ -524,7 +528,6 @@ public abstract class RoundEntity {
 	 */
 	public boolean hasProperSpace() {
 		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasAsEntity(this));
-		//TODO map eh
 	}
 	
 	/**
@@ -594,8 +597,7 @@ public abstract class RoundEntity {
 	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();
-		for (RoundEntity entity: space.getEntities()){
-			// TODO map eh
+		for (RoundEntity entity: space.entities){
 			if (this.overlap(entity))
 				throw new IllegalArgumentException();
 		}
