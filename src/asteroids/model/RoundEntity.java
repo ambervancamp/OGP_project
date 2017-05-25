@@ -199,7 +199,6 @@ public abstract class RoundEntity {
 		return position;
 //		return position.clone();
 	}
-//	TODO was die clone nu handig of niet?
 	
 	/**
 	 * Set the x-position and y-position of this ship to the given value.

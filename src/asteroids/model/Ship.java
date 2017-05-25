@@ -947,8 +947,6 @@ public class Ship extends RoundEntity {
 	 * @throws ClassNotFoundException
 	 */
 		
-	//TODO hij throwt nooit de classnotFoundException, toch staat die ertussen, documentatie en code
-	
 	public RoundEntity getClosestEntityOfClass(Class<?> cls) throws ClassNotFoundException{
 		RoundEntity shipClosest = null;
 		if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)

@@ -237,8 +237,6 @@ public abstract class Space {
 	 * 			or the space is an unbound space
 	 */
 	public boolean fitBoundary(RoundEntity entity){
-//		if (!this.canHaveAsEntity(entity))
-//			return false;
 		if (this instanceof UnboundSpace)
 			return true;
 		if (entity.getxPosition()+entity.getRadius() <= 1.01*this.getWidth() &&
@@ -248,7 +246,6 @@ public abstract class Space {
 			return true;
 		return false;
 	}
-	// TODO de haakjes wegdoen, ook in de documentatie
 	
 	/**
 	 * A method that adds an entity to the set of entities of this world.
