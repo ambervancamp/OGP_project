@@ -6,9 +6,9 @@ import asteroids.part3.programs.SourceLocation;
 public class LogicalNegationExpression extends BooleanExpression {
 		
 	private SourceLocation sourceLocation;
-	private BooleanExpression expression;
+	private Expression<? extends Boolean> expression;
 	
-	public LogicalNegationExpression(BooleanExpression expression, SourceLocation sourceLocation) {
+	public LogicalNegationExpression(Expression<? extends Boolean> expression, SourceLocation sourceLocation) {
 		setSourceLocation(sourceLocation);
 		setExpression(expression);
 	}
@@ -27,11 +27,11 @@ public class LogicalNegationExpression extends BooleanExpression {
 		this.sourceLocation = sourceLocation;
 	}
 
-	public BooleanExpression getExpression() {
+	public Expression<? extends Boolean> getExpression() {
 		return expression;
 	}
 
-	public void setExpression(BooleanExpression expression) {
+	public void setExpression(Expression<? extends Boolean> expression) {
 		this.expression = expression;
 	}
 

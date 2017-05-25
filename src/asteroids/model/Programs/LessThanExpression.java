@@ -5,11 +5,11 @@ import asteroids.part3.programs.SourceLocation;
 
 public class LessThanExpression extends BooleanExpression{
 	
-	private ConstantExpression e1;
-	private ConstantExpression e2;
+	private Expression<? extends Double> e1;
+	private Expression<? extends Double> e2;
 	private SourceLocation sourceLocation;
 	
-	public LessThanExpression(ConstantExpression e1, ConstantExpression e2, SourceLocation location) {
+	public LessThanExpression(Expression<? extends Double> e1, Expression<? extends Double> e2, SourceLocation location) {
 		setSourceLocation(location);
 		setE1(e1);
 		setE2(e2);
@@ -20,19 +20,19 @@ public class LessThanExpression extends BooleanExpression{
 		return (this.getE1().evaluate(ExecutingShip, ExecutingFunction) < this.getE2().evaluate(ExecutingShip, ExecutingFunction));
 	}
 
-	public ConstantExpression getE1() {
+	public Expression<? extends Double> getE1() {
 		return e1;
 	}
 
-	public void setE1(ConstantExpression e1) {
+	public void setE1(Expression<? extends Double> e1) {
 		this.e1 = e1;
 	}
 
-	public ConstantExpression getE2() {
+	public Expression<? extends Double> getE2() {
 		return e2;
 	}
 
-	public void setE2(ConstantExpression e2) {
+	public void setE2(Expression<? extends Double> e2) {
 		this.e2 = e2;
 	}
 

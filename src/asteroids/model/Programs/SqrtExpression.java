@@ -5,10 +5,10 @@ import asteroids.part3.programs.SourceLocation;
 
 public class SqrtExpression implements Expression<Double> {
 	
-	private ConstantExpression e;
+	private Expression<Double> e;
 	private SourceLocation location;
 	
-	public SqrtExpression(ConstantExpression e, SourceLocation location) {
+	public SqrtExpression(Expression<Double> e, SourceLocation location) {
 		setLocation(location);
 		setE(e);
 	}
@@ -18,11 +18,11 @@ public class SqrtExpression implements Expression<Double> {
 		return Math.sqrt(this.getE().evaluate(ExecutingShip, ExecutingFunction));
 	}
 
-	public ConstantExpression getE() {
+	public Expression<Double> getE() {
 		return e;
 	}
 
-	public void setE(ConstantExpression e) {
+	public void setE(Expression<Double> e) {
 		this.e = e;
 	}
 

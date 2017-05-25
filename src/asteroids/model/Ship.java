@@ -1067,8 +1067,8 @@ public class Ship extends RoundEntity {
 	 * @return	the executing process
 	 * 			| this.program.execute(duration)
 	 */
-	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
-		return this.program.execute(duration);
+	public List<Object> executeProgram(double duration) throws ClassNotFoundException{
+		return this.getProgram().execute(duration);
 	}	
 	
 	/**

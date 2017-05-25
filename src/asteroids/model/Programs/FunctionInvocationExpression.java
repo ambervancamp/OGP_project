@@ -6,7 +6,6 @@ import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class FunctionInvocationExpression implements Expression<Expression<?>> {
-	// Type T voor expression, wat de evaluate effectief returned.
 	
 	private SourceLocation sourceLocation;
 	private String functionName;

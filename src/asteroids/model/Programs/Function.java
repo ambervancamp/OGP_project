@@ -12,7 +12,7 @@ public class Function{
 	private String functionname;
 	private Statement body;
 	
-	private Boolean returnReached = false;
+	private boolean returnReached = false;
 	private Expression<?> ReturnValue;	
 	private Program program;
 	private HashMap <String, Expression<?>> parameters = new HashMap<>();
@@ -23,6 +23,7 @@ public class Function{
 		setFunctionname(functionName);
 		setBody(body);
 		body.setFunction(this);
+		body.setProgram(this.getProgram());
 	}
 	
 	public Expression<?> execute(List<Expression<?>> actualArgs) throws ClassNotFoundException{	
@@ -76,11 +77,11 @@ public class Function{
 		this.parameters = parameters;
 	}
 	
-	public Boolean getReturnReached() {
+	public boolean getReturnReached() {
 		return this.returnReached;
 	}
 
-	public void setReturnReached(Boolean returnReached) {
+	public void setReturnReached(boolean returnReached) {
 		this.returnReached = returnReached;
 	}
 

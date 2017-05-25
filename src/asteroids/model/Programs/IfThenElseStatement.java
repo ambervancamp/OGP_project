@@ -5,14 +5,16 @@ import asteroids.part3.programs.SourceLocation;
 
 public class IfThenElseStatement extends Statement{
 	
-	private BooleanExpression condition;
+	private Expression<? extends Boolean> condition;
 	private Statement ifBody;
 	private Statement elseBody;
 	
-	public IfThenElseStatement(BooleanExpression condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
+	public IfThenElseStatement(Expression<? extends Boolean> condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		setIfBody(ifBody);
+		ifBody.setProgram(this.getProgram());
 		setElseBody(elseBody);
+		elseBody.setProgram(this.getProgram());
 		setCondition(condition);
 	}
 
@@ -45,11 +47,11 @@ public class IfThenElseStatement extends Statement{
 		this.ifBody = ifBody;
 	}
 
-	public BooleanExpression getCondition() {
+	public Expression<? extends Boolean> getCondition() {
 		return this.condition;
 	}
 
-	public void setCondition(BooleanExpression condition) {
+	public void setCondition(Expression<? extends Boolean> condition) {
 		this.condition = condition;
 	}
 

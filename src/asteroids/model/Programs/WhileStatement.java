@@ -5,13 +5,14 @@ import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement{
 	
-	private BooleanExpression condition;
+	private Expression<Boolean> condition;
 	private Statement body;
 	
-	public WhileStatement(BooleanExpression condition, Statement body, SourceLocation sourceLocation) {
+	public WhileStatement(Expression<Boolean> condition, Statement body, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		setCondition(condition);
 		setBody(body);
+		body.setProgram(this.getProgram());
 	}
 	
 	@Override
@@ -43,11 +44,11 @@ public class WhileStatement extends Statement{
 //		}
 //	}
 	
-	public BooleanExpression getCondition() {
+	public Expression<Boolean> getCondition() {
 		return condition;
 	}
 
-	public void setCondition(BooleanExpression condition) {
+	public void setCondition(Expression<Boolean> condition) {
 		this.condition = condition;
 	}
 

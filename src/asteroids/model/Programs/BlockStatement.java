@@ -19,8 +19,11 @@ public class BlockStatement extends Statement{
 
 	@Override
 	public void execute() throws ClassNotFoundException {
-		for (Statement statement: this.getStatements())
+		for (Statement statement: this.getStatements()){
+//			statement.setProgram(this.getProgram());
+//			statement.setFunction(this.getFunction());
 			statement.execute();
+		}
 	}
 
 	public List<Statement> getStatements() {

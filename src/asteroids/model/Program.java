@@ -12,10 +12,10 @@ public class Program{
 	private List<Function> functions;
 	private Statement body;
 	private Ship ship;
-	private Double executeTime = 0.0;
+	private double executeTime = 0.0;
 	private List<Object> printResults = new ArrayList<Object>();	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
-	private Boolean isBreaking = false;
+	private boolean isBreaking = false;
 	// Variables can be of any type
 	// How to keep the type of a variable when first assigned?
 	// How to define global/local variables, gets difficult when invoking functions and their
@@ -35,7 +35,7 @@ public class Program{
 		}
 	}
 	
-	public List<Object> execute(Double duration) throws ClassNotFoundException{
+	public List<Object> execute(double duration) throws ClassNotFoundException{
 		this.setExecuteTime(this.getExecuteTime() + duration);
 		body.execute();
 		
@@ -76,11 +76,11 @@ public class Program{
 		this.variables = variables;
 	}
 
-	public Double getExecuteTime() {
+	public double getExecuteTime() {
 		return executeTime;
 	}
 
-	public void setExecuteTime(Double executeTime) {
+	public void setExecuteTime(double executeTime) {
 		this.executeTime = executeTime;
 	}
 
@@ -92,11 +92,11 @@ public class Program{
 		this.printResults = printResults;
 	}
 
-	public Boolean getIsBreaking() {
+	public boolean getIsBreaking() {
 		return isBreaking;
 	}
 
-	public void setIsBreaking(Boolean isBreaking) {
+	public void setIsBreaking(boolean isBreaking) {
 		this.isBreaking = isBreaking;
 	}
 

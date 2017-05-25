@@ -26,7 +26,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Statement createWhileStatement(Expression<?> condition, Statement body, SourceLocation sourceLocation) {
-		return new WhileStatement((BooleanExpression)condition, body, sourceLocation);
+		return new WhileStatement((Expression<Boolean>) condition, body, sourceLocation);
 	}
 
 	@Override
@@ -42,12 +42,12 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 	@Override
 	public Statement createIfStatement(Expression<?> condition, Statement ifBody, Statement elseBody,
 			SourceLocation sourceLocation) {
-		return new IfThenElseStatement((BooleanExpression) condition, ifBody, elseBody, sourceLocation);
+		return new IfThenElseStatement((Expression<? extends Boolean>) condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
 	public Statement createPrintStatement(Expression<?> value, SourceLocation sourceLocation) {
-		return new PrintStatement((Expression<Type>)value, sourceLocation);
+		return new PrintStatement(value, sourceLocation);
 	}
 
 	@Override
@@ -73,12 +73,12 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Expression<?> createChangeSignExpression(Expression<?> expression, SourceLocation sourceLocation) {
-		return new ChangeSignExpression((ConstantExpression)expression, sourceLocation);
+		return new ChangeSignExpression((Expression<? extends Double>) expression, sourceLocation);
 	}
 
 	@Override
 	public Expression<?> createNotExpression(Expression<?> expression, SourceLocation sourceLocation) {
-		return new LogicalNegationExpression((BooleanExpression) expression, sourceLocation);
+		return new LogicalNegationExpression( (Expression<? extends Boolean>) expression, sourceLocation);
 	}
 
 	@Override
@@ -128,27 +128,27 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Expression<?> createGetXExpression(Expression<?> e, SourceLocation location) {
-		return new GetXExpression((EntityExpression<?>)e, location);
+		return new GetXExpression((Expression<? extends RoundEntity>) e, location);
 	}
 
 	@Override
 	public Expression<?> createGetVXExpression(Expression<?> e, SourceLocation location) {
-		return new GetVXExpression((EntityExpression<?>) e, location);
+		return new GetVXExpression( (Expression<? extends RoundEntity>) e, location);
 	}
 
 	@Override
 	public Expression<?> createGetVYExpression(Expression<?> e, SourceLocation location) {
-		return new GetVYExpression((EntityExpression<?>) e, location);
+		return new GetVYExpression((Expression<? extends RoundEntity>) e, location);
 	}
 
 	@Override
 	public Expression<?> createGetRadiusExpression(Expression<?> e, SourceLocation location) {
-		return new GetRadiusExpression((EntityExpression<?>) e, location);
+		return new GetRadiusExpression((Expression<? extends RoundEntity>) e, location);
 	}
 
 	@Override
 	public Expression<?> createLessThanExpression(Expression<?> e1, Expression<?> e2, SourceLocation location) {
-		return new LessThanExpression((ConstantExpression)e1, (ConstantExpression)e2, location);
+		return new LessThanExpression((Expression<? extends Double>) e1, (Expression<? extends Double>) e2, location);
 	}
 	
 	@Override
@@ -158,22 +158,22 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Expression<?> createGetYExpression(Expression<?> e, SourceLocation location) {
-		return new GetYExpression((EntityExpression<?>) e, location);
+		return new GetYExpression( (Expression<? extends RoundEntity>) e, location);
 	}
 
 	@Override
 	public Expression<?> createAdditionExpression(Expression<?> e1, Expression<?> e2, SourceLocation location) {
-		return new AdditionExpression((ConstantExpression)e1, (ConstantExpression)e2, location);
+		return new AdditionExpression((Expression<? extends Double>) e1, (Expression<? extends Double>) e2, location);
 	}
 
 	@Override
 	public Expression<?> createMultiplicationExpression(Expression<?> e1, Expression<?> e2, SourceLocation location) {
-		return new MultiplicationExpression((ConstantExpression)e1, (ConstantExpression)e2, location);
+		return new MultiplicationExpression((Expression<? extends Double>)e1, (Expression<? extends Double>)e2, location);
 	}
 
 	@Override
 	public Expression<?> createSqrtExpression(Expression<?> e, SourceLocation location) {
-		return new SqrtExpression((ConstantExpression)e, location);
+		return new SqrtExpression((Expression<Double>) e, location);
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Statement createTurnStatement(Expression<?> angle, SourceLocation location) {
-		return new TurnStatement((ConstantExpression)angle, location);
+		return new TurnStatement((Expression<Double>) angle, location);
 	}
 
 	@Override

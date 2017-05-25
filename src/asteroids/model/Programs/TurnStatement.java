@@ -5,15 +5,15 @@ import asteroids.part3.programs.SourceLocation;
 
 public class TurnStatement extends ActionStatement{
 	
-	private ConstantExpression angle;
+	private Expression<Double> angle;
 	
-	public TurnStatement(ConstantExpression angle, SourceLocation location) {
+	public TurnStatement(Expression<Double> angle, SourceLocation location) {
 		super(location);
 		this.setAngle(angle);		
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws ClassNotFoundException {
 		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();
 		while(this.getProgram().getExecuteTime() < 0.2){
@@ -24,11 +24,11 @@ public class TurnStatement extends ActionStatement{
 		this.getProgram().setExecuteTime(this.getProgram().getExecuteTime()-0.2);
 	}
 
-	public ConstantExpression getAngle() {
+	public Expression<Double> getAngle() {
 		return angle;
 	}
 
-	public void setAngle(ConstantExpression angle) {
+	public void setAngle(Expression<Double> angle) {
 		this.angle = angle;
 	}
 

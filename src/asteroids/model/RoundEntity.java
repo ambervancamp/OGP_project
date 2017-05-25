@@ -25,6 +25,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author  Amber Van Camp & Jasper Vanmeerbeeck
  * 			tweede bachelor ingenieurswetenshappen
  * 			Computerwetenschappen: ObjectGericht Programmeren
+ * 			Link to our git repository: https://github.com/ambervancamp/OGP_project
  */
 @Value
 public abstract class RoundEntity {

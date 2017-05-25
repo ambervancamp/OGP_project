@@ -1,14 +1,15 @@
 package asteroids.model.Programs;
 
+import asteroids.model.RoundEntity;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetYExpression implements Expression<Double> {
 
-	private EntityExpression<?> e;
+	private Expression<? extends RoundEntity> e;
 	private SourceLocation location;
 	
-	public GetYExpression(EntityExpression<?> e, SourceLocation location) {
+	public GetYExpression(Expression<? extends RoundEntity> e, SourceLocation location) {
 		setE(e);
 		setLocation(location);	}
 
@@ -17,11 +18,11 @@ public class GetYExpression implements Expression<Double> {
 		return this.getE().evaluate(ExecutingShip, ExecutingFunction).getyPosition();
 	}
 
-	public EntityExpression<?> getE() {
+	public Expression<? extends RoundEntity> getE() {
 		return e;
 	}
 
-	public void setE(EntityExpression<?> e) {
+	public void setE(Expression<? extends RoundEntity> e) {
 		this.e = e;
 	}
 

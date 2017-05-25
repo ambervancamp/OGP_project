@@ -1,14 +1,15 @@
 package asteroids.model.Programs;
 
+import asteroids.model.RoundEntity;
 import asteroids.model.Ship;
 import asteroids.part3.programs.SourceLocation;
 
 public class GetVXExpression implements Expression<Double> {
 	
-	private EntityExpression<?> e;
+	private Expression<? extends RoundEntity> e;
 	private SourceLocation location;
 	
-	public GetVXExpression(EntityExpression<?> e, SourceLocation location) {
+	public GetVXExpression(Expression<? extends RoundEntity> e, SourceLocation location) {
 		setE(e);
 		setLocation(location);
 	}
@@ -18,11 +19,11 @@ public class GetVXExpression implements Expression<Double> {
 		return this.getE().evaluate(ExecutingShip, ExecutingFunction).getxVelocity();
 	}
 
-	public EntityExpression<?> getE() {
+	public Expression<? extends RoundEntity> getE() {
 		return e;
 	}
 
-	public void setE(EntityExpression<?> e) {
+	public void setE(Expression<? extends RoundEntity> e) {
 		this.e = e;
 	}
 
