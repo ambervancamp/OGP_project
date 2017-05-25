@@ -66,7 +66,6 @@ public abstract class Space {
 	public void terminate(){
 		Set<RoundEntity> entitiesToDelete = new HashSet<RoundEntity> ();
 		for (RoundEntity entity : getEntities()){
-			// TODO map eh
 			entitiesToDelete.add(entity);
 		}
 		for (RoundEntity entityToDelete : entitiesToDelete){
@@ -190,22 +189,13 @@ public abstract class Space {
 	 */
 	Set<RoundEntity> entities = new HashSet<RoundEntity>();	
 	
-//	/**
-//	 * A map of all the entities that are located in this world
-//	 */
-//	Map<double[],RoundEntity> entities2 = new HashMap<double[],RoundEntity> ();
-	
-	//TODO mapdink eh
-	
 	/**
 	 * A method that gives the entities of this space.
 	 * @return the entities of this space.
 	 */
 	public Set<RoundEntity> getEntities(){
-		return this.entities;
-//		return (Set<RoundEntity>) this.entities2.values();
+		return entities;
 	}
-	//TODO mapdink eh
 	
 	/**
 	 * A method to check whether this space has the given entity as one of its entities.
@@ -216,10 +206,8 @@ public abstract class Space {
 	 * @return 	True if and only if the given space contains this entity.
 	 */
 	public boolean hasAsEntity(@Raw RoundEntity entity) {
-//		return this.entities.contains(entity);s
-		return this.getEntities().contains(entity);
+		return this.entities.contains(entity);
 	}
-	//TODO mapdink eh
 	
 	/** A method to check whether this space can have the given entity as one of its entities.
 	 * 
@@ -249,8 +237,6 @@ public abstract class Space {
 	 * 			or the space is an unbound space
 	 */
 	public boolean fitBoundary(RoundEntity entity){
-//		if (!this.canHaveAsEntity(entity))
-//			return false;
 		if (this instanceof UnboundSpace)
 			return true;
 		if (entity.getxPosition()+entity.getRadius() <= 1.01*this.getWidth() &&
@@ -260,7 +246,6 @@ public abstract class Space {
 			return true;
 		return false;
 	}
-	// TODO de haakjes wegdoen, ook in de documentatie
 	
 	/**
 	 * A method that adds an entity to the set of entities of this world.
@@ -275,11 +260,9 @@ public abstract class Space {
 	 */
 	public void addEntity(RoundEntity entity) throws IllegalArgumentException{
 		// This function expects that the entity is already pointing to this world.	
-		if (!canHaveAsEntity(entity) || (entity.getSpace() != this) || this.hasAsEntity(entity))
+		if (!canHaveAsEntity(entity) || this.hasAsEntity(entity) || (entity.getSpace() != this))
 			throw new IllegalArgumentException();					
 		this.entities.add(entity);
-//		this.entities2.put(entity.getPosition(),entity);
-//		TODO map eh
 	}
 	
 	/**
@@ -298,8 +281,6 @@ public abstract class Space {
 		if (!canHaveAsEntity(entity) || entity.getSpace() == null || !this.hasAsEntity(entity))
 			throw new IllegalArgumentException();
 		entities.remove(entity);
-//		entities2.remove(entity.getPosition(),entity);
-		//TODO map eh
 	}
 	
 	/**
@@ -316,13 +297,11 @@ public abstract class Space {
 	public RoundEntity getEntityAt(Double xPosition, Double yPosition){
 		if (this.isTerminated())
 			return null;
-//		for (RoundEntity entity : entities){
-		for (RoundEntity entity : getEntities()){
-			//TODO map eh
-			if (entity.xPosition == xPosition && entity.yPosition == yPosition)
-				return entity;
-		}
-		return null;
+		this.evolve(0, null);
+		double [] position = {xPosition,yPosition};
+		return this.mapOfEntities.get(position);
+		// The function doesn't work, becaues the given position and the position of the mapped entity,
+		// doens't refer to the same adress.
 	}
 	
 //	All methods related to the collisions of this space.
@@ -338,11 +317,8 @@ public abstract class Space {
 		double smallestTime = Double.POSITIVE_INFINITY;
 		if (this.isTerminated() || this instanceof UnboundSpace)
 			return smallestTime;
-//		for (RoundEntity firstEntity : entities){
-		for (RoundEntity firstEntity : getEntities()){
-//			for(RoundEntity secondEntity : entities){
-			for(RoundEntity secondEntity : getEntities()){
-				//TODO map eh
+		for (RoundEntity firstEntity : entities){
+			for(RoundEntity secondEntity : entities){
 				if (firstEntity != secondEntity && firstEntity.getTimeToCollision(secondEntity)!=-0.0){
 					if (firstEntity.getTimeToCollision(secondEntity) < smallestTime)
 					smallestTime =  firstEntity.getTimeToCollision(secondEntity);
@@ -366,12 +342,8 @@ public abstract class Space {
 		if(this.isTerminated() || this instanceof UnboundSpace)
 			throw new IllegalArgumentException();
 		double timeNextCollision = this.getTimeNextCollision();
-//		for (RoundEntity firstEntity : entities){
-		for (RoundEntity firstEntity : getEntities()){
-			//TODO map eh
-//			for (RoundEntity secondEntity : entities){
-			for (RoundEntity secondEntity : getEntities()){
-				//TODO map eh
+		for (RoundEntity firstEntity : entities){
+			for (RoundEntity secondEntity : entities){
 				if (firstEntity != secondEntity){
 					if(timeNextCollision == firstEntity.getTimeToCollision(secondEntity))
 						return firstEntity.getCollisionPosition(secondEntity);
@@ -398,17 +370,13 @@ public abstract class Space {
 		if (this.isTerminated() || this instanceof UnboundSpace)
 			throw new IllegalArgumentException();
 		Set<Set<RoundEntity>> collisionPosition = new HashSet<>();
-//		for (RoundEntity entity : entities){
-		for (RoundEntity entity : getEntities()){
-			// TODO map eh
+		for (RoundEntity entity : entities){
 			if (entity.hasHitWall() && this.getTimeNextCollision() == entity.getTimeToHitWall()){
 				Set<RoundEntity> coll = new HashSet<>();
 				coll.add(entity);
 				collisionPosition.add(coll);
 			}
-//			for (RoundEntity other : entities){
-			for (RoundEntity other : getEntities()){
-				//TODO map eh
+			for (RoundEntity other : entities){
 				if (other != entity && entity.canAsCollision(other) &&
 						this.getTimeNextCollision() == entity.getTimeToCollision(other)){
 					Set<RoundEntity> coll = new HashSet<>();
@@ -435,10 +403,7 @@ public abstract class Space {
 			throws IllegalArgumentException{
 		if (this.isTerminated() || duration < 0 || Double.isNaN(duration))
 			throw new IllegalArgumentException();
-//		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (entities);
-		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (getEntities());
-		//TODO map eh
-
+		List<RoundEntity> possibleEntities = new ArrayList<RoundEntity> (entities);
 		double timeToNextHit = getTimeNextCollision();
 		while (timeToNextHit <= duration){
 			Set<Set<RoundEntity>> getCollisions = this.getCollisions();
@@ -449,9 +414,6 @@ public abstract class Space {
 				else
 					entity.move(timeToNextHit);
 				}
-				// moet dit ook automatisch, zodat al degenen die gethrust worden hierin passen?
-				// Dan zou een bullet eigenlijk ook gewoon een thrust moeten hebben,
-				// maar zou deze altijd 0 moeten zijn...
 			for (Set<RoundEntity> collision : getCollisions){
 				if (collision.size() == 1){
 					RoundEntity entityThatHitWall = (RoundEntity)collision.toArray()[0];
@@ -463,9 +425,8 @@ public abstract class Space {
 																entityThatHitWall.getPositionOfHitWall()[1]);
 						}
 					}
-					entityThatHitWall.resolveCollision();
+					entityThatHitWall.resolveCollision();					
 					}
-				
 				else if (collision.size() == 2){
 					RoundEntity firstEntity = (RoundEntity) collision.toArray()[0];
 					RoundEntity secondEntity = (RoundEntity) collision.toArray()[1];
@@ -483,9 +444,8 @@ public abstract class Space {
 			timeToNextHit = this.getTimeNextCollision();
 			}
 		if (duration > 0){
-//			for (RoundEntity entity : entities){
-			for (RoundEntity entity : getEntities()){
-			//TODO map eh
+			this.mapOfEntities.clear();
+			for (RoundEntity entity : entities){
 				if (!entity.isTerminated){
 					if (entity instanceof Ship){
 						((Ship) entity).thrust(((Ship) entity).getAcceleration(), duration);
@@ -493,9 +453,16 @@ public abstract class Space {
 						}
 					else
 						entity.move(duration);
+					this.setMapOfEntities(entity);
 				}
 				}
 			}
+		else{
+			this.mapOfEntities.clear();
+			for (RoundEntity entity : entities){
+				this.setMapOfEntities(entity);
+			}			
+		}
 		}
 
 	/**
@@ -507,9 +474,7 @@ public abstract class Space {
 	 */
 	public Set<? extends RoundEntity> getEntityOfClass(Class<?> cls) throws ClassNotFoundException {
 		Set<RoundEntity> result = new HashSet<RoundEntity>();
-//		Set<RoundEntity> entitiesInThisWorld = this.getEntities();
-		Set<RoundEntity> entitiesInThisWorld = (Set<RoundEntity>) this.getEntities();
-		//TODO map 
+		Set<RoundEntity> entitiesInThisWorld = this.getEntities();
 		
 		for (RoundEntity entity : entitiesInThisWorld) {
 			if (entity.getClass().isAssignableFrom(cls)) {
@@ -518,4 +483,36 @@ public abstract class Space {
 		}		
 		return result;
 	}
+	
+	/**
+	 * A map for the entities in this world, with their coordinate
+	 */
+	Map<double[], RoundEntity> mapOfEntities = new HashMap<double[], RoundEntity>();
+	
+	/**
+	 * A method to add an entity to the given map
+	 * @param 	entity
+	 * 			the entity we want to add to the map
+	 */
+	public void setMapOfEntities(RoundEntity entity){
+		this.mapOfEntities.put(entity.getPosition(), entity);
+	}
+	
+	/**
+	 * A method to remove an entity of the given map
+	 * @param 	entity
+	 * 			the entity we want to remove
+	 */
+	public void unsetMapOfEntities(RoundEntity entity){
+		this.mapOfEntities.remove(entity.getPosition(), entity);
+	}
+	
+	/**
+	 * A methhod that gives a map of entities and their position.
+	 * @return	a map of the entities of this world.
+	 */
+	public Map<double[], RoundEntity> getMapOfEntities(){
+		return this.mapOfEntities;
+	}
+	
 } 

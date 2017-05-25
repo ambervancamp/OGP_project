@@ -390,8 +390,7 @@ public class Bullet extends RoundEntity {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();	
 		Set<RoundEntity> entitiesToTerminate = new HashSet<RoundEntity>();
-		for (RoundEntity entity: space.getEntities()){
-			//TODO map eh
+		for (RoundEntity entity: space.entities){
 			if (this.overlap(entity)){
 				entitiesToTerminate.add(entity);
 			}
@@ -463,7 +462,8 @@ public class Bullet extends RoundEntity {
 	public void move(double duration){
 		if (!canHaveAsDuration(duration))
 			throw new IllegalArgumentException();
-		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+		this.setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
+		
 	}
 	
 	/**
@@ -483,6 +483,7 @@ public class Bullet extends RoundEntity {
 	public void resolveCollision(RoundEntity other){
 		if (!other.inSameSpace(this) || other == this)
 			throw new IllegalArgumentException();
+		
 		else if (other instanceof Ship){
 			if (this.getSource() == other){
 				this.removeOutSpace();
@@ -496,11 +497,15 @@ public class Bullet extends RoundEntity {
 			else{
 				this.terminate();
 				other.terminate();
+//				this.getSpace().deleteEntity(this);
+//				other.getSpace().deleteEntity(other);
 			}
 			}
 		else{
 			this.terminate();
 			other.terminate();
+//			this.getSpace().deleteEntity(this);
+//			other.getSpace().deleteEntity(other);
 		}
 	}
 	

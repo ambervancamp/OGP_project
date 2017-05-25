@@ -200,7 +200,6 @@ public abstract class RoundEntity {
 		return position;
 //		return position.clone();
 	}
-//	TODO was die clone nu handig of niet?
 	
 	/**
 	 * Set the x-position and y-position of this ship to the given value.
@@ -230,7 +229,8 @@ public abstract class RoundEntity {
 		this.xPosition = x;
 		this.yPosition = y;	
 	}
-
+		
+	
 //	All methods related to the velocity of a round entity.
 	
 	/**
@@ -465,8 +465,6 @@ public abstract class RoundEntity {
 		if (space.isTerminated() || this.isTerminated() )
 			return false;
 		return true;
-//		return (!space.isTerminated() && !this.isTerminated());
-		//TODO mag dees effectief weg?
 	}
 	
 	/**
@@ -525,7 +523,6 @@ public abstract class RoundEntity {
 	 */
 	public boolean hasProperSpace() {
 		return canHaveAsSpace(this.getSpace()) && (this.getSpace().hasAsEntity(this));
-		//TODO map eh
 	}
 	
 	/**
@@ -595,8 +592,7 @@ public abstract class RoundEntity {
 	public void placeInSpace(Space space) throws IllegalArgumentException {
 		if ((!canHaveAsSpace(space)))
 			throw new IllegalArgumentException();
-		for (RoundEntity entity: space.getEntities()){
-			// TODO map eh
+		for (RoundEntity entity: space.entities){
 			if (this.overlap(entity))
 				throw new IllegalArgumentException();
 		}
