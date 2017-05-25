@@ -3,6 +3,7 @@ package asteroids.model.Programs;
 import java.util.HashMap;
 import java.util.List;
 
+import asteroids.model.Program;
 import asteroids.part3.programs.SourceLocation;
 
 public class Function{
@@ -11,25 +12,29 @@ public class Function{
 	private String functionname;
 	private Statement body;
 	
+	private Boolean returnReached = false;
+	private Type ReturnValue;	
 	private Program program;
 	private HashMap <String, Expression<?>> parameters = new HashMap<>();
-	// extra map met parameters
+	// Map with parameters belonging to this function.
 	
 	public Function(String functionName, Statement body, SourceLocation sourceLocation) {
 		setSourceLocation(sourceLocation);
 		setFunctionname(functionName);
 		setBody(body);
 		body.setFunction(this);
-		// Verwijzen nu alle statements in body ook naar deze functie? -> in blockstatement ook verwijzingen
 	}
 	
 	public Type execute(List<Expression<?>> actualArgs) throws ClassNotFoundException{	
 		for(int i = 1; i <= actualArgs.size(); i++){
 			this.getParameters().put("$" + Integer.toString(i), (Expression<?>)actualArgs.toArray()[i-1]);
 		}
-		this.getBody().execute();
+		while(!this.getReturnReached()){
+			this.getBody().execute();
+		}
+		return this.getReturnValue();
 	}
-	// must return a Type
+	// Function execution always ends with a return.
 	
 	public Program getProgram() {
 		return this.program;
@@ -69,5 +74,21 @@ public class Function{
 
 	public void setParameters(HashMap <String, Expression<?>> parameters) {
 		this.parameters = parameters;
+	}
+	
+	public Boolean getReturnReached() {
+		return this.returnReached;
+	}
+
+	public void setReturnReached(Boolean returnReached) {
+		this.returnReached = returnReached;
+	}
+
+	public Type getReturnValue() {
+		return ReturnValue;
+	}
+
+	public void setReturnValue(Type returnValue) {
+		ReturnValue = returnValue;
 	}
 }

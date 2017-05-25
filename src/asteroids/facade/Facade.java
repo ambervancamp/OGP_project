@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import asteroids.model.*;
-import asteroids.model.Programs.Program;
 import asteroids.part2.CollisionListener;
 import asteroids.part2.facade.IFacade;
 import asteroids.part3.programs.IProgramFactory;

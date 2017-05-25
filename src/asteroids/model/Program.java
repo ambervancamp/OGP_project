@@ -1,9 +1,10 @@
-package asteroids.model.Programs;
+package asteroids.model;
 
 import java.util.HashMap;
 import java.util.List;
 
 import asteroids.model.*;
+import asteroids.model.Programs.*;
 
 public class Program{
 
@@ -11,10 +12,13 @@ public class Program{
 	private Statement body;
 	private Ship ship;
 	private Double executeTime = 0.0;
-	
+	private List<Type> printResults;	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	// Variables can be of any type
 	// How to keep the type of a variable when first assigned?
+	// How to define global/local variables, gets difficult when invoking functions and their
+	// reachable variables.. See assignement
+	
 	//private HashMap<String, Statement> functionsMap = new HashMap<>();
 
 	
@@ -29,12 +33,14 @@ public class Program{
 		}
 	}
 	
-	public List<Object> execute(Double duration) throws ClassNotFoundException{
+	public List<Type> execute(Double duration) throws ClassNotFoundException{
 		Double executeTime = this.getExecuteTime() + duration;
 		while(executeTime >= 2.0)
 			body.execute();
-		// functions moeten pas uitgevoerd worden wanneer deze worden opgeroepen
+		
+		return printResults;
 	}
+	// functions moeten pas uitgevoerd worden wanneer deze worden opgeroepen
 	// Met tijd uitvoeren
 
 	public List<Function> getFunctions(){
@@ -75,6 +81,14 @@ public class Program{
 
 	public void setExecuteTime(Double executeTime) {
 		this.executeTime = executeTime;
+	}
+
+	public List<Type> getPrintResults() {
+		return printResults;
+	}
+
+	public void setPrintResults(List<Type> printResults) {
+		this.printResults = printResults;
 	}
 
 //	public HashMap<String, Statement> getFunctionsMap() {

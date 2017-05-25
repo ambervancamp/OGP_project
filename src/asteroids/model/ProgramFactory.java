@@ -36,7 +36,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Statement createReturnStatement(Expression<?> value, SourceLocation sourceLocation) {
-		return new ReturnStatement(value, sourceLocation);
+		return new ReturnStatement((Expression<Type>) value, sourceLocation);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class ProgramFactory implements IProgramFactory<Expression<?>, Statement,
 
 	@Override
 	public Statement createPrintStatement(Expression<?> value, SourceLocation sourceLocation) {
-		return new PrintStatement((ConstantExpression)value, sourceLocation);
+		return new PrintStatement((Expression<Type>)value, sourceLocation);
 	}
 
 	@Override
