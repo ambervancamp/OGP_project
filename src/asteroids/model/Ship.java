@@ -1070,4 +1070,15 @@ public class Ship extends RoundEntity {
 	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
 		return this.program.execute(duration);
 	}	
+	
+	/**
+	 * Return the string value of this ship.
+	 * 
+	 * @return 	The string value of this ship.
+	 * 			| result == "Ship"
+	 */
+	@Override
+	public String toString(){
+		return "Ship";
+	}
 }

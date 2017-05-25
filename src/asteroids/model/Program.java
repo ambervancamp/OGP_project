@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Program{
 	private Statement body;
 	private Ship ship;
 	private Double executeTime = 0.0;
-	private List<Object> printResults;	
+	private List<Object> printResults = new ArrayList<Object>();	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	private Boolean isBreaking = false;
 	// Variables can be of any type

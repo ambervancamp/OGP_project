@@ -58,4 +58,15 @@ public class Asteroid  extends MinorPlanet {
 			throw new IllegalArgumentException();
 		setPosition(getPositionAfterMoving(duration)[0],getPositionAfterMoving(duration)[1]);
 	}
+	
+	/**
+	 * Return the string value of this Asteroid.
+	 * 
+	 * @return 	The string value of this Asteroid.
+	 * 			| result == "Asteroid"
+	 */
+	@Override
+	public String toString(){
+		return "Asteroid";
+	}
 }

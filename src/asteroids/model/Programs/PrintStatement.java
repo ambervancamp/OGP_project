@@ -17,7 +17,7 @@ public class PrintStatement extends Statement {
 		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();
 		this.getProgram().getPrintResults().add(this.getValue().evaluate(ExecutingShip, ExecutingFunction));
-		System.out.println(this.getValue().evaluate(ExecutingShip, ExecutingFunction).toString());	
+		System.out.println(this.getValue().evaluate(ExecutingShip, ExecutingFunction) == null ? "" : this.getValue().evaluate(ExecutingShip, ExecutingFunction).toString());	
 	}
 	// werkt deze tostring() zoals we het zouden willen?
 

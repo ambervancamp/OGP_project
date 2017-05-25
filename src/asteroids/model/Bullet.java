@@ -503,6 +503,17 @@ public class Bullet extends RoundEntity {
 			other.terminate();
 		}
 	}
+	
+	/**
+	 * Return the string value of this Bullet.
+	 * 
+	 * @return 	The string value of this Bullet.
+	 * 			| result == "Bullet"
+	 */
+	@Override
+	public String toString(){
+		return "Bullet";
+	}
 }
 
 
