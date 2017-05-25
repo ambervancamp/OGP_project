@@ -12,7 +12,7 @@ public class Program{
 	private Statement body;
 	private Ship ship;
 	private Double executeTime = 0.0;
-	private List<Type> printResults;	
+	private List<Object> printResults;	
 	private HashMap<String, Expression<?>> variables = new HashMap<>();
 	private Boolean isBreaking = false;
 	// Variables can be of any type
@@ -34,10 +34,9 @@ public class Program{
 		}
 	}
 	
-	public List<Type> execute(Double duration) throws ClassNotFoundException{
-		Double executeTime = this.getExecuteTime() + duration;
-		while(executeTime >= 2.0)
-			body.execute();
+	public List<Object> execute(Double duration) throws ClassNotFoundException{
+		this.setExecuteTime(this.getExecuteTime() + duration);
+		body.execute();
 		
 		return printResults;
 	}
@@ -84,11 +83,11 @@ public class Program{
 		this.executeTime = executeTime;
 	}
 
-	public List<Type> getPrintResults() {
+	public List<Object> getPrintResults() {
 		return printResults;
 	}
 
-	public void setPrintResults(List<Type> printResults) {
+	public void setPrintResults(List<Object> printResults) {
 		this.printResults = printResults;
 	}
 

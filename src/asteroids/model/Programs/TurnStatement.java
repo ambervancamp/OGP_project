@@ -16,7 +16,12 @@ public class TurnStatement extends ActionStatement{
 	public void execute() {
 		Function ExecutingFunction = this.getFunction();
 		Ship ExecutingShip = this.getProgram().getShip();
+		while(this.getProgram().getExecuteTime() < 0.2){
+			;
+			// Put on hold.
+		}
 		this.getProgram().getShip().turn(this.getAngle().evaluate(ExecutingShip,ExecutingFunction));
+		this.getProgram().setExecuteTime(this.getProgram().getExecuteTime()-0.2);
 	}
 
 	public ConstantExpression getAngle() {

@@ -792,7 +792,6 @@ public class Ship extends RoundEntity {
 	}
 		
 	/**
-	 * 
 	 * A variable referencing all bullets that are fired by the ship
 	 * 
 	 * @invar  	The referenced list is effective.
@@ -813,20 +812,54 @@ public class Ship extends RoundEntity {
 	public Set<Bullet> firedBullets = new HashSet<Bullet> ();
 	
 	/**
-	 * return a random bullet  in the list of bullets fired by the ship
+	 * Return the fired bullets of this ship.
 	 * 
-	 * @return	All bullets that are fired by this ship.
-	 * 			| if firedBullets.size() == 0
-	 * 			| result == null
-	 * 			otherwise
-	 * 			| index = this.firedBullets.size()*Math.random();
-	 * 			| result == (Bullet) firedBullets.toArray()[index]
+	 * @return	Returns the current fired bullets of this ship.
+	 * 			| result == this.fired bullets
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public Set<Bullet> getFiredBullets(){
+		return this.firedBullets;
+	}
+	
+	/**
+	 * Set the fired bullets of this ship.
+	 * 
+	 * @param 	firedBullets
+	 *          The new set of bullets for this ship.
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public void setFiredBullets(Set<Bullet> firedBullets){
+		this.firedBullets = firedBullets;
+	}
+	
+	/**
+	 * Return a random bullet in the list of bullets fired by the ship, that is not
+	 * terminated yet.
+	 * 
+	 * @return	One bullet that is fired and not yet terminated by this ship.
+	 * 			| for(Bullet bullet: this.getFiredBullets())
+	 *			|	if(!bullet.isTerminated())
+	 *			|		result == bullet
+	 *
+	 * @return	Null if there are no fired bullets, or all bullets are terminated.
+	 * 			| if this.getFiredBullets().size() == 0
+	 * 			| 	result == null
 	 */
 	public Bullet getFiredBullet(){
-		if (firedBullets.size() == 0)
+		if (this.getFiredBullets().size() == 0)
 			return null;
-		double index = this.firedBullets.size()*Math.random();
-		return (Bullet) firedBullets.toArray()[(int) index];
+		for(Bullet bullet: this.getFiredBullets()){
+			if(!bullet.isTerminated())
+				return bullet;
+		}
+		return null;
+//		double index = this.firedBullets.size()*Math.random();
+//		return (Bullet) firedBullets.toArray()[(int) index];
 	}
 		
 	/**
@@ -933,18 +966,17 @@ public class Ship extends RoundEntity {
 //	All methods related to the program of this ship
 	
 	/**
-	 * 
 	 * A method that returns the entity of classType cls, which distance with this ship is smallest.
 	 * 
 	 * @param 	cls
-	 * 			the classe of which we want to find the closest entity of.
+	 * 			the class of which we want to find the closest entity of.
 	 * 
-	 * @return	null if this ship is terminated, or there are no entities of the given classe.
-	 * 			| if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)
+	 * @return	null if there are no entities of the given class.
+	 * 			| if (this.getSpace().getEntityOfClass(cls).size() == 0)
 	 * 			| result == null
 	 * 
-	 * @return	the ship which distance to this ship is the smallest otherwise
-	 * 			| @see implemantation
+	 * @return	the ship which distance to this ship is the smallest
+	 * 			| @see implementation
 	 * 
 	 * @throws ClassNotFoundException
 	 */
@@ -952,39 +984,45 @@ public class Ship extends RoundEntity {
 	//TODO hij throwt nooit de classnotFoundException, toch staat die ertussen, documentatie en code
 	
 	public RoundEntity getClosestEntityOfClass(Class<?> cls) throws ClassNotFoundException{
-		RoundEntity shipClosest = null;
-		if (this.isTerminated() || this.getSpace().getEntityOfClass(cls).size() == 0)
-			return shipClosest;
-		double maxDistance = Double.MAX_VALUE;
+		RoundEntity entityClosest = null;
+		if (this.getSpace().getEntityOfClass(cls).size() == 0)
+			return entityClosest;
+		double closestDistance = Double.MAX_VALUE;
 		for (RoundEntity entity : this.getSpace().getEntityOfClass(cls)){
 			double distanceBetween = this.getDistanceBetween(entity);
-			if (distanceBetween < maxDistance){
-				maxDistance = distanceBetween;
-				shipClosest = entity;
+			if (distanceBetween < closestDistance){
+				closestDistance = distanceBetween;
+				entityClosest = entity;
 			}
 		}
-		return shipClosest;
+		return entityClosest;
 	}
 	
 	/**
+	 * a method that returns any entity in the world of this ship, that is not terminated yet.
 	 * 
-	 * a method that returns a certain entity at a random position in the entities
-	 * 
-	 * @return 	the round entity at the given random index
-	 * 			|this.getSpace().getEntities().toArray()[index];
-	 * @throws 	IllegalArgumentException
-	 * 			if this ship is terminated or the world of this ship is not a valid world.
-	 * 			| this.isTerminated || this.canHaveAsSpace(this.getWorld())
-	 */
-	
+	 * @return	One entity in the world of this ship not yet terminated.
+	 * 			| for(RoundEntity entity: this.getSpace().getEntities())
+	 *			|	if(!entity.isTerminated())
+	 *			|		result == entity
+	 *
+	 * @return	Null if there are no entities, or all entities are terminated.
+	 * 			| if this.getSpace().getEntities().size() == 0
+	 * 			| 	result == null
+	 */	
 	public RoundEntity getAnyEntity() throws IllegalArgumentException{
-		if (this.isTerminated || this.canHaveAsSpace(this.getWorld()))
-			throw new IllegalArgumentException();
-		else{
-			double index = this.getSpace().getEntities().size()*Math.random();
-			return (RoundEntity) this.getSpace().getEntities().toArray()[(int) index];
-			//TODO map eh
+		RoundEntity entityClosest = null;
+		if (this.getSpace().getEntities().size() == 0)
+			return entityClosest;
+		
+		for(RoundEntity entity: this.getSpace().getEntities()){
+			if(!entity.isTerminated())
+				return entity;
 		}
+		return entityClosest;
+//		double index = this.getSpace().getEntities().size()*Math.random();
+//		return (RoundEntity) this.getSpace().getEntities().toArray()[(int) index];
+			//TODO map eh
 	}
 	
 	/**
@@ -1029,9 +1067,7 @@ public class Ship extends RoundEntity {
 	 * @return	the executing process
 	 * 			| this.program.execute(duration)
 	 */
-	public List<Type> executeProgram(Double duration) throws ClassNotFoundException{
+	public List<Object> executeProgram(Double duration) throws ClassNotFoundException{
 		return this.program.execute(duration);
-	}
-	
-	
+	}	
 }
